@@ -1,14 +1,22 @@
 ---
-name: project-structure
+name: project-rules
 description: >
-  Enforces the specific folder structure and code generation workflows for this project.
-  Use when creating or refactoring Collections, Globals, or Custom UI Fields.
-  Ensures consistent organization and type safety.
+  General project rules and workflows. Enforces folder structure, code generation patterns, and strict policies on build/commit/push operations.
+  Use for all project development tasks.
 author: system
-version: 1.0.0
+version: 2.0.0
 ---
 
-# Project Structure & Workflow Rules
+# Project Rules & Workflows
+
+## 🚨 STRICT POLICY: Version Control & Builds
+
+**You must NOT run the following commands automatically:**
+1.  `npm run build` / `pnpm build` / `next build`
+2.  `git commit`
+3.  `git push`
+
+**Rule:** You may ONLY execute these commands if the user **explicitly requests them** in the current prompt. Never assume "it's time to save" or "verify integrity" by running these without permission.
 
 ## Directory Structure
 
@@ -56,6 +64,7 @@ You must run specific generation scripts immediately after modifying stricture-r
 - Adding new Collections or Globals.
 
 ## Summary Checklist
+- [ ] **STOP**: Did the user ask to commit/build? If no, DO NOT DO IT.
 - [ ] Is the Colection/Global in its own folder?
 - [ ] Are custom fields inside a `fields/` subfolder?
 - [ ] Did you run `generate:importmap` if you touched UI components?

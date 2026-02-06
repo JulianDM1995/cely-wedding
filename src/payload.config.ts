@@ -8,7 +8,9 @@ import { fileURLToPath } from 'url'
 import { Guests } from './collections/Guests'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
-import { QrPersonalization } from './globals/QrPersonalization/index'
+import { Personalization } from './globals/Personalization/index'
+
+import { seed } from './seed'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,7 +23,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Guests],
-  globals: [QrPersonalization],
+  globals: [Personalization],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -32,4 +34,9 @@ export default buildConfig({
   }),
   sharp,
   plugins: [],
+  onInit: async (payload) => {
+    if (process.env.PAYLOAD_SEED === 'true') {
+      await seed(payload, { reset: true })
+    }
+  },
 })

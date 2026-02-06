@@ -90,10 +90,10 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
-    'qr-personalization': QrPersonalization;
+    personalization: Personalization;
   };
   globalsSelect: {
-    'qr-personalization': QrPersonalizationSelect<false> | QrPersonalizationSelect<true>;
+    personalization: PersonalizationSelect<false> | PersonalizationSelect<true>;
   };
   locale: null;
   user: User;
@@ -347,18 +347,18 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "qr-personalization".
+ * via the `definition` "personalization".
  */
-export interface QrPersonalization {
+export interface Personalization {
   id: string;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "qr-personalization_select".
+ * via the `definition` "personalization_select".
  */
-export interface QrPersonalizationSelect<T extends boolean = true> {
+export interface PersonalizationSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
