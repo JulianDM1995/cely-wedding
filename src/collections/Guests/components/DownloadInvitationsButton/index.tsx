@@ -1,10 +1,10 @@
 'use client'
 
+import { QRLayout, renderQR } from '@/globals/Personalization/fields/InvitationDesigner/utils'
 import { Button } from '@payloadcms/ui'
 import jsPDF from 'jspdf'
 import React, { useState } from 'react'
 import { FaFilePdf } from 'react-icons/fa'
-import { QRLayout, renderQR } from '../../../../globals/Personalization/fields/QRDesigner/utils'
 
 // Helper to convert Blob to Data URL
 const blobToDataURL = (blob: Blob): Promise<string> => {
@@ -26,7 +26,7 @@ const loadImageFromUrl = (dataUrl: string): Promise<HTMLImageElement | null> => 
   })
 }
 
-export const DownloadQRsButton: React.FC = () => {
+export const DownloadInvitationsButton: React.FC = () => {
   const [opened, setOpened] = useState(false)
   const open = () => setOpened(true)
   const close = () => setOpened(false)
@@ -132,9 +132,6 @@ export const DownloadQRsButton: React.FC = () => {
           bgImageUrl = qrLayoutSettings.backgroundImage.url || ''
         } else if (qrLayoutSettings.backgroundImage && typeof qrLayoutSettings.backgroundImage === 'string') {
           // Fallback if somehow we get a string ID despite depth=1, or for robustness
-          // But DownloadQRsButton typically relies on the bulk fetch. 
-          // Since we fetch global with depth=1, it should be an object.
-          // We'll leave it simple for now as per previous working state, but ensure robust check.
         }
 
         // Build QRLayout object
@@ -223,7 +220,7 @@ export const DownloadQRsButton: React.FC = () => {
       }
 
       setProgress('Saving PDF...')
-      doc.save(`guests-qrs-${config.pageSize}-${new Date().toISOString().split('T')[0]}.pdf`)
+      doc.save(`guests-invitations-${config.pageSize}-${new Date().toISOString().split('T')[0]}.pdf`)
       close()
     } catch (e) {
       console.error('Error generating PDF', e)
@@ -401,7 +398,7 @@ export const DownloadQRsButton: React.FC = () => {
       )}
 
       <Button buttonStyle="pill" onClick={open}>
-        Download QRs
+        Download Invitations
       </Button>
     </>
   )

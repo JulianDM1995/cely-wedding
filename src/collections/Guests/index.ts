@@ -7,7 +7,7 @@ export const Guests: CollectionConfig = {
     defaultColumns: ['name', 'email', 'updatedAt'],
     components: {
       beforeList: [
-        '/collections/Guests/components/DownloadQRsButton/index.tsx#DownloadQRsButton',
+        '/collections/Guests/components/DownloadInvitationsButton/index.tsx#DownloadInvitationsButton',
       ],
     },
     preview: (doc) => {

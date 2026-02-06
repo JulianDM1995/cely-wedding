@@ -6,7 +6,7 @@ import { FaCog } from 'react-icons/fa'
 import { QRComposer } from './QRComposer'
 import { QRConfigurator } from './QRConfigurator'
 
-export const QRDesigner: React.FC = () => {
+export const InvitationDesigner: React.FC = () => {
   const [opened, setOpened] = useState(false)
   const open = () => setOpened(true)
   const close = () => setOpened(false)

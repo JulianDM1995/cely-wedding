@@ -2,7 +2,7 @@
 
 import { Button, useDocumentInfo, useField } from '@payloadcms/ui'
 import React, { useEffect, useMemo, useState } from 'react'
-import { QRLayout, renderQR, renderQRSVG } from '../../../../globals/Personalization/fields/QRDesigner/utils'
+import { QRLayout, renderQR, renderQRSVG } from '../../../../globals/Personalization/fields/InvitationDesigner/utils'
 
 // Helper to fetch media
 const fetchMediaIfId = async (input: string | any, collection: string): Promise<any> => {

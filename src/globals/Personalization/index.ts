@@ -25,7 +25,7 @@ export const Personalization: GlobalConfig = {
               type: 'ui',
               admin: {
                 components: {
-                  Field: '/globals/Personalization/fields/QRDesigner/index.tsx#QRDesigner',
+                  Field: '/globals/Personalization/fields/InvitationDesigner/index.tsx#InvitationDesigner',
                 },
               },
             },
