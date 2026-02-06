@@ -34,7 +34,18 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "[javascript][typescript][typescriptreact]": {
     "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit"
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit"
     }
+  },
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#1C1917",
+    "titleBar.activeForeground": "#E7E5E4",
+    "activityBar.background": "#1C1917",
+    "activityBar.foreground": "#FBBF24",
+    "statusBar.background": "#451A03",
+    "statusBar.foreground": "#FEF3C7",
+    "sideBar.background": "#292524",
+    "sideBar.foreground": "#E7E5E4"
   }
 }
