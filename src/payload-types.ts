@@ -151,7 +151,6 @@ export interface User {
  */
 export interface Media {
   id: string;
-  alt: string;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -281,7 +280,6 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -351,6 +349,20 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Personalization {
   id: string;
+  qrLayout?: {
+    backgroundImage?: (string | null) | Media;
+    dotsType?: ('rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square' | 'extra-rounded') | null;
+    color?: string | null;
+    cornersSquareType?: ('dot' | 'square' | 'extra-rounded') | null;
+    cornersSquareColor?: string | null;
+    cornersDotType?: ('dot' | 'square') | null;
+    cornersDotColor?: string | null;
+    show?: boolean | null;
+    size?: number | null;
+    qrSize?: number | null;
+    qrX?: number | null;
+    qrY?: number | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -359,6 +371,22 @@ export interface Personalization {
  * via the `definition` "personalization_select".
  */
 export interface PersonalizationSelect<T extends boolean = true> {
+  qrLayout?:
+    | T
+    | {
+        backgroundImage?: T;
+        dotsType?: T;
+        color?: T;
+        cornersSquareType?: T;
+        cornersSquareColor?: T;
+        cornersDotType?: T;
+        cornersDotColor?: T;
+        show?: T;
+        size?: T;
+        qrSize?: T;
+        qrX?: T;
+        qrY?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

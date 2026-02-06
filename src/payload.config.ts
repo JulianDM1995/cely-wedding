@@ -10,6 +10,7 @@ import { Media } from './collections/Media'
 import { Users } from './collections/Users'
 import { Personalization } from './globals/Personalization/index'
 
+
 import { seed } from './seed'
 
 const filename = fileURLToPath(import.meta.url)
