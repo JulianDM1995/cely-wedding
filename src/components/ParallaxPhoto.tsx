@@ -7,7 +7,7 @@ const FLOWER_OPTS = {
     width: '35vw',
     maxWidth: '350px',
     bleedX: '-4.5%',   // Horizontal bleed (left/right)
-    bleedY: '-10%',    // Vertical bleed (top/bottom) - Increased to avoid clipping
+    bleedY: '-5%',    // Vertical bleed (top/bottom) - Increased to avoid clipping
 }
 
 // Configuration for parallax intensity (adjust numbers to calibrate)
@@ -21,10 +21,10 @@ const PARALLAX_INTENSITY = {
 // y: vertical position (bottom offset)
 // z: parallax intensity (depth)
 const CHARACTER_CONFIG = {
+    gatoL: { x: '-15vh', y: 0, z: 45 },     // x is left (Left Cat)
     juan: { x: '-6vh', y: 0, z: 15 },       // x is marginRight
     tatiana: { x: '-6vh', y: 0, z: 10 },    // x is marginLeft
-    gato1: { x: '-20vh', y: 0, z: 45 },     // x is left (Left Cat)
-    gato0: { x: '-8vh', y: 0, z: 25 },      // x is right (Right Cat)
+    gatoR: { x: '-8vh', y: 0, z: 25 },      // x is right (Right Cat)
 }
 
 const ParallaxPhoto: React.FC = () => {
@@ -59,13 +59,13 @@ const ParallaxPhoto: React.FC = () => {
     const tatianaY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.tatiana.z}px`, `${characterConfig.tatiana.z}px`])
 
     // Cats (Foreground)
-    // Left Cat (Gato1) - Closest foreground (moves most)
-    const gato1X = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.gato1.z}px`, `${characterConfig.gato1.z}px`])
-    const gato1Y = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.gato1.z}px`, `${characterConfig.gato1.z}px`])
+    // Left Cat (GatoL) - Closest foreground (moves most)
+    const gatoLX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.gatoL.z}px`, `${characterConfig.gatoL.z}px`])
+    const gatoLY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.gatoL.z}px`, `${characterConfig.gatoL.z}px`])
 
-    // Right Cat (Gato0) - Slightly behind left cat
-    const gato0X = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.gato0.z}px`, `${characterConfig.gato0.z}px`])
-    const gato0Y = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.gato0.z}px`, `${characterConfig.gato0.z}px`])
+    // Right Cat (GatoR) - Slightly behind left cat
+    const gatoRX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.gatoR.z}px`, `${characterConfig.gatoR.z}px`])
+    const gatoRY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.gatoR.z}px`, `${characterConfig.gatoR.z}px`])
 
     // Flowers (Frame - Very Close)
     const flowerX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.flowers}px`, `${PARALLAX_INTENSITY.flowers}px`])
@@ -101,8 +101,8 @@ const ParallaxPhoto: React.FC = () => {
                 setCharacterConfig({
                     juan: { x: '-4vh', y: 0, z: 15 },       // Tighter spacing
                     tatiana: { x: '-4vh', y: 0, z: 10 },    // Tighter spacing
-                    gato1: { x: '-10vh', y: 0, z: 45 },     // Reduce offset
-                    gato0: { x: '-2vh', y: 0, z: 25 },      // Reduce offset
+                    gatoL: { x: '-10vh', y: 0, z: 45 },     // Reduce offset
+                    gatoR: { x: '-2vh', y: 0, z: 25 },      // Reduce offset
                 })
             } else {
                 // Desktop Configuration (Reset)
@@ -273,10 +273,10 @@ const ParallaxPhoto: React.FC = () => {
                         />
                     </div>
 
-                    {/* Left Cat (Gato1) - Foreground (Closest) */}
+                    {/* Left Cat (GatoL) - Foreground (Closest) */}
                     <motion.img
-                        src="/designs/gato1.png"
-                        alt="Gato 1"
+                        src="/designs/gatoL.png"
+                        alt="Gato L"
                         onClick={(e) => {
                             e.stopPropagation()
                             alert('🐈 PRRRRR')
@@ -284,19 +284,19 @@ const ParallaxPhoto: React.FC = () => {
                         style={{
                             position: 'absolute',
                             bottom: '0',
-                            left: characterConfig.gato1.x, // Gato1 is Left
+                            left: characterConfig.gatoL.x, // GatoL is Left
                             height: '32vh',
                             objectFit: 'contain',
                             zIndex: 9, // Closest
-                            x: gato1X,
-                            y: gato1Y
+                            x: gatoLX,
+                            y: gatoLY
                         }}
                     />
 
-                    {/* Right Cat (Gato0) - Foreground (Slightly behind) */}
+                    {/* Right Cat (GatoR) - Foreground (Slightly behind) */}
                     <motion.img
-                        src="/designs/gato0.png"
-                        alt="Gato 0"
+                        src="/designs/gatoR.png"
+                        alt="Gato R"
                         onClick={(e) => {
                             e.stopPropagation()
                             alert('🐱 MEOW')
@@ -304,12 +304,12 @@ const ParallaxPhoto: React.FC = () => {
                         style={{
                             position: 'absolute',
                             bottom: '0',
-                            right: characterConfig.gato0.x, // Gato0 is Right
+                            right: characterConfig.gatoR.x, // GatoR is Right
                             height: '32vh',
                             objectFit: 'contain',
                             zIndex: 8,
-                            x: gato0X,
-                            y: gato0Y
+                            x: gatoRX,
+                            y: gatoRY
                         }}
                     />
                 </div>
