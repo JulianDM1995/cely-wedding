@@ -171,7 +171,9 @@ export interface Guest {
   id: string;
   name: string;
   email: string;
-  slug?: string | null;
+  profilePicture?: (string | null) | Media;
+  status?: ('not_sent' | 'sent' | 'confirmed' | 'declined') | null;
+  token?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -299,7 +301,9 @@ export interface MediaSelect<T extends boolean = true> {
 export interface GuestsSelect<T extends boolean = true> {
   name?: T;
   email?: T;
-  slug?: T;
+  profilePicture?: T;
+  status?: T;
+  token?: T;
   updatedAt?: T;
   createdAt?: T;
 }

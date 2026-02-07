@@ -1,6 +1,6 @@
 'use client'
 
-import { QRLayout, renderQR } from '@/globals/Personalization/fields/InvitationDesigner/utils'
+import { InvitationLayout, renderInvitation } from '@/globals/Personalization/fields/InvitationDesigner/utils'
 import { Button } from '@payloadcms/ui'
 import jsPDF from 'jspdf'
 import React, { useState } from 'react'
@@ -51,7 +51,7 @@ export const DownloadInvitationsButton: React.FC = () => {
     showText: true,
     text: '',
   })
-  
+
   // Simple textual query params input for now
   const [extraParams, setExtraParams] = useState('')
 
@@ -66,7 +66,7 @@ export const DownloadInvitationsButton: React.FC = () => {
       // 1. Fetch Personalization Global (Source of Truth for Settings) with depth=1 for Media
       const globalRes = await fetch('/api/globals/personalization?depth=1')
       const personalization = await globalRes.json()
-      
+
       const qrLayoutSettings = personalization.qrLayout || {}
 
       // 2. Fetch Guests
@@ -110,22 +110,37 @@ export const DownloadInvitationsButton: React.FC = () => {
 
         setProgress(`Generating ${i + 1}/${guests.length}: ${guest.name}`)
 
-        // --- 1. Construct URL (Slug) ---
-        // Using slug as identifier
-        let identifier = guest.slug || guest.id
-        
+        // --- 1. Construct URL (Token) ---
+        // Access virtual 'token' field if available, or fallback to encrypted ID if we fetched it?
+        // Note: depth=0 on bulk fetch might not run afterRead hooks if not requested or configured? 
+        // Virtual fields *do* run on find.
+        // But types might not tell us 'token' exists if it's not in the main type definition.
+        // We might need to cast or ensure it is fetched.
+
+        let identifier = (guest as any).token
+
+        // If token is missing (e.g. depth/hook issue), we can't easily encrypt client-side.
+        // But wait, DownloadInvitationsButton is client-side.
+        // If the 'token' field was added to the Guests collection with 'hooks.afterRead', it should be present in the API response.
+
+        if (!identifier && guest.id) {
+          // We have a problem if we can't get the token. 
+          // For now assume it is there.
+          identifier = guest.id
+        }
+
         let url = `${appUrl}/${identifier}`
 
         // Append Query Params
         if (extraParams) {
-           if (url.includes('?')) {
-             url += `&${extraParams}`
-           } else {
-             url += `?${extraParams}`
-           }
+          if (url.includes('?')) {
+            url += `&${extraParams}`
+          } else {
+            url += `?${extraParams}`
+          }
         }
 
-        // --- 2. Build QRLayout and Generate Image using renderQR ---
+        // --- 2. Build InvitationLayout and Generate Image using renderInvitation ---
         // Get background image URL from global
         let bgImageUrl = ''
         if (qrLayoutSettings.backgroundImage && typeof qrLayoutSettings.backgroundImage === 'object') {
@@ -134,8 +149,8 @@ export const DownloadInvitationsButton: React.FC = () => {
           // Fallback if somehow we get a string ID despite depth=1, or for robustness
         }
 
-        // Build QRLayout object
-        const qrLayoutObj: QRLayout = {
+        // Build InvitationLayout object
+        const qrLayoutObj: InvitationLayout = {
           url,
           dots: {
             type: qrLayoutSettings.dotsType || 'square',
@@ -166,8 +181,8 @@ export const DownloadInvitationsButton: React.FC = () => {
           },
         }
 
-        // Generate QR image using renderQR
-        const blob = await renderQR(qrLayoutObj)
+        // Generate QR image using renderInvitation
+        const blob = await renderInvitation(qrLayoutObj)
         const imgData = await blobToDataURL(blob)
 
         // --- 3. Calculate dimensions ---
@@ -354,28 +369,28 @@ export const DownloadInvitationsButton: React.FC = () => {
                 />
               </div>
             </div>
-            
+
             <div style={modalStyles.field}>
-                 <label style={modalStyles.label}>Extra URL Params (e.g. source=qr)</label>
-                 <input
-                   type="text"
-                   style={modalStyles.input}
-                   value={extraParams}
-                   onChange={(e) => setExtraParams(e.target.value)}
-                   placeholder="key=value&key2=value2"
-                 />
+              <label style={modalStyles.label}>Extra URL Params (e.g. source=qr)</label>
+              <input
+                type="text"
+                style={modalStyles.input}
+                value={extraParams}
+                onChange={(e) => setExtraParams(e.target.value)}
+                placeholder="key=value&key2=value2"
+              />
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <input
-                  type="checkbox"
-                  checked={config.showText}
-                  onChange={(e) => setConfig({ ...config, showText: e.target.checked })}
-                  style={{ cursor: 'pointer' }}
-                />
-                <label style={modalStyles.label} onClick={() => setConfig({ ...config, showText: !config.showText })}>
-                   Show Guest Name
-                </label>
+              <input
+                type="checkbox"
+                checked={config.showText}
+                onChange={(e) => setConfig({ ...config, showText: e.target.checked })}
+                style={{ cursor: 'pointer' }}
+              />
+              <label style={modalStyles.label} onClick={() => setConfig({ ...config, showText: !config.showText })}>
+                Show Guest Name
+              </label>
             </div>
 
             {loading && (

@@ -1,9 +1,10 @@
+import { APP_DESCRIPTION, APP_NAME } from '@/constants'
 import React from 'react'
 import './styles.css'
 
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  description: APP_DESCRIPTION,
+  title: APP_NAME,
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {

@@ -1,6 +1,6 @@
 import QRCodeStyling, { CornerDotType, CornerSquareType, DotType, Options } from 'qr-code-styling'
 
-export interface QRLayout {
+export interface InvitationLayout {
   url: string
   dots: {
     type: string
@@ -27,34 +27,34 @@ export interface QRLayout {
   }
 }
 
-export async function renderQR(qrLayout: QRLayout): Promise<Blob> {
-  const layout = {
-    ...qrLayout,
+export async function renderInvitation(layout: InvitationLayout): Promise<Blob> {
+  const qrLayout = {
+    ...layout,
     logo: {
-      ...qrLayout.logo,
-      show: qrLayout.logo.show ?? false,
+      ...layout.logo,
+      show: layout.logo.show ?? false,
     },
   }
 
   // Create QR code options
   const qrOptions: Options = {
     type: 'canvas',
-    data: layout.url,
-    image: layout.logo.show ? layout.logo.image : undefined,
-    width: layout.background.image ? layout.background.qrSize : 1024,
-    height: layout.background.image ? layout.background.qrSize : 1024,
+    data: qrLayout.url,
+    image: qrLayout.logo.show ? qrLayout.logo.image : undefined,
+    width: qrLayout.background.image ? qrLayout.background.qrSize : 1024,
+    height: qrLayout.background.image ? qrLayout.background.qrSize : 1024,
     dotsOptions: {
-      color: layout.dots.color || '#000000',
-      type: (layout.dots.type as DotType) || 'square',
+      color: qrLayout.dots.color || '#000000',
+      type: (qrLayout.dots.type as DotType) || 'square',
     },
     cornersSquareOptions: {
-      color: layout.cornersSquare.color || layout.dots.color || '#000000',
-      type: (layout.cornersSquare.type as CornerSquareType) || 'square',
+      color: qrLayout.cornersSquare.color || qrLayout.dots.color || '#000000',
+      type: (qrLayout.cornersSquare.type as CornerSquareType) || 'square',
     },
     cornersDotOptions: {
       color:
-        layout.cornersDot.color || layout.cornersSquare.color || layout.dots.color || '#000000',
-      type: (layout.cornersDot.type as CornerDotType) || 'square',
+        qrLayout.cornersDot.color || qrLayout.cornersSquare.color || qrLayout.dots.color || '#000000',
+      type: (qrLayout.cornersDot.type as CornerDotType) || 'square',
     },
     backgroundOptions: {
       color: 'transparent',
@@ -63,12 +63,12 @@ export async function renderQR(qrLayout: QRLayout): Promise<Blob> {
       crossOrigin: 'anonymous',
       margin: 5,
       saveAsBlob: true,
-      imageSize: (layout.logo.size || 20) / 100,
+      imageSize: (qrLayout.logo.size || 20) / 100,
     },
   }
 
   // Case 1: No background - return just the QR code at 1024x1024
-  if (!layout.background.image) {
+  if (!qrLayout.background.image) {
     const qrCode = new QRCodeStyling(qrOptions)
     const blob = await qrCode.getRawData('png')
     if (!blob) throw new Error('Failed to generate QR code')
@@ -84,7 +84,7 @@ export async function renderQR(qrLayout: QRLayout): Promise<Blob> {
   if (!(qrBlob instanceof Blob)) throw new Error('QR code data is not a Blob')
 
   // Load background image
-  const bgImage = await loadImage(layout.background.image)
+  const bgImage = await loadImage(qrLayout.background.image)
 
   // Create canvas with background dimensions
   const canvas = document.createElement('canvas')
@@ -102,10 +102,10 @@ export async function renderQR(qrLayout: QRLayout): Promise<Blob> {
   // Draw QR code at specified position
   ctx.drawImage(
     qrImage,
-    layout.background.qrX,
-    layout.background.qrY,
-    layout.background.qrSize,
-    layout.background.qrSize,
+    qrLayout.background.qrX,
+    qrLayout.background.qrY,
+    qrLayout.background.qrSize,
+    qrLayout.background.qrSize,
   )
 
   // Convert canvas to blob
@@ -120,34 +120,34 @@ export async function renderQR(qrLayout: QRLayout): Promise<Blob> {
   })
 }
 
-export async function renderQRSVG(qrLayout: QRLayout): Promise<Blob> {
-  const layout = {
-    ...qrLayout,
+export async function renderInvitationSVG(layout: InvitationLayout): Promise<Blob> {
+  const qrLayout = {
+    ...layout,
     logo: {
-      ...qrLayout.logo,
-      show: qrLayout.logo.show ?? false,
+      ...layout.logo,
+      show: layout.logo.show ?? false,
     },
   }
 
   // Create QR code options for SVG
   const qrOptions: Options = {
     type: 'svg',
-    data: layout.url,
-    image: layout.logo.show ? layout.logo.image : undefined,
-    width: layout.background.image ? layout.background.qrSize : 1024,
-    height: layout.background.image ? layout.background.qrSize : 1024,
+    data: qrLayout.url,
+    image: qrLayout.logo.show ? qrLayout.logo.image : undefined,
+    width: qrLayout.background.image ? qrLayout.background.qrSize : 1024,
+    height: qrLayout.background.image ? qrLayout.background.qrSize : 1024,
     dotsOptions: {
-      color: layout.dots.color || '#000000',
-      type: (layout.dots.type as DotType) || 'square',
+      color: qrLayout.dots.color || '#000000',
+      type: (qrLayout.dots.type as DotType) || 'square',
     },
     cornersSquareOptions: {
-      color: layout.cornersSquare.color || layout.dots.color || '#000000',
-      type: (layout.cornersSquare.type as CornerSquareType) || 'square',
+      color: qrLayout.cornersSquare.color || qrLayout.dots.color || '#000000',
+      type: (qrLayout.cornersSquare.type as CornerSquareType) || 'square',
     },
     cornersDotOptions: {
       color:
-        layout.cornersDot.color || layout.cornersSquare.color || layout.dots.color || '#000000',
-      type: (layout.cornersDot.type as CornerDotType) || 'square',
+        qrLayout.cornersDot.color || qrLayout.cornersSquare.color || qrLayout.dots.color || '#000000',
+      type: (qrLayout.cornersDot.type as CornerDotType) || 'square',
     },
     backgroundOptions: {
       color: 'transparent',
@@ -156,12 +156,12 @@ export async function renderQRSVG(qrLayout: QRLayout): Promise<Blob> {
       crossOrigin: 'anonymous',
       margin: 5,
       saveAsBlob: true,
-      imageSize: (layout.logo.size || 20) / 100,
+      imageSize: (qrLayout.logo.size || 20) / 100,
     },
   }
 
   // Case 1: No background - return just the QR code as SVG
-  if (!layout.background.image) {
+  if (!qrLayout.background.image) {
     const qrCode = new QRCodeStyling(qrOptions)
     const blob = await qrCode.getRawData('svg')
     if (!blob) throw new Error('Failed to generate QR code')
@@ -180,7 +180,7 @@ export async function renderQRSVG(qrLayout: QRLayout): Promise<Blob> {
   const qrSvgText = await qrSvgBlob.text()
 
   // Load background image to get dimensions
-  const bgImage = await loadImage(layout.background.image)
+  const bgImage = await loadImage(qrLayout.background.image)
 
   // Convert background image to base64
   const bgBase64 = await getBase64FromImage(bgImage)
@@ -188,7 +188,7 @@ export async function renderQRSVG(qrLayout: QRLayout): Promise<Blob> {
   // Create composite SVG
   const compositeSvg = `<svg width="${bgImage.naturalWidth}" height="${bgImage.naturalHeight}" viewBox="0 0 ${bgImage.naturalWidth} ${bgImage.naturalHeight}" xmlns="http://www.w3.org/2000/svg">
   <image href="${bgBase64}" width="${bgImage.naturalWidth}" height="${bgImage.naturalHeight}" />
-  <g transform="translate(${layout.background.qrX}, ${layout.background.qrY})">
+  <g transform="translate(${qrLayout.background.qrX}, ${qrLayout.background.qrY})">
     ${qrSvgText
       .replace(/<\?xml[^?]*\?>/, '')
       .replace(/<svg[^>]*>/, '')

@@ -3,8 +3,8 @@
 import { useField, useFormFields } from '@payloadcms/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import { FaCog } from 'react-icons/fa'
-import { QRComposer } from './QRComposer'
-import { QRConfigurator } from './QRConfigurator'
+import { InvitationComposer } from './InvitationComposer'
+import { InvitationConfigurator } from './InvitationConfigurator'
 
 export const InvitationDesigner: React.FC = () => {
   const [opened, setOpened] = useState(false)
@@ -93,8 +93,8 @@ export const InvitationDesigner: React.FC = () => {
     fetchLogo()
   }, [logoId]) // Only depend on logoId, not logoSize
 
-  // Construct the finalized layout object for QRComposer
-  const finalQrLayout = {
+  // Construct the finalized layout object for InvitationComposer
+  const finalInvitationLayout = {
     url: `${process.env.NEXT_PUBLIC_APP_URL}/guest-slug`,
     dots: {
       type: formLayout.dotsType,
@@ -143,8 +143,8 @@ export const InvitationDesigner: React.FC = () => {
         overflow: 'hidden',
       }}
     >
-      <QRComposer
-        qrLayout={finalQrLayout}
+      <InvitationComposer
+        invitationLayout={finalInvitationLayout}
         setQrSize={setQrSize}
         setQrPosition={handleSetQrPosition}
       />
@@ -175,7 +175,7 @@ export const InvitationDesigner: React.FC = () => {
         <FaCog size={20} />
       </div>
 
-      <QRConfigurator opened={opened} onClose={close} />
+      <InvitationConfigurator opened={opened} onClose={close} />
     </div>
   )
 }
