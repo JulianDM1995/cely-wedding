@@ -129,7 +129,7 @@ export const DownloadInvitationsButton: React.FC = () => {
           identifier = guest.id
         }
 
-        let url = `${appUrl}/${identifier}`
+        let url = `${appUrl}/invitation?token=${identifier}`
 
         // Append Query Params
         if (extraParams) {

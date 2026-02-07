@@ -6,13 +6,17 @@ import { decryptGuestId } from '../../../utilities/guestToken'
 
 
 interface Props {
-  params: Promise<{
-    token: string
+  searchParams: Promise<{
+    token?: string
   }>
 }
-export default async function GuestPage({ params }: Props) {
-  const { token } = await params
+export default async function GuestPage({ searchParams }: Props) {
+  const { token } = await searchParams
   const payload = await getPayload({ config: configPromise })
+
+  if (!token) {
+    return notFound()
+  }
 
   const guestId = decryptGuestId(decodeURIComponent(token))
 

@@ -26,7 +26,7 @@ export const sendInvitation = async (guestId: string) => {
     // Generate personalized link
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'
     const token = encryptGuestId(guest.id)
-    const invitationLink = `${appUrl}/${token}`
+    const invitationLink = `${appUrl}/invitation?token=${token}`
 
     // Send Email
     const emailData = generateInvitationEmail(guest.name || 'Invitado', guest.email, invitationLink)

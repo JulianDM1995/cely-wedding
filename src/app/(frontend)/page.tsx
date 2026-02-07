@@ -1,5 +1,5 @@
-import { InvitationRenderer } from '@/components/InvitationRenderer'
+import { notFound } from 'next/navigation'
 
 export default function HomePage() {
-  return <InvitationRenderer />
+  notFound()
 }

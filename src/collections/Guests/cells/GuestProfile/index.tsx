@@ -3,73 +3,80 @@
 import { useConfig } from '@payloadcms/ui'
 import Link from 'next/link'
 import React from 'react'
+import './index.scss'
 
 export const GuestProfileCell: React.FC<any> = (props) => {
-  const { rowData, cellData } = props
-  const { config } = useConfig()
+    const { rowData, cellData } = props
+    const { config } = useConfig()
 
-  const profilePicture = rowData.profilePicture
-  const name = cellData // Assuming this is attached to the 'name' field
-  const token = rowData.token
-  
-  // Construct URL
-  // If token is available, use it. Otherwise fall back to ID or handle error.
-  // Since token is hidden in admin, it might not be in rowData.
-  // We'll check this assumption. If missing, we might need a server action or config change.
-  // For now, let's assume we can get it or we'll simply link to the ID and handle redirect? 
-  // No, the user wants the invitation link (/[token]).
-  
-  const href = token ? `${process.env.NEXT_PUBLIC_APP_URL}/${token}` : '#'
+    const profilePicture = rowData.profilePicture
+    const name = cellData // Assuming this is attached to the 'name' field
+    const token = rowData.token
 
-  // Handle profile picture
-  // In list view, simple relationships are often IDs. 
-  // But for uploads, Payload constructs the object if it can?
-  // If it's just an ID, we can't show the image easily without fetching.
-  // Let's assume for now we try to get the URL.
-  
-  let imageUrl: string | null = null
-  
-  if (profilePicture && typeof profilePicture === 'object' && 'url' in profilePicture) {
-      imageUrl = profilePicture.url
-  }
+    // Construct URL to admin detail view
+    const href = `/admin/collections/guests/${rowData.id}`
 
-  return (
-    <div className="flex items-center gap-3">
-        {/* Avatar */}
-        <div 
-            style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                overflow: 'hidden',
-                backgroundColor: '#eee',
-                flexShrink: 0,
-                border: '1px solid #ddd'
-            }}
-        >
-            {imageUrl ? (
-                <img 
-                    src={imageUrl} 
-                    alt={name} 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-            ) : (
-                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: '10px' }}>
-                    N/A
-                </div>
-            )}
+    const [imageUrl, setImageUrl] = React.useState<string | null>(null)
+
+    React.useEffect(() => {
+        if (profilePicture && typeof profilePicture === 'object' && 'url' in profilePicture) {
+            setImageUrl(profilePicture.url)
+        } else if (typeof profilePicture === 'string') {
+            // Fetch media if it's an ID
+            const fetchMedia = async () => {
+                try {
+                    const res = await fetch(`/api/media/${profilePicture}`)
+                    if (res.ok) {
+                        const data = await res.json()
+                        setImageUrl(data.url)
+                    }
+                } catch (err) {
+                    console.error('Error fetching guest profile picture:', err)
+                }
+            }
+            fetchMedia()
+        }
+    }, [profilePicture])
+
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%', height: '100%' }}>
+            {/* Avatar */}
+            <div
+                style={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'var(--theme-elevation-100)', // themed background
+                    borderColor: 'var(--theme-elevation-200)', // themed border
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                    width: '28px', // reduced size
+                    height: '28px', // reduced size
+                    borderRadius: '50%',
+                }}
+            >
+                {imageUrl ? (
+                    <img
+                        src={imageUrl}
+                        alt={typeof name === 'string' ? name : 'Guest'}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                ) : (
+                    <span style={{ fontSize: '10px', color: 'var(--theme-elevation-400)' }}>N/A</span>
+                )}
+            </div>
+
+            {/* Name Link */}
+            <Link
+                href={href}
+                onClick={(e) => e.stopPropagation()} // Prevent row click
+                className="guest-profile-link"
+            >
+                {name}
+            </Link>
         </div>
-        
-        {/* Name Link */}
-        <Link 
-            href={href} 
-            target="_blank"
-            onClick={(e) => e.stopPropagation()} // Prevent row click
-            className="hover:underline font-medium text-theme-primary"
-            style={{ textDecoration: 'none', color: 'inherit' }}
-        >
-            {name}
-        </Link>
-    </div>
-  )
+    )
 }

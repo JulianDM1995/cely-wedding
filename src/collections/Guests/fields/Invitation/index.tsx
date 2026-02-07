@@ -54,14 +54,14 @@ export const QRCode: React.FC = () => {
       // Assuming 'logo' is a top-level field or inside qrLayout if configured that way.
       // Based on previous file views, qrLayout had 'backgroundImage' but not explicitly 'logo' at top level yet,
       // but the snippet referenced 'brandData.logo'. I'll check for both.
-      
+
       const logoField = personalization.logo || personalization.qrLayout?.logo
       if (logoField) {
-         // If it's an object (from depth=1) or ID
-         const l = await fetchMediaIfId(logoField, 'media') // Using 'media' collection as standard
-         if (l?.url) setLogoUrl(l.url)
+        // If it's an object (from depth=1) or ID
+        const l = await fetchMediaIfId(logoField, 'media') // Using 'media' collection as standard
+        if (l?.url) setLogoUrl(l.url)
       } else {
-         setLogoUrl('')
+        setLogoUrl('')
       }
 
       const bgField = personalization.qrLayout?.backgroundImage
@@ -81,9 +81,9 @@ export const QRCode: React.FC = () => {
   const code = token || '' // If no token, empty URL or fallback? 
   // If we are in "create" mode, token is undefined.
   // We can't generate the hash client-side easily without exposing the secret.
-  
-  const url = code ? `${process.env.NEXT_PUBLIC_APP_URL}/${code}` : ''
-  
+
+  const url = code ? `${process.env.NEXT_PUBLIC_APP_URL}/invitation?token=${code}` : ''
+
   // 3. Build InvitationLayout Object
   const finalQRLayout: InvitationLayout | null = useMemo(() => {
     if (!url || !personalization) return null
@@ -163,9 +163,9 @@ export const QRCode: React.FC = () => {
       >
         <div style={{ width: '100%', position: 'relative' }}>
           {!previewUrl && (
-             <div style={{ padding: '20px', textAlign: 'center', color: '#888' }}>
-               {personalization ? 'Generating...' : 'Loading Config...'}
-             </div>
+            <div style={{ padding: '20px', textAlign: 'center', color: '#888' }}>
+              {personalization ? 'Generating...' : 'Loading Config...'}
+            </div>
           )}
 
           {previewUrl && (
@@ -178,22 +178,22 @@ export const QRCode: React.FC = () => {
               }}
             >
               <div
-                  style={{
-                    backgroundColor: bgUrl ? 'transparent' : 'white',
-                    borderRadius: 'var(--style-radius-m)',
-                    padding: '10px',
-                    width: 'fit-content',
-                  }}
-                >
+                style={{
+                  backgroundColor: bgUrl ? 'transparent' : 'white',
+                  borderRadius: 'var(--style-radius-m)',
+                  padding: '10px',
+                  width: 'fit-content',
+                }}
+              >
                 <img
-                    src={previewUrl}
-                    alt="QR Code"
-                    style={{
+                  src={previewUrl}
+                  alt="QR Code"
+                  style={{
                     maxWidth: '100%',
                     maxHeight: '300px',
                     objectFit: 'contain',
                     display: 'block',
-                    }}
+                  }}
                 />
               </div>
             </div>

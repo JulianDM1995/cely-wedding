@@ -1,0 +1,13 @@
+.guest-profile-link {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}

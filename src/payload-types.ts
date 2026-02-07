@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     guests: Guest;
+    'guest-messages': GuestMessage;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     guests: GuestsSelect<false> | GuestsSelect<true>;
+    'guest-messages': GuestMessagesSelect<false> | GuestMessagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -91,9 +93,11 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     personalization: Personalization;
+    'new-guest-message': NewGuestMessage;
   };
   globalsSelect: {
     personalization: PersonalizationSelect<false> | PersonalizationSelect<true>;
+    'new-guest-message': NewGuestMessageSelect<false> | NewGuestMessageSelect<true>;
   };
   locale: null;
   user: User;
@@ -151,6 +155,7 @@ export interface User {
  */
 export interface Media {
   id: string;
+  alt: string;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -174,6 +179,28 @@ export interface Guest {
   profilePicture?: (string | null) | Media;
   status?: ('not_sent' | 'sent' | 'confirmed' | 'declined') | null;
   token?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guest-messages".
+ */
+export interface GuestMessage {
+  id: string;
+  owner: string | Guest;
+  message: string;
+  media?: (string | null) | Media;
+  style?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  status?: ('draft' | 'published' | 'archived') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -212,6 +239,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'guests';
         value: string | Guest;
+      } | null)
+    | ({
+        relationTo: 'guest-messages';
+        value: string | GuestMessage;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -282,6 +313,7 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -304,6 +336,19 @@ export interface GuestsSelect<T extends boolean = true> {
   profilePicture?: T;
   status?: T;
   token?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guest-messages_select".
+ */
+export interface GuestMessagesSelect<T extends boolean = true> {
+  owner?: T;
+  message?: T;
+  media?: T;
+  style?: T;
+  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -372,6 +417,18 @@ export interface Personalization {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "new-guest-message".
+ */
+export interface NewGuestMessage {
+  id: string;
+  lastTimeRead?: string | null;
+  owner?: (string | null) | Guest;
+  lastMessage?: (string | null) | GuestMessage;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "personalization_select".
  */
 export interface PersonalizationSelect<T extends boolean = true> {
@@ -391,6 +448,18 @@ export interface PersonalizationSelect<T extends boolean = true> {
         qrX?: T;
         qrY?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "new-guest-message_select".
+ */
+export interface NewGuestMessageSelect<T extends boolean = true> {
+  lastTimeRead?: T;
+  owner?: T;
+  lastMessage?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

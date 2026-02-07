@@ -7,11 +7,16 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
+import { GuestMessages } from './collections/GuestMessages'
 import { Guests } from './collections/Guests'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
 import { Personalization } from './globals/Personalization/index'
 
+
+import { NewGuestMessage } from './globals/NewGuestMessage'
+
+// ...
 
 import { APP_NAME } from './constants'
 import { seed } from './seed'
@@ -42,8 +47,8 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Guests],
-  globals: [Personalization],
+  collections: [Users, Media, Guests, GuestMessages],
+  globals: [Personalization, NewGuestMessage],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -66,22 +71,26 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
-    s3Storage({
-      collections: {
-        media: true,
-      },
-      bucket: process.env.S3_BUCKET || '',
-      config: {
-        credentials: {
-          accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
-          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
-        },
-        region: process.env.S3_REGION || '',
-        endpoint: process.env.S3_ENDPOINT || '',
-        // Force path style for S3 compatible storage if needed (often needed for MinIO, sometimes for R2/others)
-        forcePathStyle: true, 
-      },
-    }),
+    ...(process.env.S3_BUCKET
+      ? [
+          s3Storage({
+            collections: {
+              media: true,
+            },
+            bucket: process.env.S3_BUCKET,
+            config: {
+              credentials: {
+                accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+                secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
+              },
+              region: process.env.S3_REGION || '',
+              endpoint: process.env.S3_ENDPOINT || '',
+              // Force path style for S3 compatible storage if needed (often needed for MinIO, sometimes for R2/others)
+              forcePathStyle: true,
+            },
+          }),
+        ]
+      : []),
   ],
   onInit: async (payload) => {
     if (process.env.PAYLOAD_SEED === 'true') {
