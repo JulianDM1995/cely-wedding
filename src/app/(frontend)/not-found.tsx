@@ -1,11 +1,9 @@
+import ParallaxPhoto from "@/components/ParallaxPhoto"
 
 export default function NotFound() {
     return (
-        <div className="home">
-            <div className="content">
-                <h1>404</h1>
-                <p>Page Not Found</p>
-            </div>
+        <div style={{ height: '100dvh', width: '100dvw', overflow: 'hidden' }}>
+            <ParallaxPhoto />
         </div>
     )
 }
