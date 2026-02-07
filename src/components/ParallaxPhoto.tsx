@@ -13,19 +13,18 @@ const FLOWER_OPTS = {
 // Configuration for parallax intensity (adjust numbers to calibrate)
 const PARALLAX_INTENSITY = {
     watercolor: '5%',   // Background depth
-    juan: 15,           // Middle ground (pixels)
-    tatiana: 10,        // Background character (pixels)
-    catLeft: 45,        // Foreground close (pixels)
-    catRight: 25,       // Foreground far (pixels)
     flowers: 65         // Very close (frame)
 }
 
-// Configuration for character X positions (adjust for spacing)
-const CHARACTER_POSITION = {
-    juan: '-6vh',       // marginRight (pulls center)
-    tatiana: '-6vh',    // marginLeft (pulls center)
-    catLeft: '-20vh',   // left offset
-    catRight: '-8vh'    // right offset
+// Configuration for characters (x, y, z)
+// x: horizontal position (css specific: marginRight, marginLeft, left, right)
+// y: vertical position (bottom offset)
+// z: parallax intensity (depth)
+const CHARACTER_CONFIG = {
+    juan: { x: '-6vh', y: 0, z: 15 },       // x is marginRight
+    tatiana: { x: '-6vh', y: 0, z: 10 },    // x is marginLeft
+    gato1: { x: '-20vh', y: 0, z: 45 },     // x is left (Left Cat)
+    gato0: { x: '-8vh', y: 0, z: 25 },      // x is right (Right Cat)
 }
 
 const ParallaxPhoto: React.FC = () => {
@@ -35,7 +34,7 @@ const ParallaxPhoto: React.FC = () => {
 
     // Configuration State (Responsive)
     const [flowerOpts, setFlowerOpts] = React.useState(FLOWER_OPTS)
-    const [characterPos, setCharacterPos] = React.useState(CHARACTER_POSITION)
+    const [characterConfig, setCharacterConfig] = React.useState(CHARACTER_CONFIG)
     const [isTiltActive, setIsTiltActive] = React.useState(false)
     const [isMobile, setIsMobile] = React.useState(false)
 
@@ -52,21 +51,21 @@ const ParallaxPhoto: React.FC = () => {
     const watercolorY = useTransform(mouseYSpring, [-0.5, 0.5], [PARALLAX_INTENSITY.watercolor, `-${PARALLAX_INTENSITY.watercolor}`])
 
     // Juan (Middle ground)
-    const juanX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.juan}px`, `${PARALLAX_INTENSITY.juan}px`])
-    const juanY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.juan}px`, `${PARALLAX_INTENSITY.juan}px`])
+    const juanX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.juan.z}px`, `${characterConfig.juan.z}px`])
+    const juanY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.juan.z}px`, `${characterConfig.juan.z}px`])
 
     // Tatiana (Slightly behind Juan - moves less)
-    const tatianaX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.tatiana}px`, `${PARALLAX_INTENSITY.tatiana}px`])
-    const tatianaY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.tatiana}px`, `${PARALLAX_INTENSITY.tatiana}px`])
+    const tatianaX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.tatiana.z}px`, `${characterConfig.tatiana.z}px`])
+    const tatianaY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.tatiana.z}px`, `${characterConfig.tatiana.z}px`])
 
     // Cats (Foreground)
     // Left Cat (Gato1) - Closest foreground (moves most)
-    const catLeftX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.catLeft}px`, `${PARALLAX_INTENSITY.catLeft}px`])
-    const catLeftY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.catLeft}px`, `${PARALLAX_INTENSITY.catLeft}px`])
+    const gato1X = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.gato1.z}px`, `${characterConfig.gato1.z}px`])
+    const gato1Y = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.gato1.z}px`, `${characterConfig.gato1.z}px`])
 
     // Right Cat (Gato0) - Slightly behind left cat
-    const catRightX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.catRight}px`, `${PARALLAX_INTENSITY.catRight}px`])
-    const catRightY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.catRight}px`, `${PARALLAX_INTENSITY.catRight}px`])
+    const gato0X = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.gato0.z}px`, `${characterConfig.gato0.z}px`])
+    const gato0Y = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.gato0.z}px`, `${characterConfig.gato0.z}px`])
 
     // Flowers (Frame - Very Close)
     const flowerX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.flowers}px`, `${PARALLAX_INTENSITY.flowers}px`])
@@ -99,17 +98,17 @@ const ParallaxPhoto: React.FC = () => {
                     bleedX: '-8%',
                     bleedY: '-5%',
                 })
-                setCharacterPos({
-                    juan: '-4vh', // Tighter spacing
-                    tatiana: '-4vh',
-                    catLeft: '-10vh', // Reduce offset so it doesn't go off screen
-                    catRight: '-2vh'
+                setCharacterConfig({
+                    juan: { x: '-4vh', y: 0, z: 15 },       // Tighter spacing
+                    tatiana: { x: '-4vh', y: 0, z: 10 },    // Tighter spacing
+                    gato1: { x: '-10vh', y: 0, z: 45 },     // Reduce offset
+                    gato0: { x: '-2vh', y: 0, z: 25 },      // Reduce offset
                 })
             } else {
                 // Desktop Configuration (Reset)
                 setIsMobile(false)
                 setFlowerOpts(FLOWER_OPTS)
-                setCharacterPos(CHARACTER_POSITION)
+                setCharacterConfig(CHARACTER_CONFIG)
             }
         }
 
@@ -252,7 +251,7 @@ const ParallaxPhoto: React.FC = () => {
                             style={{
                                 height: '70vh',
                                 objectFit: 'contain',
-                                marginRight: characterPos.juan,
+                                marginRight: characterConfig.juan.x,
                                 position: 'relative',
                                 zIndex: 2,
                                 x: juanX,
@@ -265,7 +264,7 @@ const ParallaxPhoto: React.FC = () => {
                             style={{
                                 height: '70vh',
                                 objectFit: 'contain',
-                                marginLeft: characterPos.tatiana,
+                                marginLeft: characterConfig.tatiana.x,
                                 position: 'relative',
                                 zIndex: 1,
                                 x: tatianaX,
@@ -281,12 +280,12 @@ const ParallaxPhoto: React.FC = () => {
                         style={{
                             position: 'absolute',
                             bottom: '0',
-                            left: characterPos.catLeft,
+                            left: characterConfig.gato1.x, // Gato1 is Left
                             height: '32vh',
                             objectFit: 'contain',
                             zIndex: 9, // Closest
-                            x: catLeftX,
-                            y: catLeftY
+                            x: gato1X,
+                            y: gato1Y
                         }}
                     />
 
@@ -297,12 +296,12 @@ const ParallaxPhoto: React.FC = () => {
                         style={{
                             position: 'absolute',
                             bottom: '0',
-                            right: characterPos.catRight,
+                            right: characterConfig.gato0.x, // Gato0 is Right
                             height: '32vh',
                             objectFit: 'contain',
                             zIndex: 8,
-                            x: catRightX,
-                            y: catRightY
+                            x: gato0X,
+                            y: gato0Y
                         }}
                     />
                 </div>
