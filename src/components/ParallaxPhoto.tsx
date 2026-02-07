@@ -277,6 +277,10 @@ const ParallaxPhoto: React.FC = () => {
                     <motion.img
                         src="/designs/gato1.png"
                         alt="Gato 1"
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            alert('🐈 PRRRRR')
+                        }}
                         style={{
                             position: 'absolute',
                             bottom: '0',
@@ -293,6 +297,10 @@ const ParallaxPhoto: React.FC = () => {
                     <motion.img
                         src="/designs/gato0.png"
                         alt="Gato 0"
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            alert('🐱 MEOW')
+                        }}
                         style={{
                             position: 'absolute',
                             bottom: '0',
