@@ -18,7 +18,7 @@ const DESKTOP_PARALLAX_INTENSITY = {
 
 const MOBILE_PARALLAX_INTENSITY = {
     watercolor: '15%',
-    flowers: 80         // Much stronger frame movement on mobile to separate from cats
+    flowers: 90         // Strong frame movement (90)
 }
 
 // Configuration for characters (x, y, z)
@@ -30,10 +30,10 @@ const DESKTOP_CHARACTER_CONFIG = {
 }
 
 const MOBILE_CHARACTER_CONFIG = {
-    juan: { x: -8, y: -2, z: 25 },       // Lower (-2), Slower (25)
-    tatiana: { x: 8, y: -2, z: 20 },     // Lower (-2), Slower (20)
-    gatoL: { x: -10, y: 0, z: 55 },      // Closer (-10), Mid (55)
-    gatoR: { x: 10, y: 0, z: 45 },       // Closer (10), Mid (45)
+    juan: { x: -8, y: 3, z: 15 },       // Lifted (3vh), Background Z (15)
+    tatiana: { x: 8, y: 3, z: 15 },     // Lifted (3vh), Background Z (15)
+    gatoL: { x: -12, y: 0, z: 45 },      // Midground Z (45)
+    gatoR: { x: 12, y: 0, z: 45 },       // Midground Z (45)
 }
 
 const DESKTOP_FLOWER_OPTS = {
@@ -236,7 +236,8 @@ const ParallaxPhoto: React.FC = () => {
                         objectFit: 'contain',
                         x: 0, // Fixed horizontal position
                         y: watercolorY,
-                        mixBlendMode: 'darken'
+                        mixBlendMode: 'darken',
+                        willChange: 'transform'
                     }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.5 }}
@@ -269,7 +270,8 @@ const ParallaxPhoto: React.FC = () => {
                         zIndex: 6,
                         pointerEvents: 'auto',
                         x: juanX, // Includes center offset + parallax
-                        y: juanY
+                        y: juanY,
+                        willChange: 'transform'
                     }}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -289,7 +291,8 @@ const ParallaxPhoto: React.FC = () => {
                         zIndex: 5, // Behind Juan
                         pointerEvents: 'auto',
                         x: tatianaX,
-                        y: tatianaY
+                        y: tatianaY,
+                        willChange: 'transform'
                     }}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -314,7 +317,8 @@ const ParallaxPhoto: React.FC = () => {
                         pointerEvents: 'auto',
                         cursor: 'pointer',
                         x: gatoLX,
-                        y: gatoLY
+                        y: gatoLY,
+                        willChange: 'transform'
                     }}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -339,7 +343,8 @@ const ParallaxPhoto: React.FC = () => {
                         pointerEvents: 'auto',
                         cursor: 'pointer',
                         x: gatoRX,
-                        y: gatoRY
+                        y: gatoRY,
+                        willChange: 'transform'
                     }}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -363,7 +368,8 @@ const ParallaxPhoto: React.FC = () => {
                     mixBlendMode: 'multiply',
                     pointerEvents: 'none', // Let mouse pass through to container
                     x: flowerX,
-                    y: flowerY
+                    y: flowerY,
+                    willChange: 'transform'
                 }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -385,7 +391,8 @@ const ParallaxPhoto: React.FC = () => {
                     pointerEvents: 'none',
                     scaleX: -1,
                     x: flowerX,
-                    y: flowerY
+                    y: flowerY,
+                    willChange: 'transform'
                 }}
                 initial={{ opacity: 0, scaleX: -1, scaleY: 1 }}
                 animate={{ opacity: 1, scaleX: -1, scaleY: 1 }}
@@ -408,7 +415,8 @@ const ParallaxPhoto: React.FC = () => {
                     scaleX: -1,
                     scaleY: -1,
                     x: flowerX,
-                    y: flowerY
+                    y: flowerY,
+                    willChange: 'transform'
                 }}
                 initial={{ opacity: 0, scaleX: -1, scaleY: -1 }}
                 animate={{ opacity: 1, scaleX: -1, scaleY: -1 }}
@@ -430,7 +438,8 @@ const ParallaxPhoto: React.FC = () => {
                     pointerEvents: 'none',
                     scaleY: -1,
                     x: flowerX,
-                    y: flowerY
+                    y: flowerY,
+                    willChange: 'transform'
                 }}
                 initial={{ opacity: 0, scaleX: 1, scaleY: -1 }}
                 animate={{ opacity: 1, scaleX: 1, scaleY: -1 }}
