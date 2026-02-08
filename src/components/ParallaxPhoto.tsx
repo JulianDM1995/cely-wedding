@@ -1,7 +1,8 @@
 'use client'
 
 import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import React from 'react'
+import React, { useState } from 'react'
+import ParallaxDebugModal, { ParallaxConfig } from './ParallaxDebugModal'
 
 const FLOWER_OPTS = {
     width: '35vw',
