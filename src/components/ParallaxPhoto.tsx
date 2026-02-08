@@ -477,7 +477,7 @@ const ParallaxPhoto: React.FC = () => {
                     e.stopPropagation()
                     setShowDebugModal(true)
                 }}
-                className="absolute top-4 right-4 z-50 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-lg border border-gray-200 text-gray-700 hover:bg-white transition-colors"
+                className="absolute top-20 right-4 z-[100] bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-lg border border-gray-200 text-gray-700 hover:bg-white transition-colors"
                 style={{ pointerEvents: 'auto' }}
             >
                 ⚙️
