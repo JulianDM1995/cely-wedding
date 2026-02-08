@@ -17,6 +17,8 @@ const DESKTOP_PARALLAX_INTENSITY = {
     flowers: 65         // Very close (frame)
 }
 
+const MOBILE_PARALLAX_INTENSITY = { ...DESKTOP_PARALLAX_INTENSITY }
+
 // Configuration for characters (x, y, z)
 const DESKTOP_CHARACTER_CONFIG = {
     gatoL: { x: -25, y: 10, z: 40 },     // Far Left, Distinct from Frame (65)
@@ -25,12 +27,21 @@ const DESKTOP_CHARACTER_CONFIG = {
     gatoR: { x: 25, y: 10, z: 40 },      // Far Right, Distinct from Frame (65)
 }
 
+const MOBILE_CHARACTER_CONFIG = {
+    gatoL: { x: -15, y: 10, z: 40 },     // Far Left, Distinct from Frame (65)
+    juan: { x: -12, y: 15, z: 15 },       // Near Left
+    tatiana: { x: 12, y: 15, z: 5 },     // Near Right
+    gatoR: { x: 15, y: 10, z: 40 },      // Far Right, Distinct from Frame (65)
+}
+
 const DESKTOP_FLOWER_OPTS = {
     width: '35vw',
     maxWidth: '350px',
     bleedX: '-4.5%',
     bleedY: '-10%',
 }
+
+const MOBILE_FLOWER_OPTS = { ...DESKTOP_FLOWER_OPTS }
 
 const ParallaxPhoto: React.FC = () => {
     // Mouse position state
@@ -48,7 +59,18 @@ const ParallaxPhoto: React.FC = () => {
     // Handle Resize (Only to detect mobile state for input handling, NOT for config changing)
     React.useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth < 1024)
+            const mobile = window.innerWidth < 1024
+            setIsMobile(mobile)
+
+            if (mobile) {
+                setCharacterConfig(MOBILE_CHARACTER_CONFIG)
+                setFlowerOpts(MOBILE_FLOWER_OPTS)
+                setParallaxIntensity(MOBILE_PARALLAX_INTENSITY)
+            } else {
+                setCharacterConfig(DESKTOP_CHARACTER_CONFIG)
+                setFlowerOpts(DESKTOP_FLOWER_OPTS)
+                setParallaxIntensity(DESKTOP_PARALLAX_INTENSITY)
+            }
         }
         handleResize()
         window.addEventListener('resize', handleResize)
@@ -468,9 +490,16 @@ const ParallaxPhoto: React.FC = () => {
                     setParallaxIntensity(newConfig.parallaxIntensity)
                 }}
                 onReset={() => {
-                    setCharacterConfig(DESKTOP_CHARACTER_CONFIG)
-                    setFlowerOpts(DESKTOP_FLOWER_OPTS)
-                    setParallaxIntensity(DESKTOP_PARALLAX_INTENSITY)
+                    const mobile = window.innerWidth < 1024
+                    if (mobile) {
+                        setCharacterConfig(MOBILE_CHARACTER_CONFIG)
+                        setFlowerOpts(MOBILE_FLOWER_OPTS)
+                        setParallaxIntensity(MOBILE_PARALLAX_INTENSITY)
+                    } else {
+                        setCharacterConfig(DESKTOP_CHARACTER_CONFIG)
+                        setFlowerOpts(DESKTOP_FLOWER_OPTS)
+                        setParallaxIntensity(DESKTOP_PARALLAX_INTENSITY)
+                    }
                 }}
             />
         </div >
