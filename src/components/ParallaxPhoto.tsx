@@ -17,14 +17,32 @@ const PARALLAX_INTENSITY = {
 }
 
 // Configuration for characters (x, y, z)
-// x: horizontal offset from center (vh units). Negative = Left, Positive = Right.
-// y: vertical position (bottom offset)
-// z: parallax intensity (depth)
-const CHARACTER_CONFIG = {
+const DESKTOP_CHARACTER_CONFIG = {
     gatoL: { x: -25, y: 10, z: 65 },     // Far Left
     juan: { x: -12, y: 15, z: 15 },       // Near Left
     tatiana: { x: 12, y: 15, z: 5 },     // Near Right
     gatoR: { x: 25, y: 10, z: 55 },      // Far Right
+}
+
+const MOBILE_CHARACTER_CONFIG = {
+    juan: { x: -6, y: 0, z: 15 },       // Tighter spacing
+    tatiana: { x: 6, y: 0, z: 10 },     // Tighter spacing
+    gatoL: { x: -25, y: 0, z: 45 },     // Reduce offset
+    gatoR: { x: 25, y: 0, z: 25 },      // Reduce offset
+}
+
+const DESKTOP_FLOWER_OPTS = {
+    width: '35vw',
+    maxWidth: '350px',
+    bleedX: '-4.5%',
+    bleedY: '-10%',
+}
+
+const MOBILE_FLOWER_OPTS = {
+    width: '45vw', // Larger flowers on mobile to fill frame
+    maxWidth: 'none',
+    bleedX: '-8%',
+    bleedY: '-5%',
 }
 
 const ParallaxPhoto: React.FC = () => {
@@ -33,10 +51,12 @@ const ParallaxPhoto: React.FC = () => {
     const mouseY = useMotionValue(0)
 
     // Configuration State (Responsive)
-    const [flowerOpts, setFlowerOpts] = React.useState(FLOWER_OPTS)
-    const [characterConfig, setCharacterConfig] = React.useState(CHARACTER_CONFIG)
     const [isTiltActive, setIsTiltActive] = React.useState(false)
     const [isMobile, setIsMobile] = React.useState(false)
+
+    // Derived Configuration
+    const characterConfig = isMobile ? MOBILE_CHARACTER_CONFIG : DESKTOP_CHARACTER_CONFIG
+    const flowerOpts = isMobile ? MOBILE_FLOWER_OPTS : DESKTOP_FLOWER_OPTS
 
     // Smooth spring animation configuration
     const springConfig = { damping: 30, stiffness: 200, mass: 0.5 } // "Floaty" feel
@@ -97,27 +117,7 @@ const ParallaxPhoto: React.FC = () => {
     // Handle Resize for Responsive Layout
     React.useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 768) {
-                // Mobile Configuration
-                setIsMobile(true)
-                setFlowerOpts({
-                    width: '45vw', // Larger flowers on mobile to fill frame
-                    maxWidth: 'none',
-                    bleedX: '-8%',
-                    bleedY: '-5%',
-                })
-                setCharacterConfig({
-                    juan: { x: -6, y: 0, z: 15 },       // Tighter spacing
-                    tatiana: { x: 6, y: 0, z: 10 },     // Tighter spacing
-                    gatoL: { x: -25, y: 0, z: 45 },     // Reduce offset
-                    gatoR: { x: 25, y: 0, z: 25 },      // Reduce offset
-                })
-            } else {
-                // Desktop Configuration (Reset)
-                setIsMobile(false)
-                setFlowerOpts(FLOWER_OPTS)
-                setCharacterConfig(CHARACTER_CONFIG)
-            }
+            setIsMobile(window.innerWidth < 768)
         }
 
         handleResize() // Init
