@@ -25,10 +25,10 @@ const DESKTOP_CHARACTER_CONFIG = {
 }
 
 const MOBILE_CHARACTER_CONFIG = {
-    juan: { x: -6, y: 0, z: 15 },       // Tighter spacing
-    tatiana: { x: 6, y: 0, z: 10 },     // Tighter spacing
-    gatoL: { x: -25, y: 0, z: 45 },     // Reduce offset
-    gatoR: { x: 25, y: 0, z: 25 },      // Reduce offset
+    juan: { x: -5, y: -4, z: 40 },       // Lowered (-4vh), Stronger Z (40)
+    tatiana: { x: 5, y: -4, z: 35 },     // Lowered (-4vh), Stronger Z (35)
+    gatoL: { x: -15, y: 0, z: 60 },      // Closer x (-15), Stronger Z (60)
+    gatoR: { x: 15, y: 0, z: 50 },       // Closer x (15), Stronger Z (50)
 }
 
 const DESKTOP_FLOWER_OPTS = {
