@@ -2,7 +2,7 @@
 
 import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import React, { useState } from 'react'
-import ParallaxDebugModal, { ParallaxConfig } from './ParallaxDebugModal'
+import ParallaxDebugModal from './ParallaxDebugModal'
 
 const FLOWER_OPTS = {
     width: '35vw',
@@ -17,24 +17,12 @@ const DESKTOP_PARALLAX_INTENSITY = {
     flowers: 65         // Very close (frame)
 }
 
-const MOBILE_PARALLAX_INTENSITY = {
-    watercolor: '15%',
-    flowers: 90         // Strong frame movement (90)
-}
-
 // Configuration for characters (x, y, z)
 const DESKTOP_CHARACTER_CONFIG = {
     gatoL: { x: -25, y: 10, z: 40 },     // Far Left, Distinct from Frame (65)
     juan: { x: -12, y: 15, z: 15 },       // Near Left
     tatiana: { x: 12, y: 15, z: 5 },     // Near Right
     gatoR: { x: 25, y: 10, z: 40 },      // Far Right, Distinct from Frame (65)
-}
-
-const MOBILE_CHARACTER_CONFIG = {
-    juan: { x: 0, y: 0, z: 10 },       // Lifted (3vh), Background Z (10)
-    tatiana: { x: 0, y: 0, z: 15 },     // Lifted (3vh), Background Z (10)
-    gatoL: { x: -5, y: 0, z: 20 },      // align w/ chars
-    gatoR: { x: 1, y: 0, z: 25 },       // align w/ chars
 }
 
 const DESKTOP_FLOWER_OPTS = {
@@ -44,37 +32,16 @@ const DESKTOP_FLOWER_OPTS = {
     bleedY: '-10%',
 }
 
-const MOBILE_FLOWER_OPTS = {
-    width: '45vw', // Larger flowers on mobile to fill frame
-    maxWidth: 'none',
-    bleedX: '-8%',
-    bleedY: '-5%',
-}
-
 const ParallaxPhoto: React.FC = () => {
     // Mouse position state
     const mouseX = useMotionValue(0)
     const mouseY = useMotionValue(0)
 
-    // Configuration State (Responsive)
-    const [isTiltActive, setIsTiltActive] = React.useState(false)
-    const [isMobile, setIsMobile] = React.useState(false)
+    // Configuration State (Static Desktop)
+    const [characterConfig, setCharacterConfig] = React.useState(DESKTOP_CHARACTER_CONFIG)
+    const [flowerOpts, setFlowerOpts] = React.useState(DESKTOP_FLOWER_OPTS)
+    const [parallaxIntensity, setParallaxIntensity] = React.useState(DESKTOP_PARALLAX_INTENSITY)
     const [showDebugModal, setShowDebugModal] = useState(false)
-
-    // Mutable Configuration State (Overrides from Debug Modal)
-    const [mobileConfigOverride, setMobileConfigOverride] = useState<ParallaxConfig | null>(null)
-
-    // Derived Configuration (Code Constants + Overrides)
-    const activeMobileConfig = mobileConfigOverride || {
-        characterConfig: MOBILE_CHARACTER_CONFIG,
-        flowerOpts: MOBILE_FLOWER_OPTS,
-        parallaxIntensity: MOBILE_PARALLAX_INTENSITY
-    }
-
-    // Derived Configuration
-    const characterConfig = isMobile ? activeMobileConfig.characterConfig : DESKTOP_CHARACTER_CONFIG
-    const flowerOpts = isMobile ? activeMobileConfig.flowerOpts : DESKTOP_FLOWER_OPTS
-    const parallaxIntensity = isMobile ? activeMobileConfig.parallaxIntensity : DESKTOP_PARALLAX_INTENSITY
 
     // Smooth spring animation configuration
     const springConfig = { damping: 30, stiffness: 200, mass: 0.5 } // "Floaty" feel
@@ -119,8 +86,6 @@ const ParallaxPhoto: React.FC = () => {
 
 
     const handleMouseMove = (e: React.MouseEvent) => {
-        if (isMobile || isTiltActive) return // Completely ignore mouse on mobile to prevent touch interference
-
         const { clientX, clientY, currentTarget } = e
         const { width, height, left, top } = currentTarget.getBoundingClientRect()
 
@@ -132,75 +97,9 @@ const ParallaxPhoto: React.FC = () => {
         mouseY.set(y)
     }
 
-    // Handle Resize for Responsive Layout
-    React.useEffect(() => {
-        const updateMobile = () => {
-            setIsMobile(window.matchMedia('(max-width: 768px)').matches)
-        }
-
-        updateMobile() // Init
-        window.addEventListener('resize', updateMobile)
-        return () => window.removeEventListener('resize', updateMobile)
-    }, [])
-
-    // Handle Device Orientation (Tilt)
-    React.useEffect(() => {
-        // Only add listener automatically if NOT on iOS 13+ (which requires permission)
-        // Check if permission API exists
-        if (typeof DeviceOrientationEvent !== 'undefined' && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
-            // Do nothing, wait for user interaction to request permission
-        } else {
-            // Non-iOS 13+ devices (Android, older iOS) - try adding listener immediately
-            window.addEventListener('deviceorientation', handleOrientation)
-        }
-
-        return () => {
-            window.removeEventListener('deviceorientation', handleOrientation)
-        }
-    }, [])
-
-    const handleOrientation = (e: DeviceOrientationEvent) => {
-        if (!e.gamma || !e.beta) return
-
-        setIsTiltActive(true) // We have valid tilt data
-
-        // Gamma: Left/Right tilt (-90 to 90)
-        // Clamp to -45 to 45 for better control
-        const gamma = Math.min(Math.max(e.gamma, -45), 45)
-        const x = gamma / 90 // Map -45..45 to -0.5..0.5
-
-        // Beta: Front/Back tilt (-180 to 180)
-        // Standard holding is around 45 degrees.
-        // We want 45 to be "center" (0).
-        // 0 (flat) -> -0.5
-        // 90 (upright) -> 0.5
-        const beta = Math.min(Math.max(e.beta, 0), 90)
-        const y = (beta - 45) / 90 // Map 0..90 to -0.5..0.5
-
-        mouseX.set(x)
-        mouseY.set(y)
-    }
-
-    // Attempt to request permission on any tap/click
-    const handleInteraction = async () => {
-        // Check for iOS 13+ permission API
-        if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
-            try {
-                const response = await (DeviceOrientationEvent as any).requestPermission()
-                if (response === 'granted') {
-                    window.addEventListener('deviceorientation', handleOrientation)
-                }
-            } catch (error) {
-                // Ignore errors
-            }
-        }
-    }
-
     return (
         <div
             onMouseMove={handleMouseMove}
-            onClick={handleInteraction}
-            onTouchStart={handleInteraction}
             style={{
                 position: 'relative',
                 width: '100%',
@@ -487,13 +386,23 @@ const ParallaxPhoto: React.FC = () => {
                 ⚙️
             </button>
 
+
+
             {/* Debug Modal */}
             <ParallaxDebugModal
                 isOpen={showDebugModal}
                 onClose={() => setShowDebugModal(false)}
-                config={activeMobileConfig}
-                onUpdate={setMobileConfigOverride}
-                onReset={() => setMobileConfigOverride(null)}
+                config={{ characterConfig, flowerOpts, parallaxIntensity }}
+                onUpdate={(newConfig) => {
+                    setCharacterConfig(newConfig.characterConfig)
+                    setFlowerOpts(newConfig.flowerOpts)
+                    setParallaxIntensity(newConfig.parallaxIntensity)
+                }}
+                onReset={() => {
+                    setCharacterConfig(DESKTOP_CHARACTER_CONFIG)
+                    setFlowerOpts(DESKTOP_FLOWER_OPTS)
+                    setParallaxIntensity(DESKTOP_PARALLAX_INTENSITY)
+                }}
             />
         </div >
     )
