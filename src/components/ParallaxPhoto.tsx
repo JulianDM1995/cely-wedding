@@ -4,20 +4,18 @@ import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } fr
 import React, { useState } from 'react'
 import ParallaxDebugModal from './ParallaxDebugModal'
 
-const FLOWER_OPTS = {
-    width: '35vw',
-    maxWidth: '350px',
-    bleedX: '-4.5%',   // Horizontal bleed (left/right)
-    bleedY: '-10%',    // Vertical bleed (top/bottom) - Increased to avoid clipping
-}
+
 
 // Configuration for parallax intensity (adjust numbers to calibrate)
 const DESKTOP_PARALLAX_INTENSITY = {
     watercolor: '15%',   // Background depth
-    flowers: 65         // Very close (frame)
+    flowers: 50         // Very close (frame)
 }
 
-const MOBILE_PARALLAX_INTENSITY = { ...DESKTOP_PARALLAX_INTENSITY }
+const MOBILE_PARALLAX_INTENSITY = {
+    watercolor: '15%',
+    flowers: 85         // Stronger frame movement on mobile
+}
 
 // Configuration for characters (x, y, z)
 const DESKTOP_CHARACTER_CONFIG = {
@@ -28,20 +26,25 @@ const DESKTOP_CHARACTER_CONFIG = {
 }
 
 const MOBILE_CHARACTER_CONFIG = {
-    gatoL: { x: -15, y: 10, z: 40 },     // Far Left, Distinct from Frame (65)
-    juan: { x: -12, y: 15, z: 15 },       // Near Left
-    tatiana: { x: 12, y: 15, z: 5 },     // Near Right
-    gatoR: { x: 15, y: 10, z: 40 },      // Far Right, Distinct from Frame (65)
+    gatoL: { x: -13, y: 14, z: 40 },     // Far Left, Distinct from Frame (65)
+    juan: { x: -11, y: 15, z: 15 },       // Near Left
+    tatiana: { x: 11, y: 15, z: 5 },     // Near Right
+    gatoR: { x: 13, y: 14, z: 40 },      // Far Right, Distinct from Frame (65)
 }
 
 const DESKTOP_FLOWER_OPTS = {
-    width: '35vw',
-    maxWidth: '350px',
-    bleedX: '-4.5%',
-    bleedY: '-10%',
+    width: '40vw',
+    maxWidth: '500px',
+    bleedX: '-40px',
+    bleedY: '-40px',
 }
 
-const MOBILE_FLOWER_OPTS = { ...DESKTOP_FLOWER_OPTS }
+const MOBILE_FLOWER_OPTS = {
+    width: '50vw',
+    maxWidth: '500px',
+    bleedX: '-10px',
+    bleedY: '-10px',
+}
 
 const ParallaxPhoto: React.FC = () => {
     // Mouse position state
