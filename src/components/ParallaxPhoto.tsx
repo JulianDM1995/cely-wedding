@@ -23,17 +23,17 @@ const MOBILE_PARALLAX_INTENSITY = {
 
 // Configuration for characters (x, y, z)
 const DESKTOP_CHARACTER_CONFIG = {
-    gatoL: { x: -25, y: 10, z: 65 },     // Far Left
+    gatoL: { x: -25, y: 10, z: 40 },     // Far Left, Distinct from Frame (65)
     juan: { x: -12, y: 15, z: 15 },       // Near Left
     tatiana: { x: 12, y: 15, z: 5 },     // Near Right
-    gatoR: { x: 25, y: 10, z: 55 },      // Far Right
+    gatoR: { x: 25, y: 10, z: 40 },      // Far Right, Distinct from Frame (65)
 }
 
 const MOBILE_CHARACTER_CONFIG = {
-    juan: { x: -8, y: 3, z: 15 },       // Lifted (3vh), Background Z (15)
-    tatiana: { x: 8, y: 3, z: 15 },     // Lifted (3vh), Background Z (15)
-    gatoL: { x: -12, y: 0, z: 45 },      // Midground Z (45)
-    gatoR: { x: 12, y: 0, z: 45 },       // Midground Z (45)
+    juan: { x: -8, y: 3, z: 10 },       // Lifted (3vh), Background Z (10)
+    tatiana: { x: 8, y: 3, z: 10 },     // Lifted (3vh), Background Z (10)
+    gatoL: { x: -12, y: 0, z: 30 },      // Midground Z (30)
+    gatoR: { x: 12, y: 0, z: 30 },       // Midground Z (30)
 }
 
 const DESKTOP_FLOWER_OPTS = {
