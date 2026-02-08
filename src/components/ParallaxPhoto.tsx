@@ -11,9 +11,14 @@ const FLOWER_OPTS = {
 }
 
 // Configuration for parallax intensity (adjust numbers to calibrate)
-const PARALLAX_INTENSITY = {
+const DESKTOP_PARALLAX_INTENSITY = {
     watercolor: '15%',   // Background depth
     flowers: 65         // Very close (frame)
+}
+
+const MOBILE_PARALLAX_INTENSITY = {
+    watercolor: '15%',
+    flowers: 80         // Much stronger frame movement on mobile to separate from cats
 }
 
 // Configuration for characters (x, y, z)
@@ -25,10 +30,10 @@ const DESKTOP_CHARACTER_CONFIG = {
 }
 
 const MOBILE_CHARACTER_CONFIG = {
-    juan: { x: -5, y: -4, z: 40 },       // Lowered (-4vh), Stronger Z (40)
-    tatiana: { x: 5, y: -4, z: 35 },     // Lowered (-4vh), Stronger Z (35)
-    gatoL: { x: -15, y: 0, z: 60 },      // Closer x (-15), Stronger Z (60)
-    gatoR: { x: 15, y: 0, z: 50 },       // Closer x (15), Stronger Z (50)
+    juan: { x: -8, y: -2, z: 25 },       // Lower (-2), Slower (25)
+    tatiana: { x: 8, y: -2, z: 20 },     // Lower (-2), Slower (20)
+    gatoL: { x: -10, y: 0, z: 55 },      // Closer (-10), Mid (55)
+    gatoR: { x: 10, y: 0, z: 45 },       // Closer (10), Mid (45)
 }
 
 const DESKTOP_FLOWER_OPTS = {
@@ -57,6 +62,7 @@ const ParallaxPhoto: React.FC = () => {
     // Derived Configuration
     const characterConfig = isMobile ? MOBILE_CHARACTER_CONFIG : DESKTOP_CHARACTER_CONFIG
     const flowerOpts = isMobile ? MOBILE_FLOWER_OPTS : DESKTOP_FLOWER_OPTS
+    const parallaxIntensity = isMobile ? MOBILE_PARALLAX_INTENSITY : DESKTOP_PARALLAX_INTENSITY
 
     // Smooth spring animation configuration
     const springConfig = { damping: 30, stiffness: 200, mass: 0.5 } // "Floaty" feel
@@ -68,7 +74,7 @@ const ParallaxPhoto: React.FC = () => {
     // Calculate transforms for different layers (depth)
     // Watercolor Background (Deep depth - moves opposite to mouse)
     const watercolorX = 0 // Fixed horizontal position
-    const watercolorY = useTransform(mouseYSpring, [-0.5, 0.5], [PARALLAX_INTENSITY.watercolor, `-${PARALLAX_INTENSITY.watercolor}`])
+    const watercolorY = useTransform(mouseYSpring, [-0.5, 0.5], [parallaxIntensity.watercolor, `-${parallaxIntensity.watercolor}`])
 
     // Juan (Middle ground)
     const juanParallaxX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.juan.z}px`, `${characterConfig.juan.z}px`])
@@ -96,8 +102,8 @@ const ParallaxPhoto: React.FC = () => {
     const gatoRY = useMotionTemplate`calc(${-characterConfig.gatoR.y}vh + ${gatoRParallaxY})`
 
     // Flowers (Frame - Very Close)
-    const flowerX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.flowers}px`, `${PARALLAX_INTENSITY.flowers}px`])
-    const flowerY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.flowers}px`, `${PARALLAX_INTENSITY.flowers}px`])
+    const flowerX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${parallaxIntensity.flowers}px`, `${parallaxIntensity.flowers}px`])
+    const flowerY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${parallaxIntensity.flowers}px`, `${parallaxIntensity.flowers}px`])
 
 
     const handleMouseMove = (e: React.MouseEvent) => {
