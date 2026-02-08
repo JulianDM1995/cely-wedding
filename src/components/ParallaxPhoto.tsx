@@ -31,10 +31,10 @@ const DESKTOP_CHARACTER_CONFIG = {
 }
 
 const MOBILE_CHARACTER_CONFIG = {
-    juan: { x: -8, y: 3, z: 10 },       // Lifted (3vh), Background Z (10)
-    tatiana: { x: 8, y: 3, z: 10 },     // Lifted (3vh), Background Z (10)
-    gatoL: { x: -12, y: 0, z: 30 },      // Midground Z (30)
-    gatoR: { x: 12, y: 0, z: 30 },       // Midground Z (30)
+    juan: { x: 0, y: 0, z: 10 },       // Lifted (3vh), Background Z (10)
+    tatiana: { x: 0, y: 0, z: 15 },     // Lifted (3vh), Background Z (10)
+    gatoL: { x: -5, y: 0, z: 20 },      // align w/ chars
+    gatoR: { x: 1, y: 0, z: 25 },       // align w/ chars
 }
 
 const DESKTOP_FLOWER_OPTS = {
@@ -61,17 +61,20 @@ const ParallaxPhoto: React.FC = () => {
     const [isMobile, setIsMobile] = React.useState(false)
     const [showDebugModal, setShowDebugModal] = useState(false)
 
-    // Mutable Configuration State
-    const [mobileConfig, setMobileConfig] = useState<ParallaxConfig>({
+    // Mutable Configuration State (Overrides from Debug Modal)
+    const [mobileConfigOverride, setMobileConfigOverride] = useState<ParallaxConfig | null>(null)
+
+    // Derived Configuration (Code Constants + Overrides)
+    const activeMobileConfig = mobileConfigOverride || {
         characterConfig: MOBILE_CHARACTER_CONFIG,
         flowerOpts: MOBILE_FLOWER_OPTS,
         parallaxIntensity: MOBILE_PARALLAX_INTENSITY
-    })
+    }
 
     // Derived Configuration
-    const characterConfig = isMobile ? mobileConfig.characterConfig : DESKTOP_CHARACTER_CONFIG
-    const flowerOpts = isMobile ? mobileConfig.flowerOpts : DESKTOP_FLOWER_OPTS
-    const parallaxIntensity = isMobile ? mobileConfig.parallaxIntensity : DESKTOP_PARALLAX_INTENSITY
+    const characterConfig = isMobile ? activeMobileConfig.characterConfig : DESKTOP_CHARACTER_CONFIG
+    const flowerOpts = isMobile ? activeMobileConfig.flowerOpts : DESKTOP_FLOWER_OPTS
+    const parallaxIntensity = isMobile ? activeMobileConfig.parallaxIntensity : DESKTOP_PARALLAX_INTENSITY
 
     // Smooth spring animation configuration
     const springConfig = { damping: 30, stiffness: 200, mass: 0.5 } // "Floaty" feel
@@ -131,13 +134,13 @@ const ParallaxPhoto: React.FC = () => {
 
     // Handle Resize for Responsive Layout
     React.useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 768)
+        const updateMobile = () => {
+            setIsMobile(window.matchMedia('(max-width: 768px)').matches)
         }
 
-        handleResize() // Init
-        window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener('resize', handleResize)
+        updateMobile() // Init
+        window.addEventListener('resize', updateMobile)
+        return () => window.removeEventListener('resize', updateMobile)
     }, [])
 
     // Handle Device Orientation (Tilt)
@@ -488,13 +491,9 @@ const ParallaxPhoto: React.FC = () => {
             <ParallaxDebugModal
                 isOpen={showDebugModal}
                 onClose={() => setShowDebugModal(false)}
-                config={mobileConfig}
-                onUpdate={setMobileConfig}
-                onReset={() => setMobileConfig({
-                    characterConfig: MOBILE_CHARACTER_CONFIG,
-                    flowerOpts: MOBILE_FLOWER_OPTS,
-                    parallaxIntensity: MOBILE_PARALLAX_INTENSITY
-                })}
+                config={activeMobileConfig}
+                onUpdate={setMobileConfigOverride}
+                onReset={() => setMobileConfigOverride(null)}
             />
         </div >
     )
