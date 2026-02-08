@@ -49,6 +49,16 @@ const MOBILE_FLOWER_OPTS = {
     bleedY: '-20px',
 }
 
+const DESKTOP_WATERCOLOR_OPTS = {
+    top: '50%',
+    scale: 1.0
+}
+
+const MOBILE_WATERCOLOR_OPTS = {
+    top: '40%', // Higher up for mobile
+    scale: 1.2  // 20% larger on mobile
+}
+
 const ParallaxPhoto: React.FC = () => {
     // Mouse position state
     const mouseX = useMotionValue(0)
@@ -58,6 +68,7 @@ const ParallaxPhoto: React.FC = () => {
     const [characterConfig, setCharacterConfig] = React.useState(DESKTOP_CHARACTER_CONFIG)
     const [flowerOpts, setFlowerOpts] = React.useState(DESKTOP_FLOWER_OPTS)
     const [parallaxIntensity, setParallaxIntensity] = React.useState(DESKTOP_PARALLAX_INTENSITY)
+    const [watercolorOpts, setWatercolorOpts] = React.useState(DESKTOP_WATERCOLOR_OPTS)
     const [isTiltActive, setIsTiltActive] = React.useState(false)
     const [isMobile, setIsMobile] = React.useState(false)
 
@@ -71,10 +82,12 @@ const ParallaxPhoto: React.FC = () => {
                 setCharacterConfig(MOBILE_CHARACTER_CONFIG)
                 setFlowerOpts(MOBILE_FLOWER_OPTS)
                 setParallaxIntensity(MOBILE_PARALLAX_INTENSITY)
+                setWatercolorOpts(MOBILE_WATERCOLOR_OPTS)
             } else {
                 setCharacterConfig(DESKTOP_CHARACTER_CONFIG)
                 setFlowerOpts(DESKTOP_FLOWER_OPTS)
                 setParallaxIntensity(DESKTOP_PARALLAX_INTENSITY)
+                setWatercolorOpts(DESKTOP_WATERCOLOR_OPTS)
             }
         }
         handleResize()
@@ -223,7 +236,7 @@ const ParallaxPhoto: React.FC = () => {
             {/* Watercolor - Dynamic Background - Wrapped for Centering */}
             <div style={{
                 position: 'absolute',
-                top: '50%',
+                top: watercolorOpts.top,
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
                 width: '100%', // Wrapper takes full width to allow centering child
@@ -243,6 +256,7 @@ const ParallaxPhoto: React.FC = () => {
                         objectFit: 'contain',
                         x: 0, // Fixed horizontal position
                         y: watercolorY,
+                        scale: watercolorOpts.scale,
                         mixBlendMode: 'darken',
                         willChange: 'transform'
                     }}
