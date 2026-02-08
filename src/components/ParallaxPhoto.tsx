@@ -1,8 +1,8 @@
 'use client'
 
 import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import React, { useState } from 'react'
-import ParallaxDebugModal from './ParallaxDebugModal'
+import React from 'react'
+
 
 
 
@@ -45,8 +45,8 @@ const DESKTOP_FLOWER_OPTS = {
 const MOBILE_FLOWER_OPTS = {
     width: '50vw',
     maxWidth: '500px',
-    bleedX: '-50px',
-    bleedY: '-50px',
+    bleedX: '-20px',
+    bleedY: '-20px',
 }
 
 const ParallaxPhoto: React.FC = () => {
@@ -60,7 +60,6 @@ const ParallaxPhoto: React.FC = () => {
     const [parallaxIntensity, setParallaxIntensity] = React.useState(DESKTOP_PARALLAX_INTENSITY)
     const [isTiltActive, setIsTiltActive] = React.useState(false)
     const [isMobile, setIsMobile] = React.useState(false)
-    const [showDebugModal, setShowDebugModal] = useState(false)
 
     // Handle Resize (Only to detect mobile state for input handling, NOT for config changing)
     React.useEffect(() => {
@@ -469,45 +468,6 @@ const ParallaxPhoto: React.FC = () => {
             }}>
                 Creado por <a href="https://www.julian-medina.dev/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>Julián Medina</a>
             </div>
-
-            {/* Debug Button */}
-            <button
-                onClick={(e) => {
-                    e.stopPropagation()
-                    setShowDebugModal(true)
-                }}
-                onTouchStart={(e) => e.stopPropagation()}
-                className="fixed top-24 right-4 z-[9999] bg-white/80 backdrop-blur-sm p-3 rounded-full shadow-2xl border-2 border-primary/20 text-gray-800 hover:bg-white transition-all active:scale-95"
-                style={{ pointerEvents: 'auto' }}
-            >
-                ⚙️
-            </button>
-
-
-
-            {/* Debug Modal */}
-            <ParallaxDebugModal
-                isOpen={showDebugModal}
-                onClose={() => setShowDebugModal(false)}
-                config={{ characterConfig, flowerOpts, parallaxIntensity }}
-                onUpdate={(newConfig) => {
-                    setCharacterConfig(newConfig.characterConfig)
-                    setFlowerOpts(newConfig.flowerOpts)
-                    setParallaxIntensity(newConfig.parallaxIntensity)
-                }}
-                onReset={() => {
-                    const mobile = window.innerWidth < 1024
-                    if (mobile) {
-                        setCharacterConfig(MOBILE_CHARACTER_CONFIG)
-                        setFlowerOpts(MOBILE_FLOWER_OPTS)
-                        setParallaxIntensity(MOBILE_PARALLAX_INTENSITY)
-                    } else {
-                        setCharacterConfig(DESKTOP_CHARACTER_CONFIG)
-                        setFlowerOpts(DESKTOP_FLOWER_OPTS)
-                        setParallaxIntensity(DESKTOP_PARALLAX_INTENSITY)
-                    }
-                }}
-            />
         </div >
     )
 }
