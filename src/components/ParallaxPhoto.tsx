@@ -18,7 +18,7 @@ const MOBILE_PARALLAX_INTENSITY = {
 }
 
 // Sensitivity factor for mobile tilt (0.1 = very subtle, 1.0 = full range)
-const MOBILE_TILT_SENSITIVITY = 0.4
+const MOBILE_TILT_SENSITIVITY = 0.6
 
 // Configuration for characters (x, y, z)
 const DESKTOP_CHARACTER_CONFIG = {
@@ -36,7 +36,7 @@ const MOBILE_CHARACTER_CONFIG = {
 }
 
 const DESKTOP_FLOWER_OPTS = {
-    width: '40vw',
+    width: '35vw',
     maxWidth: '500px',
     bleedX: '-50px',
     bleedY: '-50px',
