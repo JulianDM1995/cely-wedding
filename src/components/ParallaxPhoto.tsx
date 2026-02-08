@@ -58,11 +58,19 @@ const ParallaxPhoto: React.FC = () => {
     // Configuration State (Responsive)
     const [isTiltActive, setIsTiltActive] = React.useState(false)
     const [isMobile, setIsMobile] = React.useState(false)
+    const [showDebugModal, setShowDebugModal] = useState(false)
+
+    // Mutable Configuration State
+    const [mobileConfig, setMobileConfig] = useState<ParallaxConfig>({
+        characterConfig: MOBILE_CHARACTER_CONFIG,
+        flowerOpts: MOBILE_FLOWER_OPTS,
+        parallaxIntensity: MOBILE_PARALLAX_INTENSITY
+    })
 
     // Derived Configuration
-    const characterConfig = isMobile ? MOBILE_CHARACTER_CONFIG : DESKTOP_CHARACTER_CONFIG
-    const flowerOpts = isMobile ? MOBILE_FLOWER_OPTS : DESKTOP_FLOWER_OPTS
-    const parallaxIntensity = isMobile ? MOBILE_PARALLAX_INTENSITY : DESKTOP_PARALLAX_INTENSITY
+    const characterConfig = isMobile ? mobileConfig.characterConfig : DESKTOP_CHARACTER_CONFIG
+    const flowerOpts = isMobile ? mobileConfig.flowerOpts : DESKTOP_FLOWER_OPTS
+    const parallaxIntensity = isMobile ? mobileConfig.parallaxIntensity : DESKTOP_PARALLAX_INTENSITY
 
     // Smooth spring animation configuration
     const springConfig = { damping: 30, stiffness: 200, mass: 0.5 } // "Floaty" feel
@@ -461,7 +469,32 @@ const ParallaxPhoto: React.FC = () => {
             }}>
                 Creado por <a href="https://www.julian-medina.dev/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>Julián Medina</a>
             </div>
-        </div>
+
+            {/* Debug Button */}
+            <button
+                onClick={(e) => {
+                    e.stopPropagation()
+                    setShowDebugModal(true)
+                }}
+                className="absolute top-4 right-4 z-50 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-lg border border-gray-200 text-gray-700 hover:bg-white transition-colors"
+                style={{ pointerEvents: 'auto' }}
+            >
+                ⚙️
+            </button>
+
+            {/* Debug Modal */}
+            <ParallaxDebugModal
+                isOpen={showDebugModal}
+                onClose={() => setShowDebugModal(false)}
+                config={mobileConfig}
+                onUpdate={setMobileConfig}
+                onReset={() => setMobileConfig({
+                    characterConfig: MOBILE_CHARACTER_CONFIG,
+                    flowerOpts: MOBILE_FLOWER_OPTS,
+                    parallaxIntensity: MOBILE_PARALLAX_INTENSITY
+                })}
+            />
+        </div >
     )
 }
 
