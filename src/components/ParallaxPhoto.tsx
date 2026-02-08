@@ -1,30 +1,30 @@
 'use client'
 
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import React from 'react'
 
 const FLOWER_OPTS = {
     width: '35vw',
     maxWidth: '350px',
     bleedX: '-4.5%',   // Horizontal bleed (left/right)
-    bleedY: '-5%',    // Vertical bleed (top/bottom) - Increased to avoid clipping
+    bleedY: '-10%',    // Vertical bleed (top/bottom) - Increased to avoid clipping
 }
 
 // Configuration for parallax intensity (adjust numbers to calibrate)
 const PARALLAX_INTENSITY = {
-    watercolor: '5%',   // Background depth
+    watercolor: '15%',   // Background depth
     flowers: 65         // Very close (frame)
 }
 
 // Configuration for characters (x, y, z)
-// x: horizontal position (css specific: marginRight, marginLeft, left, right)
+// x: horizontal offset from center (vh units). Negative = Left, Positive = Right.
 // y: vertical position (bottom offset)
 // z: parallax intensity (depth)
 const CHARACTER_CONFIG = {
-    gatoL: { x: '-15vh', y: 0, z: 45 },     // x is left (Left Cat)
-    juan: { x: '-6vh', y: 0, z: 15 },       // x is marginRight
-    tatiana: { x: '-6vh', y: 0, z: 10 },    // x is marginLeft
-    gatoR: { x: '-8vh', y: 0, z: 25 },      // x is right (Right Cat)
+    gatoL: { x: -25, y: 15, z: 45 },     // Far Left
+    juan: { x: -12, y: 15, z: 15 },       // Near Left
+    tatiana: { x: 12, y: 15, z: 10 },     // Near Right
+    gatoR: { x: 25, y: 15, z: 35 },      // Far Right
 }
 
 const ParallaxPhoto: React.FC = () => {
@@ -47,25 +47,33 @@ const ParallaxPhoto: React.FC = () => {
 
     // Calculate transforms for different layers (depth)
     // Watercolor Background (Deep depth - moves opposite to mouse)
-    const watercolorX = useTransform(mouseXSpring, [-0.5, 0.5], [PARALLAX_INTENSITY.watercolor, `-${PARALLAX_INTENSITY.watercolor}`])
+    const watercolorX = 0 // Fixed horizontal position
     const watercolorY = useTransform(mouseYSpring, [-0.5, 0.5], [PARALLAX_INTENSITY.watercolor, `-${PARALLAX_INTENSITY.watercolor}`])
 
     // Juan (Middle ground)
-    const juanX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.juan.z}px`, `${characterConfig.juan.z}px`])
-    const juanY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.juan.z}px`, `${characterConfig.juan.z}px`])
+    const juanParallaxX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.juan.z}px`, `${characterConfig.juan.z}px`])
+    const juanParallaxY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.juan.z}px`, `${characterConfig.juan.z}px`])
+    const juanX = useMotionTemplate`calc(-50% + ${characterConfig.juan.x}vh + ${juanParallaxX})`
+    const juanY = useMotionTemplate`calc(${-characterConfig.juan.y}vh + ${juanParallaxY})`
 
     // Tatiana (Slightly behind Juan - moves less)
-    const tatianaX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.tatiana.z}px`, `${characterConfig.tatiana.z}px`])
-    const tatianaY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.tatiana.z}px`, `${characterConfig.tatiana.z}px`])
+    const tatianaParallaxX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.tatiana.z}px`, `${characterConfig.tatiana.z}px`])
+    const tatianaParallaxY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.tatiana.z}px`, `${characterConfig.tatiana.z}px`])
+    const tatianaX = useMotionTemplate`calc(-50% + ${characterConfig.tatiana.x}vh + ${tatianaParallaxX})`
+    const tatianaY = useMotionTemplate`calc(${-characterConfig.tatiana.y}vh + ${tatianaParallaxY})`
 
     // Cats (Foreground)
     // Left Cat (GatoL) - Closest foreground (moves most)
-    const gatoLX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.gatoL.z}px`, `${characterConfig.gatoL.z}px`])
-    const gatoLY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.gatoL.z}px`, `${characterConfig.gatoL.z}px`])
+    const gatoLParallaxX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.gatoL.z}px`, `${characterConfig.gatoL.z}px`])
+    const gatoLParallaxY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.gatoL.z}px`, `${characterConfig.gatoL.z}px`])
+    const gatoLX = useMotionTemplate`calc(-50% + ${characterConfig.gatoL.x}vh + ${gatoLParallaxX})`
+    const gatoLY = useMotionTemplate`calc(${-characterConfig.gatoL.y}vh + ${gatoLParallaxY})`
 
     // Right Cat (GatoR) - Slightly behind left cat
-    const gatoRX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.gatoR.z}px`, `${characterConfig.gatoR.z}px`])
-    const gatoRY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.gatoR.z}px`, `${characterConfig.gatoR.z}px`])
+    const gatoRParallaxX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${characterConfig.gatoR.z}px`, `${characterConfig.gatoR.z}px`])
+    const gatoRParallaxY = useTransform(mouseYSpring, [-0.5, 0.5], [`-${characterConfig.gatoR.z}px`, `${characterConfig.gatoR.z}px`])
+    const gatoRX = useMotionTemplate`calc(-50% + ${characterConfig.gatoR.x}vh + ${gatoRParallaxX})`
+    const gatoRY = useMotionTemplate`calc(${-characterConfig.gatoR.y}vh + ${gatoRParallaxY})`
 
     // Flowers (Frame - Very Close)
     const flowerX = useTransform(mouseXSpring, [-0.5, 0.5], [`-${PARALLAX_INTENSITY.flowers}px`, `${PARALLAX_INTENSITY.flowers}px`])
@@ -99,10 +107,10 @@ const ParallaxPhoto: React.FC = () => {
                     bleedY: '-5%',
                 })
                 setCharacterConfig({
-                    juan: { x: '-4vh', y: 0, z: 15 },       // Tighter spacing
-                    tatiana: { x: '-4vh', y: 0, z: 10 },    // Tighter spacing
-                    gatoL: { x: '-10vh', y: 0, z: 45 },     // Reduce offset
-                    gatoR: { x: '-2vh', y: 0, z: 25 },      // Reduce offset
+                    juan: { x: -6, y: 0, z: 15 },       // Tighter spacing
+                    tatiana: { x: 6, y: 0, z: 10 },     // Tighter spacing
+                    gatoL: { x: -25, y: 0, z: 45 },     // Reduce offset
+                    gatoR: { x: 25, y: 0, z: 25 },      // Reduce offset
                 })
             } else {
                 // Desktop Configuration (Reset)
@@ -235,84 +243,88 @@ const ParallaxPhoto: React.FC = () => {
                 left: 0,
                 width: '100%',
                 height: '100%',
-                display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'center',
                 zIndex: 5,
-                paddingBottom: '5vh' // Reduced padding to allow more space
+                pointerEvents: 'none' // Click passing through
             }}>
-                <div style={{ position: 'relative', width: 'auto', height: '75vh', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+                {/* Note: pointerEvents 'auto' on images to allow clicks */}
 
-                    {/* Couple - Middle Layer (Split for individual parallax) */}
-                    <div style={{ position: 'relative', display: 'flex', zIndex: 6 }}>
-                        <motion.img
-                            src="/designs/juan.png"
-                            alt="Juan"
-                            style={{
-                                height: '70vh',
-                                objectFit: 'contain',
-                                marginRight: characterConfig.juan.x,
-                                position: 'relative',
-                                zIndex: 2,
-                                x: juanX,
-                                y: juanY
-                            }}
-                        />
-                        <motion.img
-                            src="/designs/tatiana.png"
-                            alt="Tatiana"
-                            style={{
-                                height: '70vh',
-                                objectFit: 'contain',
-                                marginLeft: characterConfig.tatiana.x,
-                                position: 'relative',
-                                zIndex: 1,
-                                x: tatianaX,
-                                y: tatianaY
-                            }}
-                        />
-                    </div>
+                {/* Juan - Middle Layer */}
+                <motion.img
+                    src="/designs/juan.png"
+                    alt="Juan"
+                    style={{
+                        position: 'absolute',
+                        bottom: '0',
+                        left: '50%', // Centered anchor
+                        height: '70vh',
+                        objectFit: 'contain',
+                        zIndex: 6,
+                        pointerEvents: 'auto',
+                        x: juanX, // Includes center offset + parallax
+                        y: juanY
+                    }}
+                />
 
-                    {/* Left Cat (GatoL) - Foreground (Closest) */}
-                    <motion.img
-                        src="/designs/gatoL.png"
-                        alt="Gato L"
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            alert('🐈 PRRRRR')
-                        }}
-                        style={{
-                            position: 'absolute',
-                            bottom: '0',
-                            left: characterConfig.gatoL.x, // GatoL is Left
-                            height: '32vh',
-                            objectFit: 'contain',
-                            zIndex: 9, // Closest
-                            x: gatoLX,
-                            y: gatoLY
-                        }}
-                    />
+                {/* Tatiana - Middle Layer */}
+                <motion.img
+                    src="/designs/tatiana.png"
+                    alt="Tatiana"
+                    style={{
+                        position: 'absolute',
+                        bottom: '0',
+                        left: '50%',
+                        height: '70vh',
+                        objectFit: 'contain',
+                        zIndex: 5, // Behind Juan
+                        pointerEvents: 'auto',
+                        x: tatianaX,
+                        y: tatianaY
+                    }}
+                />
 
-                    {/* Right Cat (GatoR) - Foreground (Slightly behind) */}
-                    <motion.img
-                        src="/designs/gatoR.png"
-                        alt="Gato R"
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            alert('🐱 MEOW')
-                        }}
-                        style={{
-                            position: 'absolute',
-                            bottom: '0',
-                            right: characterConfig.gatoR.x, // GatoR is Right
-                            height: '32vh',
-                            objectFit: 'contain',
-                            zIndex: 8,
-                            x: gatoRX,
-                            y: gatoRY
-                        }}
-                    />
-                </div>
+                {/* Left Cat (GatoL) - Foreground (Closest) */}
+                <motion.img
+                    src="/designs/gatoL.png"
+                    alt="Gato L"
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        alert('🐈 PRRRRR')
+                    }}
+                    style={{
+                        position: 'absolute',
+                        bottom: '0',
+                        left: '50%',
+                        height: '32vh',
+                        objectFit: 'contain',
+                        zIndex: 9, // Closest
+                        pointerEvents: 'auto',
+                        cursor: 'pointer',
+                        x: gatoLX,
+                        y: gatoLY
+                    }}
+                />
+
+                {/* Right Cat (GatoR) - Foreground (Slightly behind) */}
+                <motion.img
+                    src="/designs/gatoR.png"
+                    alt="Gato R"
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        alert('🐱 MEOW')
+                    }}
+                    style={{
+                        position: 'absolute',
+                        bottom: '0',
+                        left: '50%',
+                        height: '32vh',
+                        objectFit: 'contain',
+                        zIndex: 8,
+                        pointerEvents: 'auto',
+                        cursor: 'pointer',
+                        x: gatoRX,
+                        y: gatoRY
+                    }}
+                />
             </div>
 
             {/* --- Flowers (Static Frame) --- */}
