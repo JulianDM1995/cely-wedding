@@ -2,8 +2,8 @@ import { Button, Link, Text } from '@react-email/components'
 import { render } from '@react-email/render'
 import { EmailTemplate } from './components/EmailTemplate'
 
-export const generateInvitationEmail = (guestName: string, guestEmail: string, invitationLink: string) => {
-  const emailHtml = render(
+export const generateInvitationEmail = async (guestName: string, guestEmail: string, invitationLink: string) => {
+  const emailHtml = await render(
     <EmailTemplate
       previewText={`¡Hola ${guestName}! Estás invitado a nuestra boda.`}
       heading={`¡Hola ${guestName}!`}

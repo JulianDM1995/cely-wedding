@@ -29,7 +29,7 @@ export const sendInvitation = async (guestId: string) => {
     const invitationLink = `${appUrl}/invitation?token=${token}`
 
     // Send Email
-    const emailData = generateInvitationEmail(guest.name || 'Invitado', guest.email, invitationLink)
+    const emailData = await generateInvitationEmail(guest.name || 'Invitado', guest.email, invitationLink)
     await payload.sendEmail(emailData)
 
     // Update Status

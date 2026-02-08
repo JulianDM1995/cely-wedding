@@ -24,9 +24,8 @@ export const sendGuestAccessEmail = async (guestId: string) => {
     const accessLink = `${process.env.NEXT_PUBLIC_APP_URL}/new-message?token=${token}`
 
     // 3. Send Email
-    // 3. Send Email
-    const emailData = generateAccessLinkEmail({
-      guestName: guest.name,
+    const emailData = await generateAccessLinkEmail({
+      guestName: guest.name || 'Guest',
       guestEmail: guest.email,
       accessLink,
     })

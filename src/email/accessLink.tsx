@@ -3,7 +3,7 @@ import { Button, Link, Text } from '@react-email/components'
 import { render } from '@react-email/render'
 import { EmailTemplate } from './components/EmailTemplate'
 
-export const generateAccessLinkEmail = ({
+export const generateAccessLinkEmail = async ({
   guestName,
   guestEmail,
   accessLink,
@@ -12,7 +12,7 @@ export const generateAccessLinkEmail = ({
   guestEmail: string
   accessLink: string
 }) => {
-  const emailHtml = render(
+  const emailHtml = await render(
     <EmailTemplate
       previewText={`Leave a message for ${APP_NAME}`}
       heading={`Hello, ${guestName}`}

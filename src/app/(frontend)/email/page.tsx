@@ -2,13 +2,13 @@ import { generateAccessLinkEmail } from '@/email/accessLink'
 import { generateInvitationEmail } from '@/email/invitation'
 import React from 'react'
 
-export default function EmailPreviewPage() {
-    const invitationEmail = generateInvitationEmail(
+export default async function EmailPreviewPage() {
+    const invitationEmail = await generateInvitationEmail(
         'Julian & Tatiana',
         'test@example.com',
         'https://cely-wedding.vercel.app/invitation/test-token',
     )
-    const accessLinkEmail = generateAccessLinkEmail({
+    const accessLinkEmail = await generateAccessLinkEmail({
         guestName: 'Invitado Especial',
         guestEmail: 'guest@example.com',
         accessLink: 'https://cely-wedding.vercel.app/guestbook/access-token',
