@@ -37,11 +37,23 @@ const ParallaxPhoto: React.FC = () => {
     const mouseX = useMotionValue(0)
     const mouseY = useMotionValue(0)
 
-    // Configuration State (Static Desktop)
+    // Configuration State (Static Desktop - Positions kept as is)
     const [characterConfig, setCharacterConfig] = React.useState(DESKTOP_CHARACTER_CONFIG)
     const [flowerOpts, setFlowerOpts] = React.useState(DESKTOP_FLOWER_OPTS)
     const [parallaxIntensity, setParallaxIntensity] = React.useState(DESKTOP_PARALLAX_INTENSITY)
+    const [isTiltActive, setIsTiltActive] = React.useState(false)
+    const [isMobile, setIsMobile] = React.useState(false)
     const [showDebugModal, setShowDebugModal] = useState(false)
+
+    // Handle Resize (Only to detect mobile state for input handling, NOT for config changing)
+    React.useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 1024)
+        }
+        handleResize()
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
 
     // Smooth spring animation configuration
     const springConfig = { damping: 30, stiffness: 200, mass: 0.5 } // "Floaty" feel
@@ -86,6 +98,8 @@ const ParallaxPhoto: React.FC = () => {
 
 
     const handleMouseMove = (e: React.MouseEvent) => {
+        if (isMobile || isTiltActive) return // Completely ignore mouse on mobile to prevent touch interference
+
         const { clientX, clientY, currentTarget } = e
         const { width, height, left, top } = currentTarget.getBoundingClientRect()
 
@@ -97,9 +111,64 @@ const ParallaxPhoto: React.FC = () => {
         mouseY.set(y)
     }
 
+    // Handle Device Orientation (Tilt)
+    React.useEffect(() => {
+        // Only add listener automatically if NOT on iOS 13+ (which requires permission)
+        // Check if permission API exists
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+            // Do nothing, wait for user interaction to request permission
+        } else {
+            // Non-iOS 13+ devices (Android, older iOS) - try adding listener immediately
+            window.addEventListener('deviceorientation', handleOrientation)
+        }
+
+        return () => {
+            window.removeEventListener('deviceorientation', handleOrientation)
+        }
+    }, [])
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+        if (!e.gamma || !e.beta) return
+
+        setIsTiltActive(true) // We have valid tilt data
+
+        // Gamma: Left/Right tilt (-90 to 90)
+        // Clamp to -45 to 45 for better control
+        const gamma = Math.min(Math.max(e.gamma, -45), 45)
+        const x = gamma / 90 // Map -45..45 to -0.5..0.5
+
+        // Beta: Front/Back tilt (-180 to 180)
+        // Standard holding is around 45 degrees.
+        // We want 45 to be "center" (0).
+        // 0 (flat) -> -0.5
+        // 90 (upright) -> 0.5
+        const beta = Math.min(Math.max(e.beta, 0), 90)
+        const y = (beta - 45) / 90 // Map 0..90 to -0.5..0.5
+
+        mouseX.set(x)
+        mouseY.set(y)
+    }
+
+    // Attempt to request permission on any tap/click
+    const handleInteraction = async () => {
+        // Check for iOS 13+ permission API
+        if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+            try {
+                const response = await (DeviceOrientationEvent as any).requestPermission()
+                if (response === 'granted') {
+                    window.addEventListener('deviceorientation', handleOrientation)
+                }
+            } catch (error) {
+                // Ignore errors
+            }
+        }
+    }
+
     return (
         <div
             onMouseMove={handleMouseMove}
+            onClick={handleInteraction}
+            onTouchStart={handleInteraction}
             style={{
                 position: 'relative',
                 width: '100%',
