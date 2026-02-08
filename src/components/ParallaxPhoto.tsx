@@ -29,24 +29,24 @@ const DESKTOP_CHARACTER_CONFIG = {
 }
 
 const MOBILE_CHARACTER_CONFIG = {
-    gatoL: { x: -13, y: 12, z: 30 },     // Far Left, Distinct from Frame (65)
-    juan: { x: -11, y: 13, z: 15 },       // Near Left
-    tatiana: { x: 11, y: 13, z: 5 },     // Near Right
-    gatoR: { x: 13, y: 12, z: 30 },      // Far Right, Distinct from Frame (65)
+    gatoL: { x: -13, y: 10, z: 30 },     // Far Left, Distinct from Frame (65)
+    juan: { x: -11, y: 11, z: 15 },       // Near Left
+    tatiana: { x: 11, y: 11, z: 5 },     // Near Right
+    gatoR: { x: 13, y: 10, z: 30 },      // Far Right, Distinct from Frame (65)
 }
 
 const DESKTOP_FLOWER_OPTS = {
     width: '40vw',
     maxWidth: '500px',
-    bleedX: '-40px',
-    bleedY: '-40px',
+    bleedX: '-50px',
+    bleedY: '-50px',
 }
 
 const MOBILE_FLOWER_OPTS = {
     width: '50vw',
     maxWidth: '500px',
-    bleedX: '-10px',
-    bleedY: '-10px',
+    bleedX: '-50px',
+    bleedY: '-50px',
 }
 
 const ParallaxPhoto: React.FC = () => {
