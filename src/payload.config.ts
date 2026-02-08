@@ -33,7 +33,7 @@ export default buildConfig({
     components: {
       graphics: {
         Icon: '/fields/ClientIcon.tsx#default',
-        Logo: '/fields/ClientLogo.tsx#default',
+        Logo: '/fields/ClientBanner.tsx#default',
       },
     },
     meta: {

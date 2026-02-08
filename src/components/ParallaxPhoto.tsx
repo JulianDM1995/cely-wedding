@@ -21,10 +21,10 @@ const PARALLAX_INTENSITY = {
 // y: vertical position (bottom offset)
 // z: parallax intensity (depth)
 const CHARACTER_CONFIG = {
-    gatoL: { x: -25, y: 15, z: 45 },     // Far Left
+    gatoL: { x: -25, y: 10, z: 65 },     // Far Left
     juan: { x: -12, y: 15, z: 15 },       // Near Left
-    tatiana: { x: 12, y: 15, z: 10 },     // Near Right
-    gatoR: { x: 25, y: 15, z: 35 },      // Far Right
+    tatiana: { x: 12, y: 15, z: 5 },     // Near Right
+    gatoR: { x: 25, y: 10, z: 55 },      // Far Right
 }
 
 const ParallaxPhoto: React.FC = () => {
@@ -228,11 +228,13 @@ const ParallaxPhoto: React.FC = () => {
                         width: 'auto',
                         height: '90%',
                         objectFit: 'contain',
-                        x: watercolorX,
+                        x: 0, // Fixed horizontal position
                         y: watercolorY,
-                        opacity: 0.5,
                         mixBlendMode: 'darken'
                     }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.5 }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
                 />
             </div>
 
@@ -263,6 +265,9 @@ const ParallaxPhoto: React.FC = () => {
                         x: juanX, // Includes center offset + parallax
                         y: juanY
                     }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
                 />
 
                 {/* Tatiana - Middle Layer */}
@@ -280,6 +285,9 @@ const ParallaxPhoto: React.FC = () => {
                         x: tatianaX,
                         y: tatianaY
                     }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
                 />
 
                 {/* Left Cat (GatoL) - Foreground (Closest) */}
@@ -294,7 +302,7 @@ const ParallaxPhoto: React.FC = () => {
                         position: 'absolute',
                         bottom: '0',
                         left: '50%',
-                        height: '32vh',
+                        height: '24vh',
                         objectFit: 'contain',
                         zIndex: 9, // Closest
                         pointerEvents: 'auto',
@@ -302,6 +310,9 @@ const ParallaxPhoto: React.FC = () => {
                         x: gatoLX,
                         y: gatoLY
                     }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.2, delay: 0.8, ease: "easeInOut" }}
                 />
 
                 {/* Right Cat (GatoR) - Foreground (Slightly behind) */}
@@ -316,7 +327,7 @@ const ParallaxPhoto: React.FC = () => {
                         position: 'absolute',
                         bottom: '0',
                         left: '50%',
-                        height: '32vh',
+                        height: '24vh',
                         objectFit: 'contain',
                         zIndex: 8,
                         pointerEvents: 'auto',
@@ -324,6 +335,9 @@ const ParallaxPhoto: React.FC = () => {
                         x: gatoRX,
                         y: gatoRY
                     }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.2, delay: 0.8, ease: "easeInOut" }}
                 />
             </div>
 
@@ -345,6 +359,9 @@ const ParallaxPhoto: React.FC = () => {
                     x: flowerX,
                     y: flowerY
                 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.5, delay: 1.2, ease: "easeInOut" }}
             />
 
             {/* Top Right Flower - Mirror Horizontally */}
@@ -364,6 +381,9 @@ const ParallaxPhoto: React.FC = () => {
                     x: flowerX,
                     y: flowerY
                 }}
+                initial={{ opacity: 0, scaleX: -1, scaleY: 1 }}
+                animate={{ opacity: 1, scaleX: -1, scaleY: 1 }}
+                transition={{ duration: 1.5, delay: 1.2, ease: "easeInOut" }}
             />
 
             {/* Bottom Right Flower - Mirror Both */}
@@ -384,6 +404,9 @@ const ParallaxPhoto: React.FC = () => {
                     x: flowerX,
                     y: flowerY
                 }}
+                initial={{ opacity: 0, scaleX: -1, scaleY: -1 }}
+                animate={{ opacity: 1, scaleX: -1, scaleY: -1 }}
+                transition={{ duration: 1.5, delay: 1.2, ease: "easeInOut" }}
             />
 
             {/* Bottom Left Flower - Mirror Vertically */}
@@ -403,6 +426,9 @@ const ParallaxPhoto: React.FC = () => {
                     x: flowerX,
                     y: flowerY
                 }}
+                initial={{ opacity: 0, scaleX: 1, scaleY: -1 }}
+                animate={{ opacity: 1, scaleX: 1, scaleY: -1 }}
+                transition={{ duration: 1.5, delay: 1.2, ease: "easeInOut" }}
             />
 
             {/* Attribution */}
