@@ -14,8 +14,11 @@ const DESKTOP_PARALLAX_INTENSITY = {
 
 const MOBILE_PARALLAX_INTENSITY = {
     watercolor: '15%',
-    flowers: 85         // Stronger frame movement on mobile
+    flowers: 40         // Reduced from 85 for subtler mobile effect
 }
+
+// Sensitivity factor for mobile tilt (0.1 = very subtle, 1.0 = full range)
+const MOBILE_TILT_SENSITIVITY = 0.4
 
 // Configuration for characters (x, y, z)
 const DESKTOP_CHARACTER_CONFIG = {
@@ -26,10 +29,10 @@ const DESKTOP_CHARACTER_CONFIG = {
 }
 
 const MOBILE_CHARACTER_CONFIG = {
-    gatoL: { x: -13, y: 14, z: 40 },     // Far Left, Distinct from Frame (65)
-    juan: { x: -11, y: 15, z: 15 },       // Near Left
-    tatiana: { x: 11, y: 15, z: 5 },     // Near Right
-    gatoR: { x: 13, y: 14, z: 40 },      // Far Right, Distinct from Frame (65)
+    gatoL: { x: -13, y: 12, z: 30 },     // Far Left, Distinct from Frame (65)
+    juan: { x: -11, y: 13, z: 15 },       // Near Left
+    tatiana: { x: 11, y: 13, z: 5 },     // Near Right
+    gatoR: { x: 13, y: 12, z: 30 },      // Far Right, Distinct from Frame (65)
 }
 
 const DESKTOP_FLOWER_OPTS = {
@@ -160,7 +163,7 @@ const ParallaxPhoto: React.FC = () => {
         // Gamma: Left/Right tilt (-90 to 90)
         // Clamp to -45 to 45 for better control
         const gamma = Math.min(Math.max(e.gamma, -45), 45)
-        const x = gamma / 90 // Map -45..45 to -0.5..0.5
+        const x = (gamma / 90) * MOBILE_TILT_SENSITIVITY // Map -45..45 to -0.5..0.5, then dampen
 
         // Beta: Front/Back tilt (-180 to 180)
         // Standard holding is around 45 degrees.
@@ -168,7 +171,7 @@ const ParallaxPhoto: React.FC = () => {
         // 0 (flat) -> -0.5
         // 90 (upright) -> 0.5
         const beta = Math.min(Math.max(e.beta, 0), 90)
-        const y = (beta - 45) / 90 // Map 0..90 to -0.5..0.5
+        const y = ((beta - 45) / 90) * MOBILE_TILT_SENSITIVITY // Map 0..90 to -0.5..0.5, then dampen
 
         mouseX.set(x)
         mouseY.set(y)
