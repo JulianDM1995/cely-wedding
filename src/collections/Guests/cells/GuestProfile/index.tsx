@@ -3,6 +3,7 @@
 import { useConfig } from '@payloadcms/ui'
 import Link from 'next/link'
 import React from 'react'
+import { FaUser } from 'react-icons/fa'
 import './index.scss'
 
 export const GuestProfileCell: React.FC<any> = (props) => {
@@ -65,7 +66,7 @@ export const GuestProfileCell: React.FC<any> = (props) => {
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                 ) : (
-                    <span style={{ fontSize: '10px', color: 'var(--theme-elevation-400)' }}>N/A</span>
+                    <FaUser style={{ color: '#aaa', fontSize: '14px' }} />
                 )}
             </div>
 

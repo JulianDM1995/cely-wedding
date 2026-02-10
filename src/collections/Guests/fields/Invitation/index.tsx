@@ -65,8 +65,10 @@ export const QRCode: React.FC = () => {
       }
 
       const bgField = personalization.qrLayout?.backgroundImage
+      console.log('Resolving bgField:', bgField)
       if (bgField) {
         const bg = await fetchMediaIfId(bgField, 'media')
+        console.log('Resolved bg:', bg)
         if (bg?.url) setBgUrl(bg.url)
       } else {
         setBgUrl('')

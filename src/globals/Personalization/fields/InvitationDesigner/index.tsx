@@ -55,7 +55,7 @@ export const InvitationDesigner: React.FC = () => {
         return
       }
       try {
-        const res = await fetch(`/api/brand-qr-backgrounds/${bgId}`)
+        const res = await fetch(`/api/media/${bgId}`)
         if (res.ok) {
           const data = await res.json()
           setBgUrl(data.url)

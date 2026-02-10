@@ -1,7 +1,10 @@
 'use client'
 
-import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import type { Guest } from '@/payload-types'
+import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import React from 'react'
+import { FaStar } from 'react-icons/fa'
+import { InvitationRenderer } from './InvitationRenderer'
 
 
 
@@ -59,10 +62,13 @@ const MOBILE_WATERCOLOR_OPTS = {
     scale: 1.2  // 20% larger on mobile
 }
 
-const ParallaxPhoto: React.FC = () => {
+const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
     // Mouse position state
     const mouseX = useMotionValue(0)
     const mouseY = useMotionValue(0)
+
+    // Invitation Modal State
+    const [isInvitationOpen, setIsInvitationOpen] = React.useState(false)
 
     // Configuration State (Static Desktop - Positions kept as is)
     const [characterConfig, setCharacterConfig] = React.useState(DESKTOP_CHARACTER_CONFIG)
@@ -324,10 +330,6 @@ const ParallaxPhoto: React.FC = () => {
                 <motion.img
                     src="/designs/gatoL.png"
                     alt="Gato L"
-                    onClick={(e) => {
-                        e.stopPropagation()
-                        alert('🐈 PRRRRR')
-                    }}
                     style={{
                         position: 'absolute',
                         bottom: '0',
@@ -336,7 +338,6 @@ const ParallaxPhoto: React.FC = () => {
                         objectFit: 'contain',
                         zIndex: 9, // Closest
                         pointerEvents: 'auto',
-                        cursor: 'pointer',
                         x: gatoLX,
                         y: gatoLY,
                         willChange: 'transform'
@@ -350,10 +351,6 @@ const ParallaxPhoto: React.FC = () => {
                 <motion.img
                     src="/designs/gatoR.png"
                     alt="Gato R"
-                    onClick={(e) => {
-                        e.stopPropagation()
-                        alert('🐱 MEOW')
-                    }}
                     style={{
                         position: 'absolute',
                         bottom: '0',
@@ -362,7 +359,6 @@ const ParallaxPhoto: React.FC = () => {
                         objectFit: 'contain',
                         zIndex: 8,
                         pointerEvents: 'auto',
-                        cursor: 'pointer',
                         x: gatoRX,
                         y: gatoRY,
                         willChange: 'transform'
@@ -466,6 +462,191 @@ const ParallaxPhoto: React.FC = () => {
                 animate={{ opacity: 1, scaleX: 1, scaleY: -1 }}
                 transition={{ duration: 1.5, delay: 1.2, ease: "easeInOut" }}
             />
+
+            {/* Elegant Button for Guest */}
+            {guest && (
+                <motion.div
+                    initial={{ opacity: 0, y: 30, scale: 0.9, x: "-50%" }}
+                    animate={{ opacity: 1, y: 0, scale: 1, x: "-50%" }}
+                    transition={{ delay: 1.5, duration: 1, type: "spring", stiffness: 50 }}
+                    style={{
+                        position: 'absolute',
+                        bottom: '14vh', // Moved up further as requested
+                        left: '50%',
+                        // transform: 'translateX(-50%)', // Removed to avoid conflict with Framer Motion
+                        zIndex: 50,
+                        pointerEvents: 'auto',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '8px' // Reduced gap
+                    }}
+                >
+                    {/* "Invitation for" Label */}
+                    <motion.span
+                        initial={{ opacity: 0, y: 10 }} // Add small slide up
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.6, duration: 0.8 }} // Appears just after container starts
+                        style={{
+                            color: '#333', // Dark text
+                            backgroundColor: 'rgba(255, 255, 255, 0.6)', // Semi-transparent white background
+                            backdropFilter: 'blur(4px)',
+                            WebkitBackdropFilter: 'blur(4px)',
+                            padding: '4px 16px',
+                            borderRadius: '20px',
+                            fontFamily: 'var(--font-great-vibes)', // Wedding script font
+                            fontSize: '24px', // Increased size for script font legibility
+                            lineHeight: '1',
+                            // fontStyle: 'italic', // Not needed for Great Vibes
+                            letterSpacing: '1px',
+                            fontWeight: 400,
+                            boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+                            textShadow: 'none' // Remove shadow as we have a background now
+                        }}
+                    >
+                        Invitación especial para
+                    </motion.span>
+
+                    <motion.button
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 2.4, duration: 0.8, ease: "easeOut" }} // Appears after label
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setIsInvitationOpen(true)
+                        }}
+                        style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.65)', // More transparent for glassmorphism
+                            backdropFilter: 'blur(12px)',
+                            WebkitBackdropFilter: 'blur(12px)',
+                            border: '1px solid rgba(255, 255, 255, 0.4)',
+                            padding: '12px 32px 12px 24px', // Adjusted padding for avatar balance
+                            borderRadius: '50px', // Fully rounded
+                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5) inset',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '12px',
+                            // transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // CSS transition conflicts with framer motion sometimes, but usually fine for hover. 
+                            // Better to use motion props for hover if converted to motion.button, keeping simple for now.
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}
+                        whileHover={{ scale: 1.05, y: -2, backgroundColor: 'rgba(255, 255, 255, 0.85)', boxShadow: '0 15px 35px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.8) inset' }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        {/* Shimmer Effect */}
+                        <div style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            background: 'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%)',
+                            backgroundSize: '200% 100%',
+                            opacity: 0.5,
+                            pointerEvents: 'none'
+                        }} />
+
+                        {/* Guest Photo - Avatar */}
+                        {guest.profilePicture && typeof guest.profilePicture === 'object' && 'url' in guest.profilePicture && (
+                            <div style={{
+                                width: '32px',
+                                height: '32px',
+                                borderRadius: '50%',
+                                overflow: 'hidden',
+                                border: '2px solid rgba(212, 175, 55, 0.5)', // Gold border
+                                marginRight: '6px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: '#f0f0f0'
+                            }}>
+                                <img
+                                    src={(guest.profilePicture as any).url}
+                                    alt={guest.name}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover'
+                                    }}
+                                />
+                            </div>
+                        )}
+
+                        <span style={{
+                            fontFamily: 'var(--font-cormorant)',
+                            fontSize: '24px', // Slightly larger for Cormorant styling
+                            color: '#2c2c2c',
+                            letterSpacing: '0.5px',
+                            fontWeight: 600
+                        }}>
+                            {guest.name}
+                        </span>
+                        <FaStar style={{
+                            fontSize: '14px',
+                            color: '#d4af37',
+                            marginLeft: '6px'
+                        }} />
+                    </motion.button>
+
+                    {/* Animated "Click to open" hint - REMOVED */}
+                </motion.div>
+            )}
+
+            {/* Invitation Modal Overlay */}
+            <AnimatePresence>
+                {isInvitationOpen && guest && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            zIndex: 100,
+                            backgroundColor: 'rgba(0, 0, 0, 0.6)', // Darker background as requested
+                            backdropFilter: 'blur(8px)', // Blur the background scene
+                            WebkitBackdropFilter: 'blur(8px)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            overflowY: 'auto', // Allow scrolling for the invitation
+                        }}
+                        onClick={() => setIsInvitationOpen(false)} // Click outside to close
+                    >
+
+                        {/* Content Container with Animation */}
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.95, opacity: 0, y: 10 }}
+                            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} // Spring-like ease out
+                            style={{
+                                width: '100%',
+                                minHeight: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        // onClick removed to allow clicks to pass through to overlay
+                        >
+                            <InvitationRenderer
+                                guest={guest}
+                                transparentBg
+                                onClose={() => setIsInvitationOpen(false)}
+                            />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Attribution */}
             <div style={{

@@ -1,5 +1,5 @@
 import { GuestProfileCell as GuestProfileCell_2a38c462ac9ef254d759dfc0f00e6640 } from '../../../collections/Guests/cells/GuestProfile/index.tsx'
-import { SendInvitationCell as SendInvitationCell_2b373e9c8a0e8ea07dfcd703ca534be5 } from '../../../collections/Guests/cells/InvitationStatus/index.tsx'
+import { StatusCell as StatusCell_f3ba00b634a401ea084a343d3ebe0b39 } from '../../../collections/Guests/cells/StatusCell/index.tsx'
 import { InvitationStatusField as InvitationStatusField_7ac9c84cb601db96bd64668c3f69cb95 } from '../../../collections/Guests/fields/InvitationStatus/index.tsx'
 import { QRCode as QRCode_ef30215213e8a24268d04edfbfcb9a42 } from '../../../collections/Guests/fields/Invitation/index.tsx'
 import { DownloadInvitationsButton as DownloadInvitationsButton_dfd3a7e50c49125b1f3e3ad8a304099d } from '../../../collections/Guests/components/DownloadInvitationsButton/index.tsx'
@@ -13,7 +13,7 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 export const importMap = {
   "/collections/Guests/cells/GuestProfile/index.tsx#GuestProfileCell": GuestProfileCell_2a38c462ac9ef254d759dfc0f00e6640,
-  "/collections/Guests/cells/InvitationStatus/index.tsx#SendInvitationCell": SendInvitationCell_2b373e9c8a0e8ea07dfcd703ca534be5,
+  "/collections/Guests/cells/StatusCell/index.tsx#StatusCell": StatusCell_f3ba00b634a401ea084a343d3ebe0b39,
   "/collections/Guests/fields/InvitationStatus/index.tsx#InvitationStatusField": InvitationStatusField_7ac9c84cb601db96bd64668c3f69cb95,
   "/collections/Guests/fields/Invitation/index.tsx#QRCode": QRCode_ef30215213e8a24268d04edfbfcb9a42,
   "/collections/Guests/components/DownloadInvitationsButton/index.tsx#DownloadInvitationsButton": DownloadInvitationsButton_dfd3a7e50c49125b1f3e3ad8a304099d,

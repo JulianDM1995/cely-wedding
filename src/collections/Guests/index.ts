@@ -4,21 +4,17 @@ export const Guests: CollectionConfig = {
   slug: 'guests',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'email', 'updatedAt'],
+    defaultColumns: ['name', 'status', 'email', 'updatedAt'],
     components: {
       beforeList: [
         '/collections/Guests/components/DownloadInvitationsButton/index.tsx#DownloadInvitationsButton',
       ],
     },
     preview: (doc) => {
-      // Preview will likely fail or need to be updated to use a token if we want "Live Preview" to work for admin.
-      // Since tokens are dynamic, maybe we can't easily preview without a persistent token field.
-      // But for now, let's just use the ID and let the frontend handle it or disable preview if no token.
-      // Actually, we can generate a temporary token for preview if we import the utility, 
-      // but imports in config might be tricky if not careful with server/client boundaries.
-      // For now, let's allow preview via ID and maybe the frontend can accept ID in dev mode or we update this later.
-      // Wait, user asked to use hash.
-      return null // Disable preview for now as it requires token generation which is better done in fields or endpoints.
+      if (doc?.token && typeof doc.token === 'string') {
+        return `/invitation?token=${encodeURIComponent(doc.token)}`
+      }
+      return null
     },
     hideAPIURL: true,
   },
@@ -56,10 +52,9 @@ export const Guests: CollectionConfig = {
       ],
       defaultValue: 'not_sent',
       admin: {
-        hidden: true,
         position: 'sidebar',
         components: {
-          Cell: '/collections/Guests/cells/InvitationStatus/index.tsx#SendInvitationCell',
+          Cell: '/collections/Guests/cells/StatusCell/index.tsx#StatusCell',
         },
       },
     },
