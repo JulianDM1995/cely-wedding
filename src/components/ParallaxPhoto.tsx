@@ -582,7 +582,7 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                             letterSpacing: '0.5px',
                             fontWeight: 600
                         }}>
-                            {guest.name}
+                            {guest?.name || 'Invitado'}
                         </span>
                         <FaStar style={{
                             fontSize: '14px',
@@ -593,7 +593,8 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
 
                     {/* Animated "Click to open" hint - REMOVED */}
                 </motion.div>
-            )}
+            )
+            }
 
             {/* Invitation Modal Overlay */}
             <AnimatePresence>

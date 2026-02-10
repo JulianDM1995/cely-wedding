@@ -35,15 +35,16 @@ export default function NotFound() {
                 textAlign: 'center',
                 padding: '20px'
             }}>
-                <div style={{ position: 'relative', marginBottom: '40px', height: '200px', width: '300px' }}>
+                {/* Container Height Increased to prevent overlap */}
+                <div style={{ position: 'relative', marginBottom: '20px', height: '320px', width: '300px' }}>
                     {/* Left Cat (GatoL) Peeking */}
                     <div style={{
                         position: 'absolute',
                         bottom: 0,
-                        left: '20px',
-                        width: '120px',
-                        height: '140px',
-                        transform: 'rotate(-10deg)',
+                        left: '0px',
+                        width: '140px',
+                        height: '160px',
+
                         zIndex: 2
                     }}>
                         <Image
@@ -58,10 +59,10 @@ export default function NotFound() {
                     <div style={{
                         position: 'absolute',
                         bottom: 0,
-                        right: '20px',
-                        width: '120px',
-                        height: '140px',
-                        transform: 'rotate(10deg)',
+                        right: '0px',
+                        width: '140px',
+                        height: '160px',
+
                         zIndex: 1
                     }}>
                         <Image
@@ -72,16 +73,16 @@ export default function NotFound() {
                         />
                     </div>
 
-                    {/* 404 Text behind cats */}
+                    {/* 404 Text - Moved up and made more visible */}
                     <div style={{
                         position: 'absolute',
-                        bottom: '20px',
+                        top: '0px',
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        fontSize: '8rem',
+                        fontSize: '9rem',
                         lineHeight: 1,
                         fontWeight: 'bold',
-                        color: 'rgba(212, 175, 55, 0.2)', // Lite Gold
+                        color: 'rgba(212, 175, 55, 0.4)', // More visible
                         zIndex: 0,
                         fontFamily: 'var(--font-playfair)'
                     }}>
