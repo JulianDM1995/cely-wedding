@@ -501,7 +501,9 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                             letterSpacing: '1px',
                             fontWeight: 400,
                             boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-                            textShadow: 'none' // Remove shadow as we have a background now
+                            textShadow: 'none', // Remove shadow as we have a background now
+                            textAlign: 'center',
+                            width: '100%'
                         }}
                     >
                         Invitación especial para
@@ -554,6 +556,9 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                             <div style={{
                                 width: '32px',
                                 height: '32px',
+                                minWidth: '32px',
+                                minHeight: '32px',
+                                flexShrink: 0,
                                 borderRadius: '50%',
                                 overflow: 'hidden',
                                 border: '2px solid rgba(212, 175, 55, 0.5)', // Gold border
@@ -561,7 +566,8 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                backgroundColor: '#f0f0f0'
+                                backgroundColor: '#f0f0f0',
+                                aspectRatio: '1 / 1'
                             }}>
                                 <img
                                     src={(guest.profilePicture as any).url}
@@ -619,6 +625,7 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             overflowY: 'auto', // Allow scrolling for the invitation
+                            padding: '20px' // Mobile margin to show background
                         }}
                         onClick={() => setIsInvitationOpen(false)} // Click outside to close
                     >
