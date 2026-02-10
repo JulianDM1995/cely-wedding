@@ -124,7 +124,7 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
               style={{
                 textTransform: 'uppercase',
                 letterSpacing: '3px',
-                fontSize: '12px',
+                fontSize: 'clamp(10px, 1.5vw + 6px, 12px)',
                 color: '#997b1f', // Darker gold as requested
                 fontWeight: 600,
                 fontFamily: 'var(--font-cormorant)'
@@ -165,7 +165,7 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
 
           <h1
             style={{
-              fontSize: '3.5rem', // Larger name
+              fontSize: 'clamp(2rem, 5vw + 1rem, 3.5rem)', // Responsive: smaller on mobile, larger on desktop
               color: '#1a1a1a',
               marginBottom: '2px', // Reduce bottom margin as email is coming next
               fontWeight: 'normal', // Reverted to normal as requested
@@ -178,14 +178,14 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
 
 
 
-          <p style={{ color: '#666', fontSize: '1.2rem', marginBottom: '30px', lineHeight: '1.6', fontStyle: 'italic', maxWidth: '80%' }}>
+          <p style={{ color: '#666', fontSize: 'clamp(1rem, 2vw + 0.5rem, 1.2rem)', marginBottom: '30px', lineHeight: '1.6', fontStyle: 'italic', maxWidth: '80%' }}>
             Estamos encantados de que celebres<br />con nosotros este día especial.
           </p>
 
           {/* Attendance Actions - Only show if guest exists */}
           {guest && (
             <div style={{ marginTop: '20px', width: '100%' }}>
-              <p style={{ marginBottom: '20px', color: '#d4af37', fontFamily: 'var(--font-great-vibes)', fontSize: '2.2rem' }}>¿Nos acompañarás?</p>
+              <p style={{ marginBottom: '20px', color: '#d4af37', fontFamily: 'var(--font-great-vibes)', fontSize: 'clamp(1.5rem, 3vw + 1rem, 2.2rem)' }}>¿Nos acompañarás?</p>
               <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
                 <AttendanceButtons guestId={guest.id} initialStatus={guest.status} />
               </div>
