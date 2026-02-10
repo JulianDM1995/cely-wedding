@@ -5,6 +5,10 @@ export const NewGuestMessage: GlobalConfig = {
   access: {
     read: () => true,
   },
+  admin: {
+    group: 'Admin',
+    // hidden: true,
+  },
   fields: [
     {
       name: 'lastTimeRead',

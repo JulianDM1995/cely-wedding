@@ -24,6 +24,9 @@ import { seed } from './seed'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+import { en } from 'payload/i18n/en'
+import { es } from 'payload/i18n/es'
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -46,6 +49,10 @@ export default buildConfig({
         },
       ],
     },
+  },
+  i18n: {
+    supportedLanguages: { es, en },
+    fallbackLanguage: 'es', 
   },
   collections: [Users, Media, Guests, GuestMessages],
   globals: [Personalization, NewGuestMessage],

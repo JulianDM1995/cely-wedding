@@ -23,14 +23,23 @@ export const sendGuestAccessEmail = async (guestId: string) => {
     const token = signGuestAccessToken(guest.id)
     const accessLink = `${process.env.NEXT_PUBLIC_APP_URL}/new-message?token=${token}`
 
-    // 3. Send Email
+    // 3. Send Email or Log
     const emailData = await generateAccessLinkEmail({
       guestName: guest.name || 'Guest',
       guestEmail: guest.email,
       accessLink,
     })
 
-    await payload.sendEmail(emailData)
+    if (!process.env.RESEND_API_KEY && !process.env.SENDGRID_API_KEY) {
+      console.log('--- EMAIL SIMULATION (No API Key) ---')
+      console.log('To:', guest.email)
+      console.log('Subject:', emailData.subject)
+      console.log('Link:', accessLink)
+      console.log('HTML (Preview):', emailData.html?.substring(0, 100) + '...')
+      console.log('-------------------------------------')
+    } else {
+      await payload.sendEmail(emailData)
+    }
 
     // Update Global owner for "Live Read" status
     try {

@@ -3,7 +3,6 @@
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import { generateInvitationEmail } from '../../../../email/invitation'
-import { encryptGuestId } from '../../../../utilities/guestToken'
 
 // Server Action for sending invitation
 export const sendInvitation = async (guestId: string) => {
@@ -25,12 +24,27 @@ export const sendInvitation = async (guestId: string) => {
 
     // Generate personalized link
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'
-    const token = encryptGuestId(guest.id)
+    const token = guest.code
+    
+    if (!token) {
+        throw new Error('Guest has no invitation code. Please save the guest first.')
+    }
+
     const invitationLink = `${appUrl}/invitation?token=${token}`
 
-    // Send Email
+    // Send Email or Log to Console
     const emailData = await generateInvitationEmail(guest.name || 'Invitado', guest.email, invitationLink)
-    await payload.sendEmail(emailData)
+    
+    if (!process.env.RESEND_API_KEY && !process.env.SENDGRID_API_KEY) {
+      console.log('--- EMAIL SIMULATION (No API Key) ---')
+      console.log('To:', guest.email)
+      console.log('Subject:', emailData.subject)
+      console.log('Link:', invitationLink)
+      console.log('HTML (Preview):', emailData.html.substring(0, 100) + '...')
+      console.log('-------------------------------------')
+    } else {
+        await payload.sendEmail(emailData)
+    }
 
     // Update Status
     await payload.update({

@@ -2,7 +2,6 @@ import ParallaxPhoto from '@/components/ParallaxPhoto'
 import configPromise from '@payload-config'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
-import { decryptGuestId } from '../../../utilities/guestToken'
 
 
 import { APP_NAME } from '@/constants'
@@ -24,18 +23,23 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   }
 
   const payload = await getPayload({ config: configPromise })
-  const guestId = decryptGuestId(decodeURIComponent(token))
 
-  if (!guestId) {
-    return {
-      title: 'Invitación inválida'
-    }
-  }
+  let guest = null
 
-  const guest = await payload.findByID({
+  // Treat as short code
+  const guests = await payload.find({
     collection: 'guests',
-    id: guestId,
+    where: {
+      code: {
+        equals: token,
+      },
+    },
+    limit: 1,
   })
+
+  if (guests.docs.length > 0) {
+    guest = guests.docs[0]
+  }
 
   if (!guest) {
     return {
@@ -63,16 +67,21 @@ export default async function GuestPage({ searchParams }: Props) {
     return notFound()
   }
 
-  const guestId = decryptGuestId(decodeURIComponent(token))
-
-  if (!guestId) {
-    return notFound()
-  }
-
-  const guest = await payload.findByID({
+  // Treat as short code
+  const guests = await payload.find({
     collection: 'guests',
-    id: guestId,
+    where: {
+      code: {
+        equals: token,
+      },
+    },
+    limit: 1,
   })
+
+  let guest = null
+  if (guests.docs.length > 0) {
+    guest = guests.docs[0]
+  }
 
   if (!guest) {
     return notFound()

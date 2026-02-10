@@ -3,10 +3,20 @@ import { colorField } from '../../fields/ColorField'
 
 export const Personalization: GlobalConfig = {
   slug: 'personalization',
+  label: {
+    es: 'Personalización',
+    en: 'Personalization',
+  },
+  admin: {
+    group: 'Admin',
+  },
   fields: [
 
     {
-      label: 'QR Layout',
+      label: {
+        es: 'Diseño QR',
+        en: 'QR Layout',
+      },
       type: 'collapsible',
       fields: [
         {
@@ -18,7 +28,10 @@ export const Personalization: GlobalConfig = {
               name: 'backgroundImage',
               type: 'upload',
               relationTo: 'media',
-              label: 'Background Image',
+              label: {
+                es: 'Imagen de Fondo',
+                en: 'Background Image',
+              },
             },
             {
               name: 'designer',
@@ -35,19 +48,27 @@ export const Personalization: GlobalConfig = {
                 {
                   name: 'dotsType',
                   type: 'select',
+                  label: {
+                    es: 'Tipo de Puntos',
+                    en: 'Dots Type',
+                  },
                   options: [
-                    { label: 'Rounded', value: 'rounded' },
-                    { label: 'Dots', value: 'dots' },
-                    { label: 'Classy', value: 'classy' },
-                    { label: 'Classy Rounded', value: 'classy-rounded' },
-                    { label: 'Square', value: 'square' },
-                    { label: 'Extra Rounded', value: 'extra-rounded' },
+                    { label: { es: 'Redondeado', en: 'Rounded' }, value: 'rounded' },
+                    { label: { es: 'Puntos', en: 'Dots' }, value: 'dots' },
+                    { label: { es: 'Elegante', en: 'Classy' }, value: 'classy' },
+                    { label: { es: 'Elegante Redondeado', en: 'Classy Rounded' }, value: 'classy-rounded' },
+                    { label: { es: 'Cuadrado', en: 'Square' }, value: 'square' },
+                    { label: { es: 'Extra Redondeado', en: 'Extra Rounded' }, value: 'extra-rounded' },
                   ],
                   defaultValue: 'square',
                   admin: { width: '50%', hidden: true },
                 },
                 colorField({
                   name: 'color', // Main color (dots)
+                  label: {
+                    es: 'Color Principal',
+                    en: 'Main Color',
+                  },
                   admin: { width: '50%', hidden: true },
                 }),
               ],
@@ -58,16 +79,24 @@ export const Personalization: GlobalConfig = {
                 {
                   name: 'cornersSquareType',
                   type: 'select',
+                  label: {
+                    es: 'Tipo de Esquinas (Cuadrado)',
+                    en: 'Corners Type (Square)',
+                  },
                   options: [
-                    { label: 'Dot', value: 'dot' },
-                    { label: 'Square', value: 'square' },
-                    { label: 'Extra Rounded', value: 'extra-rounded' },
+                    { label: { es: 'Punto', en: 'Dot' }, value: 'dot' },
+                    { label: { es: 'Cuadrado', en: 'Square' }, value: 'square' },
+                    { label: { es: 'Extra Redondeado', en: 'Extra Rounded' }, value: 'extra-rounded' },
                   ],
                   defaultValue: 'square',
                   admin: { width: '50%', hidden: true },
                 },
                 colorField({
                   name: 'cornersSquareColor',
+                  label: {
+                    es: 'Color de Esquinas (Cuadrado)',
+                    en: 'Corners Color (Square)',
+                  },
                   admin: { width: '50%', hidden: true },
                 }),
               ],
@@ -78,15 +107,23 @@ export const Personalization: GlobalConfig = {
                 {
                   name: 'cornersDotType',
                   type: 'select',
+                  label: {
+                    es: 'Tipo de Esquinas (Punto)',
+                    en: 'Corners Type (Dot)',
+                  },
                   options: [
-                    { label: 'Dot', value: 'dot' },
-                    { label: 'Square', value: 'square' },
+                    { label: { es: 'Punto', en: 'Dot' }, value: 'dot' },
+                    { label: { es: 'Cuadrado', en: 'Square' }, value: 'square' },
                   ],
                   defaultValue: 'square',
                   admin: { width: '50%', hidden: true },
                 },
                 colorField({
                   name: 'cornersDotColor',
+                  label: {
+                    es: 'Color de Esquinas (Punto)',
+                    en: 'Corners Color (Dot)',
+                  },
                   admin: { width: '50%', hidden: true },
                 }),
               ],
@@ -94,13 +131,19 @@ export const Personalization: GlobalConfig = {
             {
               name: 'show',
               type: 'checkbox',
-              label: 'Show Logo',
+              label: {
+                es: 'Mostrar Logo',
+                en: 'Show Logo',
+              },
               admin: { hidden: true },
             },
             {
               name: 'size',
               type: 'number',
-              label: 'Logo Size (%)',
+              label: {
+                es: 'Tamaño del Logo (%)',
+                en: 'Logo Size (%)',
+              },
               defaultValue: 20,
               admin: { hidden: true },
             },

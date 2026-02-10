@@ -3,7 +3,7 @@
 import type { Guest } from '@/payload-types'
 import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import React from 'react'
-import { FaStar } from 'react-icons/fa'
+import { FaEnvelopeOpenText } from 'react-icons/fa'
 import { InvitationRenderer } from './InvitationRenderer'
 
 
@@ -466,104 +466,61 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
             {/* Elegant Button for Guest */}
             {guest && (
                 <motion.div
-                    initial={{ opacity: 0, y: 30, scale: 0.9, x: "-50%" }}
-                    animate={{ opacity: 1, y: 0, scale: 1, x: "-50%" }}
-                    transition={{ delay: 1.5, duration: 1, type: "spring", stiffness: 50 }}
+                    initial={{ opacity: 0, y: 30, x: "-50%" }}
+                    animate={{ opacity: 1, y: 0, x: "-50%" }}
+                    transition={{
+                        delay: 1.5,
+                        duration: 1,
+                        type: "spring",
+                        stiffness: 50
+                    }}
                     style={{
                         position: 'absolute',
-                        bottom: 'clamp(45%, 20vh, 22vh)', // Higher on mobile, 14vh on desktop
+                        bottom: 'clamp(40%, 20vh, 22vh)',
                         left: '50%',
-                        // transform: 'translateX(-50%)', // Removed to avoid conflict with Framer Motion
                         zIndex: 50,
                         pointerEvents: 'auto',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '8px' // Reduced gap
                     }}
                 >
-                    {/* "Invitation for" Label */}
-                    <motion.span
-                        initial={{ opacity: 0, y: 10 }} // Add small slide up
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.6, duration: 0.8 }} // Appears just after container starts
-                        style={{
-                            color: '#333', // Dark text
-                            backgroundColor: 'rgba(255, 255, 255, 0.6)', // Semi-transparent white background
-                            backdropFilter: 'blur(4px)',
-                            WebkitBackdropFilter: 'blur(4px)',
-                            padding: '4px 16px',
-                            borderRadius: '20px',
-                            fontFamily: 'var(--font-great-vibes)', // Wedding script font
-                            fontSize: '24px', // Increased size for script font legibility
-                            lineHeight: '1',
-                            // fontStyle: 'italic', // Not needed for Great Vibes
-                            letterSpacing: '1px',
-                            fontWeight: 400,
-                            boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-                            textShadow: 'none', // Remove shadow as we have a background now
-                            textAlign: 'center',
-                            width: '100%'
-                        }}
-                    >
-                        Invitación especial para
-                    </motion.span>
-
                     <motion.button
-                        initial="hidden"
-                        animate="visible"
+                        initial="rest"
                         whileHover="hover"
                         whileTap="tap"
-                        variants={{
-                            hidden: { opacity: 0, scale: 0.9 },
-                            visible: {
-                                opacity: 1,
-                                scale: 1,
-                                y: 0,
-                                backgroundColor: 'rgba(255, 255, 255, 0.65)',
-                                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5) inset',
-                                // Remove transition here to avoid it applying to hover-out
-                            },
-                            hover: {
-                                scale: 1.08,
-                                y: -4,
-                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                                boxShadow: '0 20px 40px rgba(212, 175, 55, 0.3), 0 0 0 2px rgba(212, 175, 55, 0.4) inset, 0 0 20px rgba(212, 175, 55, 0.2)',
-                                transition: { duration: 0.3, ease: "easeOut" }
-                            },
-                            tap: { scale: 0.96 }
-                        }}
-                        // Apply entrance transition specifically to the animate prop would be ideal,
-                        // but since we are using variants, we can use the 'transition' prop on the component
-                        // expecting it to apply to the state change.
-                        // However, to strictly separate entrance delay from hover recover, we can use specific transition orchestraton.
-
-                        transition={{
-                            delay: 2.4, // This applies to the initial mount animation (hidden -> visible)
-                            duration: 0.8,
-                            ease: "easeOut",
-                            // Override default transition for layout properties to be snappy on interactions
-                            default: { duration: 0.3, ease: "easeOut" }
-                        }}
+                        animate="rest"
                         onClick={(e) => {
                             e.stopPropagation()
                             setIsInvitationOpen(true)
                         }}
+                        variants={{
+                            rest: {
+                                scale: 1,
+                                backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.6) inset',
+                                transition: { duration: 0.3, ease: "easeOut" }
+                            },
+                            hover: {
+                                scale: 1.05,
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                boxShadow: '0 20px 40px rgba(212, 175, 55, 0.25), 0 0 0 2px rgba(212, 175, 55, 0.4) inset, 0 0 20px rgba(212, 175, 55, 0.1)',
+                                transition: { duration: 0.3, ease: "easeOut" }
+                            },
+                            tap: { scale: 0.98 }
+                        }}
                         style={{
-                            backdropFilter: 'blur(12px)',
-                            WebkitBackdropFilter: 'blur(12px)',
-                            border: '1px solid rgba(255, 255, 255, 0.4)',
-                            padding: 'clamp(10px 20px 10px 18px, 2vw, 12px 32px 12px 24px)',
-                            borderRadius: '50px',
-                            cursor: 'pointer',
                             display: 'flex',
+                            flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '12px',
+                            gap: '6px',
+                            padding: '16px 32px',
+                            backdropFilter: 'blur(12px)',
+                            WebkitBackdropFilter: 'blur(12px)',
+                            borderRadius: '24px',
+                            border: 'none',
+                            cursor: 'pointer',
+                            maxWidth: '90vw',
                             position: 'relative',
-                            overflow: 'hidden',
-                            color: 'inherit',
-                            fontFamily: 'inherit'
+                            overflow: 'hidden'
                         }}
                     >
                         {/* Shimmer Effect */}
@@ -575,27 +532,38 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                             height: '100%',
                             background: 'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%)',
                             backgroundSize: '200% 100%',
-                            opacity: 0.5,
-                            pointerEvents: 'none'
+                            opacity: 0.6,
+                            pointerEvents: 'none',
+                            borderRadius: '24px'
                         }} />
+
+                        {/* "Invitation for" Label */}
+                        <span style={{
+                            fontFamily: 'var(--font-great-vibes)',
+                            fontSize: '28px',
+                            color: '#444',
+                            lineHeight: '1.2',
+                            letterSpacing: '0.5px',
+                            marginBottom: '8px'
+                        }}>
+                            Invitación especial
+                        </span>
 
                         {/* Guest Photo - Avatar */}
                         {guest.profilePicture && typeof guest.profilePicture === 'object' && 'url' in guest.profilePicture && (
                             <div style={{
-                                width: '32px',
-                                height: '32px',
-                                minWidth: '32px',
-                                minHeight: '32px',
-                                flexShrink: 0,
+                                width: '64px',
+                                height: '64px',
                                 borderRadius: '50%',
                                 overflow: 'hidden',
-                                border: '2px solid rgba(212, 175, 55, 0.5)', // Gold border
-                                marginRight: '6px',
+                                border: '2px solid rgba(212, 175, 55, 0.6)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 backgroundColor: '#f0f0f0',
-                                aspectRatio: '1 / 1'
+                                flexShrink: 0,
+                                marginBottom: '4px',
+                                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
                             }}>
                                 <img
                                     src={(guest.profilePicture as any).url}
@@ -611,25 +579,25 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
 
                         <span style={{
                             fontFamily: 'var(--font-cormorant)',
-                            fontSize: 'clamp(18px, 3vw + 6px, 24px)', // Smaller on mobile, 24px on desktop
-                            color: '#2c2c2c',
-                            letterSpacing: '0.5px',
+                            fontSize: 'clamp(22px, 5vw, 32px)',
+                            color: '#1a1a1a',
                             fontWeight: 600,
-                            whiteSpace: 'nowrap' // Prevent wrapping
+                            letterSpacing: '0.5px',
+                            whiteSpace: 'nowrap',
+                            marginBottom: '4px'
                         }}>
                             {guest?.name || 'Invitado'}
                         </span>
-                        <FaStar style={{
-                            fontSize: '14px',
+
+                        <FaEnvelopeOpenText style={{
+                            fontSize: '18px',
                             color: '#d4af37',
-                            marginLeft: '6px'
+                            marginTop: '4px',
+                            opacity: 0.8
                         }} />
                     </motion.button>
-
-                    {/* Animated "Click to open" hint - REMOVED */}
                 </motion.div>
-            )
-            }
+            )}
 
             {/* Invitation Modal Overlay */}
             <AnimatePresence>

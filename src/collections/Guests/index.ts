@@ -2,7 +2,18 @@ import type { CollectionConfig } from 'payload'
 
 export const Guests: CollectionConfig = {
   slug: 'guests',
+  labels: {
+    singular: {
+        es: 'Invitado',
+        en: 'Guest',
+    },
+    plural: {
+        es: 'Invitados',
+        en: 'Guests',
+    },
+  },
   admin: {
+    group: 'Admin',
     useAsTitle: 'name',
     defaultColumns: ['name', 'status', 'email', 'updatedAt'],
     components: {
@@ -23,6 +34,10 @@ export const Guests: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
+      label: {
+        es: 'Nombre',
+        en: 'Name',
+      },
       required: true,
       admin: {
         components: {
@@ -33,30 +48,48 @@ export const Guests: CollectionConfig = {
     {
       name: 'email',
       type: 'email',
+      label: {
+        es: 'Correo Electrónico',
+        en: 'Email',
+      },
       required: true,
     },
     {
       name: 'profilePicture',
       type: 'upload',
       relationTo: 'media',
+      label: {
+        es: 'Foto de Perfil',
+        en: 'Profile Picture',
+      },
       required: false,
     },
     {
       name: 'message',
       type: 'textarea',
-      label: 'Mensaje Personalizado',
+      label: {
+        es: 'Mensaje Personalizado',
+        en: 'Custom Message',
+      },
       admin: {
-        description: 'Mensaje personalizado para la invitación. Si se deja vacío, se usará el mensaje por defecto.',
+        description: {
+            es: 'Mensaje personalizado para la invitación. Si se deja vacío, se usará el mensaje por defecto.',
+            en: 'Custom message for the invitation. If empty, uses the default message.',
+        },
       },
     },
     {
       name: 'status',
       type: 'select',
+      label: {
+        es: 'Estado',
+        en: 'Status',
+      },
       options: [
-        { label: 'Not Sent', value: 'not_sent' },
-        { label: 'Sent', value: 'sent' },
-        { label: 'Confirmed', value: 'confirmed' },
-        { label: 'Declined', value: 'declined' },
+        { label: { es: 'No Enviado', en: 'Not Sent' }, value: 'not_sent' },
+        { label: { es: 'Enviado', en: 'Sent' }, value: 'sent' },
+        { label: { es: 'Confirmado', en: 'Confirmed' }, value: 'confirmed' },
+        { label: { es: 'Declinado', en: 'Declined' }, value: 'declined' },
       ],
       defaultValue: 'not_sent',
       admin: {
@@ -78,13 +111,27 @@ export const Guests: CollectionConfig = {
       },
       hooks: {
         afterRead: [
-          async ({ data, req }) => {
-            if (!data?.id) return null
-            // We need to dynamically import or use a utility that uses the payload secret.
-            // Since this config is shared, we should import the utility.
-            // However, ensuring checking server-only code.
-            const { encryptGuestId } = await import('../../utilities/guestToken')
-            return encryptGuestId(data.id)
+          ({ data }) => {
+            return data?.code || null
+          },
+        ],
+      },
+    },
+    {
+      name: 'code',
+      type: 'text',
+      index: true,
+      unique: true,
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+      },
+      hooks: {
+        beforeValidate: [
+          async ({ value, req }) => {
+            if (value) return value
+            const { generateGuestCode } = await import('../../utilities/guestToken')
+            return generateGuestCode()
           },
         ],
       },
@@ -92,6 +139,10 @@ export const Guests: CollectionConfig = {
     {
        name: 'statusField',
        type: 'ui',
+       label: {
+            es: 'Panel de Estado',
+            en: 'Status Panel',
+       },
        admin: {
          position: 'sidebar',
          components: {
@@ -102,6 +153,10 @@ export const Guests: CollectionConfig = {
     {
       name: 'qrInvitation',
       type: 'ui',
+      label: {
+        es: 'Invitación QR',
+        en: 'QR Invitation',
+      },
       admin: {
         position: 'sidebar',
         components: {

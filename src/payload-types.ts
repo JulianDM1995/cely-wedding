@@ -178,11 +178,12 @@ export interface Guest {
   email: string;
   profilePicture?: (string | null) | Media;
   /**
-   * Mensaje personalizado para la invitación. Si se deja vacío, se usará el mensaje por defecto.
+   * Custom message for the invitation. If empty, uses the default message.
    */
   message?: string | null;
   status?: ('not_sent' | 'sent' | 'confirmed' | 'declined') | null;
   token?: string | null;
+  code?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -341,6 +342,7 @@ export interface GuestsSelect<T extends boolean = true> {
   message?: T;
   status?: T;
   token?: T;
+  code?: T;
   updatedAt?: T;
   createdAt?: T;
 }
