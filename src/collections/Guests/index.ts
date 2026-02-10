@@ -42,6 +42,14 @@ export const Guests: CollectionConfig = {
       required: false,
     },
     {
+      name: 'message',
+      type: 'textarea',
+      label: 'Mensaje Personalizado',
+      admin: {
+        description: 'Mensaje personalizado para la invitación. Si se deja vacío, se usará el mensaje por defecto.',
+      },
+    },
+    {
       name: 'status',
       type: 'select',
       options: [

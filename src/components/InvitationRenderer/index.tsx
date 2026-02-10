@@ -90,7 +90,7 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
             left: '12px',
             right: '12px',
             bottom: '12px',
-            border: '1px solid rgba(212, 175, 55, 0.3)', // Subtle gold inner border
+            border: '2px solid rgba(212, 175, 55, 0.5)', // Thicker and darker gold inner border
             borderRadius: '16px',
             pointerEvents: 'none'
           }}
@@ -178,8 +178,8 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
 
 
 
-          <p style={{ color: '#666', fontSize: 'clamp(1rem, 2vw + 0.5rem, 1.2rem)', marginBottom: '30px', lineHeight: '1.6', fontStyle: 'italic', maxWidth: '80%' }}>
-            Estamos encantados de que celebres<br />con nosotros este día especial.
+          <p style={{ color: '#666', fontSize: 'clamp(1rem, 2vw + 0.5rem, 1.2rem)', marginBottom: '30px', lineHeight: '1.6', fontStyle: 'italic', maxWidth: '80%', whiteSpace: 'pre-line' }}>
+            {guest?.message ? guest.message : <>Estamos encantados de que celebres<br />con nosotros este día especial.</>}
           </p>
 
           {/* Attendance Actions - Only show if guest exists */}
@@ -260,31 +260,59 @@ const AttendanceButtons = ({ guestId, initialStatus }: { guestId: string, initia
           backgroundColor: status === 'confirmed' ? '#2e7d32' : '#d4af37', // Gold button
           color: '#fff',
           border: 'none',
-          borderRadius: '2px', // Sharper corners for elegance
-          cursor: 'pointer',
+          borderRadius: '50px', // More rounded for modern look
+          cursor: loading || status === 'confirmed' ? 'default' : 'pointer',
           fontWeight: 600,
           fontSize: '14px',
           letterSpacing: '1px',
           textTransform: 'uppercase',
-          opacity: loading ? 0.7 : 1,
-          boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)', // Gold shadow
-          transition: 'all 0.3s ease',
-          minWidth: '150px'
+          opacity: loading && status !== 'confirmed' ? 0.7 : 1,
+          boxShadow: status === 'confirmed' ? 'none' : '0 4px 15px rgba(212, 175, 55, 0.3)', // Gold shadow
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          minWidth: '160px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          transform: status === 'confirmed' ? 'scale(1.05)' : 'scale(1)'
         }}
         onMouseEnter={(e) => {
-          if (status !== 'confirmed') {
-            e.currentTarget.style.transform = 'translateY(-2px)'
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(212, 175, 55, 0.4)'
+          if (status !== 'confirmed' && !loading) {
+            e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)'
+            e.currentTarget.style.boxShadow = '0 8px 25px rgba(212, 175, 55, 0.5)'
           }
         }}
         onMouseLeave={(e) => {
-          if (status !== 'confirmed') {
-            e.currentTarget.style.transform = 'translateY(0)'
+          if (status !== 'confirmed' && !loading) {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)'
             e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.3)'
           }
         }}
+        onMouseDown={(e) => {
+          if (!loading && status !== 'confirmed') {
+            e.currentTarget.style.transform = 'scale(0.98)'
+          }
+        }}
+        onMouseUp={(e) => {
+          if (!loading && status !== 'confirmed') {
+            e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)'
+          }
+        }}
       >
-        {status === 'confirmed' ? '✓ Confirmado' : 'Confirmar'}
+        {loading && status !== 'confirmed' ? (
+          <div className="spinner" style={{
+            width: '16px',
+            height: '16px',
+            border: '2px solid rgba(255,255,255,0.3)',
+            borderTop: '2px solid #fff',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+          }} />
+        ) : status === 'confirmed' ? (
+          <>✓ Confirmado</>
+        ) : (
+          'Confirmar'
+        )}
       </button>
       <button
         onClick={() => handleUpdateStatus('declined')}
@@ -293,32 +321,57 @@ const AttendanceButtons = ({ guestId, initialStatus }: { guestId: string, initia
           padding: '12px 32px',
           backgroundColor: 'transparent',
           color: status === 'declined' ? '#d32f2f' : '#666',
-          border: '1px solid #ddd',
-          borderRadius: '2px',
-          cursor: 'pointer',
+          border: status === 'declined' ? '1px solid #d32f2f' : '1px solid #ddd',
+          borderRadius: '50px',
+          cursor: loading || status === 'declined' ? 'default' : 'pointer',
           fontWeight: 500,
           fontSize: '14px',
           letterSpacing: '1px',
           textTransform: 'uppercase',
-          opacity: loading ? 0.7 : 1,
+          opacity: loading && status !== 'declined' ? 0.7 : 1,
           transition: 'all 0.3s ease',
-          minWidth: '150px'
+          minWidth: '160px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px'
         }}
         onMouseEnter={(e) => {
-          if (status !== 'declined') {
+          if (status !== 'declined' && !loading) {
             e.currentTarget.style.borderColor = '#999'
             e.currentTarget.style.color = '#333'
+            e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.02)'
           }
         }}
         onMouseLeave={(e) => {
-          if (status !== 'declined') {
+          if (status !== 'declined' && !loading) {
             e.currentTarget.style.borderColor = '#ddd'
             e.currentTarget.style.color = '#666'
+            e.currentTarget.style.backgroundColor = 'transparent'
           }
         }}
       >
-        {status === 'declined' ? 'Declinado' : 'Declinar'}
+        {loading && status !== 'declined' ? (
+          <div className="spinner" style={{
+            width: '16px',
+            height: '16px',
+            border: '2px solid rgba(0,0,0,0.1)',
+            borderTop: '2px solid #666',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+          }} />
+        ) : status === 'declined' ? (
+          'Declinado'
+        ) : (
+          'Declinar'
+        )}
       </button>
+      <style jsx global>{`
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </>
   )
 }

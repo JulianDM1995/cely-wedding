@@ -471,7 +471,7 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                     transition={{ delay: 1.5, duration: 1, type: "spring", stiffness: 50 }}
                     style={{
                         position: 'absolute',
-                        bottom: '14vh', // Moved up further as requested
+                        bottom: 'clamp(35%, 20vh, 22vh)', // Higher on mobile, 14vh on desktop
                         left: '50%',
                         // transform: 'translateX(-50%)', // Removed to avoid conflict with Framer Motion
                         zIndex: 50,
@@ -510,33 +510,61 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                     </motion.span>
 
                     <motion.button
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 2.4, duration: 0.8, ease: "easeOut" }} // Appears after label
+                        initial="hidden"
+                        animate="visible"
+                        whileHover="hover"
+                        whileTap="tap"
+                        variants={{
+                            hidden: { opacity: 0, scale: 0.9 },
+                            visible: {
+                                opacity: 1,
+                                scale: 1,
+                                y: 0,
+                                backgroundColor: 'rgba(255, 255, 255, 0.65)',
+                                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5) inset',
+                                // Remove transition here to avoid it applying to hover-out
+                            },
+                            hover: {
+                                scale: 1.08,
+                                y: -4,
+                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                boxShadow: '0 20px 40px rgba(212, 175, 55, 0.3), 0 0 0 2px rgba(212, 175, 55, 0.4) inset, 0 0 20px rgba(212, 175, 55, 0.2)',
+                                transition: { duration: 0.3, ease: "easeOut" }
+                            },
+                            tap: { scale: 0.96 }
+                        }}
+                        // Apply entrance transition specifically to the animate prop would be ideal,
+                        // but since we are using variants, we can use the 'transition' prop on the component
+                        // expecting it to apply to the state change.
+                        // However, to strictly separate entrance delay from hover recover, we can use specific transition orchestraton.
+
+                        transition={{
+                            delay: 2.4, // This applies to the initial mount animation (hidden -> visible)
+                            duration: 0.8,
+                            ease: "easeOut",
+                            // Override default transition for layout properties to be snappy on interactions
+                            default: { duration: 0.3, ease: "easeOut" }
+                        }}
                         onClick={(e) => {
                             e.stopPropagation()
                             setIsInvitationOpen(true)
                         }}
                         style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.65)', // More transparent for glassmorphism
                             backdropFilter: 'blur(12px)',
                             WebkitBackdropFilter: 'blur(12px)',
                             border: '1px solid rgba(255, 255, 255, 0.4)',
-                            padding: '12px 32px 12px 24px', // Adjusted padding for avatar balance
-                            borderRadius: '50px', // Fully rounded
-                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5) inset',
+                            padding: 'clamp(10px 20px 10px 18px, 2vw, 12px 32px 12px 24px)',
+                            borderRadius: '50px',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '12px',
-                            // transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // CSS transition conflicts with framer motion sometimes, but usually fine for hover. 
-                            // Better to use motion props for hover if converted to motion.button, keeping simple for now.
                             position: 'relative',
-                            overflow: 'hidden'
+                            overflow: 'hidden',
+                            color: 'inherit',
+                            fontFamily: 'inherit'
                         }}
-                        whileHover={{ scale: 1.05, y: -2, backgroundColor: 'rgba(255, 255, 255, 0.85)', boxShadow: '0 15px 35px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.8) inset' }}
-                        whileTap={{ scale: 0.98 }}
                     >
                         {/* Shimmer Effect */}
                         <div style={{
@@ -583,10 +611,11 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
 
                         <span style={{
                             fontFamily: 'var(--font-cormorant)',
-                            fontSize: '24px', // Slightly larger for Cormorant styling
+                            fontSize: 'clamp(18px, 3vw + 6px, 24px)', // Smaller on mobile, 24px on desktop
                             color: '#2c2c2c',
                             letterSpacing: '0.5px',
-                            fontWeight: 600
+                            fontWeight: 600,
+                            whiteSpace: 'nowrap' // Prevent wrapping
                         }}>
                             {guest?.name || 'Invitado'}
                         </span>
