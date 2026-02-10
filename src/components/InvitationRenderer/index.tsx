@@ -186,7 +186,7 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
           {guest && (
             <div style={{ marginTop: '20px', width: '100%' }}>
               <p style={{ marginBottom: '20px', color: '#d4af37', fontFamily: 'var(--font-great-vibes)', fontSize: 'clamp(1.5rem, 3vw + 1rem, 2.2rem)' }}>¿Nos acompañarás?</p>
-              <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', gap: 'clamp(8px, 2vw, 16px)', justifyContent: 'center' }}>
                 <AttendanceButtons guestId={guest.id} initialStatus={guest.status} />
               </div>
             </div>
@@ -256,20 +256,20 @@ const AttendanceButtons = ({ guestId, initialStatus }: { guestId: string, initia
         onClick={() => handleUpdateStatus('confirmed')}
         disabled={loading || status === 'confirmed'}
         style={{
-          padding: '12px 32px',
+          padding: 'clamp(8px, 2vw, 12px) clamp(16px, 4vw, 32px)',
           backgroundColor: status === 'confirmed' ? '#2e7d32' : '#d4af37', // Gold button
           color: '#fff',
           border: 'none',
           borderRadius: '50px', // More rounded for modern look
           cursor: loading || status === 'confirmed' ? 'default' : 'pointer',
           fontWeight: 600,
-          fontSize: '14px',
+          fontSize: 'clamp(12px, 1.5vw, 14px)',
           letterSpacing: '1px',
           textTransform: 'uppercase',
           opacity: loading && status !== 'confirmed' ? 0.7 : 1,
           boxShadow: status === 'confirmed' ? 'none' : '0 4px 15px rgba(212, 175, 55, 0.3)', // Gold shadow
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          minWidth: '160px',
+          minWidth: 'clamp(120px, 30vw, 160px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -318,19 +318,19 @@ const AttendanceButtons = ({ guestId, initialStatus }: { guestId: string, initia
         onClick={() => handleUpdateStatus('declined')}
         disabled={loading || status === 'declined'}
         style={{
-          padding: '12px 32px',
+          padding: 'clamp(8px, 2vw, 12px) clamp(16px, 4vw, 32px)',
           backgroundColor: 'transparent',
           color: status === 'declined' ? '#d32f2f' : '#666',
           border: status === 'declined' ? '1px solid #d32f2f' : '1px solid #ddd',
           borderRadius: '50px',
           cursor: loading || status === 'declined' ? 'default' : 'pointer',
           fontWeight: 500,
-          fontSize: '14px',
+          fontSize: 'clamp(12px, 1.5vw, 14px)',
           letterSpacing: '1px',
           textTransform: 'uppercase',
           opacity: loading && status !== 'declined' ? 0.7 : 1,
           transition: 'all 0.3s ease',
-          minWidth: '160px',
+          minWidth: 'clamp(120px, 30vw, 160px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

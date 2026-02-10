@@ -471,7 +471,7 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                     transition={{ delay: 1.5, duration: 1, type: "spring", stiffness: 50 }}
                     style={{
                         position: 'absolute',
-                        bottom: 'clamp(35%, 20vh, 22vh)', // Higher on mobile, 14vh on desktop
+                        bottom: 'clamp(45%, 20vh, 22vh)', // Higher on mobile, 14vh on desktop
                         left: '50%',
                         // transform: 'translateX(-50%)', // Removed to avoid conflict with Framer Motion
                         zIndex: 50,
