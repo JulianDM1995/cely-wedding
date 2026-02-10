@@ -16,6 +16,7 @@ const greatVibes = Great_Vibes({
 })
 
 export const metadata = {
+  metadataBase: process.env.NEXT_PUBLIC_APP_URL,
   description: APP_DESCRIPTION,
   title: APP_NAME,
 }
