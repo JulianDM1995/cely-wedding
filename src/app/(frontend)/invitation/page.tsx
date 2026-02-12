@@ -53,9 +53,6 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     openGraph: {
       title: `${guest.name} | ${APP_NAME}`,
       description: `Invitación especial para ${guest.name}.`,
-      images: guest.profilePicture && typeof guest.profilePicture === 'object' && 'url' in guest.profilePicture
-        ? [(guest.profilePicture as any).url]
-        : []
     }
   }
 }

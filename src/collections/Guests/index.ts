@@ -123,8 +123,7 @@ export const Guests: CollectionConfig = {
       index: true,
       unique: true,
       admin: {
-        position: 'sidebar',
-        readOnly: true,
+        hidden: true,
       },
       hooks: {
         beforeValidate: [
@@ -134,6 +133,16 @@ export const Guests: CollectionConfig = {
             return generateGuestCode()
           },
         ],
+      },
+    },
+    {
+      name: 'viewInvitation',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '/collections/Guests/components/ViewInvitationButton.tsx#ViewInvitationButton',
+        },
       },
     },
     {
