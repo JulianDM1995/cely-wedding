@@ -20,12 +20,11 @@ export const Guests: CollectionConfig = {
       beforeList: [
         '/collections/Guests/components/DownloadInvitationsButton/index.tsx#DownloadInvitationsButton',
       ],
-    },
-    preview: (doc) => {
-      if (doc?.token && typeof doc.token === 'string') {
-        return `/invitation?token=${encodeURIComponent(doc.token)}`
-      }
-      return null
+      edit: {
+        beforeDocumentControls: [
+          '/collections/Guests/components/ViewInvitationButton.tsx#ViewInvitationButton',
+        ],
+      },
     },
     hideAPIURL: true,
   },
@@ -55,6 +54,56 @@ export const Guests: CollectionConfig = {
       required: true,
     },
     {
+      name: 'guestsCount',
+      type: 'number',
+      label: {
+        es: 'Número de Invitados',
+        en: 'Number of Guests',
+      },
+      defaultValue: 1,
+      admin: {
+        hidden: true, // Hide from Admin UI
+        position: 'sidebar',
+      },
+      hooks: {
+        beforeChange: [
+          ({ siblingData }) => {
+            return siblingData?.guestNames?.length || 1
+          },
+        ],
+      },
+    },
+    {
+      type: 'collapsible',
+      label: {
+        es: 'Nombres de los Invitados',
+        en: 'Guest Names',
+      },
+      fields: [
+        {
+          name: 'guestNames',
+          type: 'array',
+          label: {
+              es: 'Lista de Nombres',
+              en: 'Names List',
+          },
+          fields: [
+            {
+              name: 'fullName',
+              type: 'text',
+              label: {
+                es: 'Nombre Completo',
+                en: 'Full Name',
+              },
+            },
+          ],
+          admin: {
+            initCollapsed: false,
+          },
+        },
+      ],
+    },
+    {
       name: 'profilePicture',
       type: 'upload',
       relationTo: 'media',
@@ -72,6 +121,7 @@ export const Guests: CollectionConfig = {
         en: 'Custom Message',
       },
       admin: {
+        hidden: true,
         description: {
             es: 'Mensaje personalizado para la invitación. Si se deja vacío, se usará el mensaje por defecto.',
             en: 'Custom message for the invitation. If empty, uses the default message.',
@@ -95,6 +145,7 @@ export const Guests: CollectionConfig = {
       admin: {
         position: 'sidebar',
         components: {
+          Field: '/collections/Guests/fields/InvitationStatus/index.tsx#InvitationStatusField',
           Cell: '/collections/Guests/cells/StatusCell/index.tsx#StatusCell',
         },
       },
@@ -136,29 +187,30 @@ export const Guests: CollectionConfig = {
       },
     },
     {
-      name: 'viewInvitation',
-      type: 'ui',
+      name: 'phoneNumber',
+      type: 'text',
+      label: {
+        es: 'Teléfono',
+        en: 'Phone Number',
+      },
       admin: {
-        position: 'sidebar',
         components: {
-          Field: '/collections/Guests/components/ViewInvitationButton.tsx#ViewInvitationButton',
+          Field: '/collections/Guests/components/PhoneField.tsx#PhoneField',
         },
       },
     },
     {
-       name: 'statusField',
-       type: 'ui',
-       label: {
-            es: 'Panel de Estado',
-            en: 'Status Panel',
-       },
-       admin: {
-         position: 'sidebar',
-         components: {
-            Field: '/collections/Guests/fields/InvitationStatus/index.tsx#InvitationStatusField'
-         }
-       }
+      name: 'whatsapp',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '/collections/Guests/components/WhatsAppButton.tsx#WhatsAppButton',
+        },
+      },
     },
+
+
     {
       name: 'qrInvitation',
       type: 'ui',

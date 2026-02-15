@@ -1,4 +1,3 @@
-import { APP_NAME } from '@/constants'
 import { Button, Link, Text } from '@react-email/components'
 import { render } from '@react-email/render'
 import { EmailTemplate } from './components/EmailTemplate'
@@ -7,15 +6,18 @@ export const generateAccessLinkEmail = async ({
   guestName,
   guestEmail,
   accessLink,
+  coupleNames,
 }: {
   guestName: string
   guestEmail: string
   accessLink: string
+  coupleNames: string
 }) => {
   const emailHtml = await render(
     <EmailTemplate
-      previewText={`Leave a message for ${APP_NAME}`}
+      previewText={`Leave a message for ${coupleNames}`}
       heading={`Hello, ${guestName}`}
+      coupleNames={coupleNames}
     >
       <Text className="text-slate-600 text-base leading-relaxed mb-6 text-center">
         We're so glad you're here! Click the button below to leave a message in our guestbook.
@@ -42,7 +44,8 @@ export const generateAccessLinkEmail = async ({
 
   return {
     to: guestEmail,
-    subject: `Leave a message for ${APP_NAME}`,
+    from: `${coupleNames} <${process.env.RESEND_FROM_EMAIL}>`,
+    subject: `Leave a message for ${coupleNames}`,
     html: emailHtml
   }
 }

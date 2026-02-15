@@ -2,11 +2,12 @@ import { Button, Link, Text } from '@react-email/components'
 import { render } from '@react-email/render'
 import { EmailTemplate } from './components/EmailTemplate'
 
-export const generateInvitationEmail = async (guestName: string, guestEmail: string, invitationLink: string) => {
+export const generateInvitationEmail = async (guestName: string, guestEmail: string, invitationLink: string, coupleNames: string) => {
   const emailHtml = await render(
     <EmailTemplate
       previewText={`¡Hola ${guestName}! Estás invitado a nuestra boda.`}
       heading={`¡Hola ${guestName}!`}
+      coupleNames={coupleNames}
     >
       <Text className="text-slate-600 text-base leading-relaxed mb-6 text-center">
         Nos hace muy felices invitarte a nuestra boda.
@@ -36,6 +37,7 @@ export const generateInvitationEmail = async (guestName: string, guestEmail: str
 
   return {
     to: guestEmail,
+    from: `${coupleNames} <${process.env.RESEND_FROM_EMAIL}>`,
     subject: '¡Estás invitado a nuestra boda!',
     html: emailHtml
   }

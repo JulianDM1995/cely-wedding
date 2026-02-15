@@ -62,7 +62,7 @@ const MOBILE_WATERCOLOR_OPTS = {
     scale: 1.2  // 20% larger on mobile
 }
 
-const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
+const ParallaxPhoto: React.FC<{ guest?: Guest; weddingDate?: string | null; couple?: { groom: string; bride: string } }> = ({ guest, weddingDate, couple }) => {
     // Mouse position state
     const mouseX = useMotionValue(0)
     const mouseY = useMotionValue(0)
@@ -287,7 +287,7 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                 {/* Juan - Middle Layer */}
                 <motion.img
                     src="/designs/juan.png"
-                    alt="Juan"
+                    alt={couple?.groom || 'Novio'}
                     style={{
                         position: 'absolute',
                         bottom: '0',
@@ -308,7 +308,7 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                 {/* Tatiana - Middle Layer */}
                 <motion.img
                     src="/designs/tatiana.png"
-                    alt="Tatiana"
+                    alt={couple?.bride || 'Novia'}
                     style={{
                         position: 'absolute',
                         bottom: '0',
@@ -589,12 +589,32 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                             {guest?.name || 'Invitado'}
                         </span>
 
-                        <FaEnvelopeOpenText style={{
-                            fontSize: '18px',
-                            color: '#d4af37',
-                            marginTop: '4px',
-                            opacity: 0.8
-                        }} />
+                        <div style={{
+                            marginTop: '16px',
+                            padding: '10px 24px',
+                            border: '1px solid #d4af37',
+                            borderRadius: '50px',
+                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            transition: 'all 0.3s ease',
+                        }}>
+                            <span style={{
+                                fontFamily: 'var(--font-cormorant)',
+                                fontSize: '18px',
+                                textTransform: 'uppercase',
+                                letterSpacing: '2px',
+                                fontWeight: 600,
+                                color: '#d4af37',
+                            }}>
+                                Abrir Invitación
+                            </span>
+                            <FaEnvelopeOpenText style={{
+                                fontSize: '16px',
+                                color: '#d4af37',
+                            }} />
+                        </div>
                     </motion.button>
                 </motion.div>
             )}
@@ -647,6 +667,7 @@ const ParallaxPhoto: React.FC<{ guest?: Guest }> = ({ guest }) => {
                                 guest={guest}
                                 transparentBg
                                 onClose={() => setIsInvitationOpen(false)}
+                                weddingDate={weddingDate}
                             />
                         </motion.div>
                     </motion.div>

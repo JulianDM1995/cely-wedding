@@ -18,6 +18,7 @@ export const GuestMessages: CollectionConfig = {
   },
   admin: {
     group: 'Admin',
+    hidden: true,
   },
   access: {
     create: authenticated,

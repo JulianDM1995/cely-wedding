@@ -17,6 +17,7 @@ export interface EmailTemplateProps {
     heading?: string
     children: React.ReactNode
     baseUrl?: string
+    coupleNames?: string
 }
 
 export const EmailTemplate: React.FC<EmailTemplateProps> = ({
@@ -24,6 +25,7 @@ export const EmailTemplate: React.FC<EmailTemplateProps> = ({
     heading,
     children,
     baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://cely-wedding.vercel.app', // Fallback to production URL
+    coupleNames = 'Juan & Tatiana',
 }) => {
     return (
         <Html>
@@ -38,7 +40,7 @@ export const EmailTemplate: React.FC<EmailTemplateProps> = ({
                                 src={`${baseUrl}/images/branding/banner.png`}
                                 width="280"
                                 height="auto"
-                                alt="Juan & Tatiana"
+                                alt={coupleNames}
                                 className="mx-auto"
                             />
                         </Section>
@@ -59,7 +61,7 @@ export const EmailTemplate: React.FC<EmailTemplateProps> = ({
                         {/* Footer */}
                         <Section className="bg-gray-50 py-6 px-8 text-center border-t border-gray-100">
                             <Text className="text-slate-400 text-xs m-0">
-                                © {new Date().getFullYear()} Juan & Tatiana using {process.env.NEXT_PUBLIC_APP_NAME || 'Wedding App'}.
+                                © {new Date().getFullYear()} {coupleNames} using {process.env.NEXT_PUBLIC_APP_NAME || 'Wedding App'}.
                             </Text>
                         </Section>
                     </Container>

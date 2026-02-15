@@ -65,14 +65,15 @@ export default buildConfig({
     url: process.env.DATABASE_URL || '',
   }),
   email: nodemailerAdapter({
-    defaultFromAddress: process.env.SENDGRID_FROM_EMAIL || 'onboarding@resend.dev',
-    defaultFromName: process.env.SENDGRID_FROM_NAME || APP_NAME,
+    defaultFromAddress: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+    defaultFromName: APP_NAME,
     transportOptions: {
-      host: 'smtp.sendgrid.net',
-      port: 587,
+      host: 'smtp.resend.com',
+      port: 465,
+      secure: true,
       auth: {
-        user: 'apikey',
-        pass: process.env.SENDGRID_API_KEY,
+        user: 'resend',
+        pass: process.env.RESEND_API_KEY,
       },
     },
   }),

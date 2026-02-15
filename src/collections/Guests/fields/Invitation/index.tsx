@@ -1,6 +1,6 @@
 'use client'
 
-import { useDocumentInfo, useField } from '@payloadcms/ui'
+import { Button, useDocumentInfo, useField } from '@payloadcms/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import { InvitationLayout, renderInvitation } from '../../../../globals/Personalization/fields/InvitationDesigner/utils'
 
@@ -155,54 +155,59 @@ export const QRCode: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col w-full">
-
+    <div style={{ marginBottom: '20px' }}>
+      <label className="field-label">QR Invitation</label>
       <div
         style={{
-          width: '100%',
-
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '15px',
+          padding: '10px',
+          border: '1px solid var(--theme-elevation-150)',
+          borderRadius: 'var(--style-radius-m)',
+          backgroundColor: 'var(--theme-elevation-50)',
+          width: '100%'
         }}
       >
-        <div style={{ width: '100%', position: 'relative' }}>
-          {!previewUrl && (
-            <div style={{ padding: '20px', textAlign: 'center', color: '#888' }}>
-              {personalization ? 'Generating...' : 'Loading Config...'}
-            </div>
-          )}
+        {!previewUrl && (
+          <div style={{ padding: '20px', textAlign: 'center', color: '#888' }}>
+            {personalization ? 'Generating...' : 'Loading Config...'}
+          </div>
+        )}
 
-          {previewUrl && (
+        {previewUrl && (
+          <>
             <div
               style={{
-                position: 'relative',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
+                backgroundColor: bgUrl ? 'transparent' : 'white',
+                borderRadius: 'var(--style-radius-m)',
+                padding: '10px',
+                width: 'fit-content',
+                maxWidth: '100%',
               }}
             >
-              <div
+              <img
+                src={previewUrl}
+                alt="QR Code"
                 style={{
-                  backgroundColor: bgUrl ? 'transparent' : 'white',
-                  borderRadius: 'var(--style-radius-m)',
-                  padding: '10px',
-                  width: 'fit-content',
+                  maxWidth: '100%',
+                  maxHeight: '300px',
+                  objectFit: 'contain',
+                  display: 'block',
                 }}
-              >
-                <img
-                  src={previewUrl}
-                  alt="QR Code"
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: '300px',
-                    objectFit: 'contain',
-                    display: 'block',
-                  }}
-                />
-              </div>
+              />
             </div>
-          )}
-        </div>
-
-
+            <Button
+              size="small"
+              buttonStyle="secondary"
+              onClick={() => window.open(previewUrl, '_blank')}
+              icon="link"
+            >
+              Abrir en nueva pestaña
+            </Button>
+          </>
+        )}
       </div>
     </div>
   )

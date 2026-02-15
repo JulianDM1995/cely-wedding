@@ -7,7 +7,7 @@ export const NewGuestMessage: GlobalConfig = {
   },
   admin: {
     group: 'Admin',
-    // hidden: true,
+    hidden: true,
   },
   fields: [
     {

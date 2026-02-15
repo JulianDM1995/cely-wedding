@@ -7,9 +7,10 @@ interface InvitationRendererProps {
   guest?: Guest
   transparentBg?: boolean
   onClose?: () => void
+  weddingDate?: string | null
 }
 
-export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, transparentBg, onClose }) => {
+export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, transparentBg, onClose, weddingDate }) => {
   return (
     <div
       style={{
@@ -185,6 +186,10 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
           {/* Attendance Actions - Only show if guest exists */}
           {guest && (
             <div style={{ marginTop: '20px', width: '100%' }}>
+
+              {/* Countdown Timer */}
+              {weddingDate && <Countdown targetDate={weddingDate} />}
+
               <p style={{ marginBottom: '20px', color: '#d4af37', fontFamily: 'var(--font-great-vibes)', fontSize: 'clamp(1.5rem, 3vw + 1rem, 2.2rem)' }}>¿Nos acompañarás?</p>
               <div style={{ display: 'flex', gap: 'clamp(8px, 2vw, 16px)', justifyContent: 'center' }}>
                 <AttendanceButtons guestId={guest.id} initialStatus={guest.status} />
@@ -193,6 +198,90 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
           )}
         </div>
       </div>
+    </div>
+  )
+}
+
+const Countdown = ({ targetDate }: { targetDate: string }) => {
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft())
+
+  function calculateTimeLeft() {
+    const difference = +new Date(targetDate) - +new Date()
+    let timeLeft = {}
+
+    if (difference > 0) {
+      timeLeft = {
+        días: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        horas: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        min: Math.floor((difference / 1000 / 60) % 60),
+        seg: Math.floor((difference / 1000) % 60),
+      }
+    }
+    return timeLeft
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeLeft(calculateTimeLeft())
+    }, 1000)
+    return () => clearTimeout(timer)
+  })
+
+  // Determine if keys are empty (time passed)
+  const timerComponents: React.JSX.Element[] = []
+  const timeUnits = [
+    { label: 'Días', value: (timeLeft as any).días },
+    { label: 'Horas', value: (timeLeft as any).horas },
+    { label: 'Min', value: (timeLeft as any).min },
+    { label: 'Seg', value: (timeLeft as any).seg },
+  ]
+
+  timeUnits.forEach((unit) => {
+    timerComponents.push(
+      <div key={unit.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 10px' }}>
+        <span style={{
+          fontSize: 'clamp(1.2rem, 2vw, 1.5rem)',
+          fontWeight: 600,
+          color: '#1a1a1a',
+          fontFamily: 'var(--font-cormorant)',
+          lineHeight: 1
+        }}>
+          {unit.value !== undefined ? String(unit.value).padStart(2, '0') : '00'}
+        </span>
+        <span style={{
+          fontSize: '0.7rem',
+          textTransform: 'uppercase',
+          letterSpacing: '1px',
+          color: '#997b1f',
+          marginTop: '4px'
+        }}>
+          {unit.label}
+        </span>
+      </div>
+    )
+  })
+
+  // If time has passed
+  if (Object.keys(timeLeft).length === 0) {
+    return (
+      <div style={{ marginBottom: '20px', fontFamily: 'var(--font-cormorant)', fontSize: '1.2rem', color: '#1a1a1a' }}>
+        ¡El gran día ha llegado!
+      </div>
+    )
+  }
+
+  return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      marginBottom: '30px',
+      padding: '15px',
+      borderTop: '1px solid rgba(212, 175, 55, 0.2)',
+      borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
+      width: 'fit-content',
+      margin: '0 auto 30px auto'
+    }}>
+      {timerComponents}
     </div>
   )
 }

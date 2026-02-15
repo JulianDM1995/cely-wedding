@@ -84,9 +84,19 @@ export default async function GuestPage({ searchParams }: Props) {
     return notFound()
   }
 
+  // Fetch global config
+  const personalization = await payload.findGlobal({
+    slug: 'personalization',
+  })
+
+  const couple = {
+    groom: personalization.couple?.groom || 'Juan',
+    bride: personalization.couple?.bride || 'Tatiana'
+  }
+
   return (
     <div style={{ height: '100dvh', width: '100%' }}>
-      <ParallaxPhoto guest={guest} />
+      <ParallaxPhoto guest={guest} weddingDate={personalization.weddingDate} couple={couple} />
     </div>
   )
 }

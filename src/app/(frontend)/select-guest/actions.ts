@@ -23,14 +23,21 @@ export const sendGuestAccessEmail = async (guestId: string) => {
     const token = signGuestAccessToken(guest.id)
     const accessLink = `${process.env.NEXT_PUBLIC_APP_URL}/new-message?token=${token}`
 
+    // Fetch Personalization for dynamic couple names
+    const personalization = await payload.findGlobal({
+      slug: 'personalization',
+    })
+    const coupleNames = `${personalization.couple?.groom || 'Juan'} & ${personalization.couple?.bride || 'Tatiana'}`
+
     // 3. Send Email or Log
     const emailData = await generateAccessLinkEmail({
       guestName: guest.name || 'Guest',
       guestEmail: guest.email,
       accessLink,
+      coupleNames,
     })
 
-    if (!process.env.RESEND_API_KEY && !process.env.SENDGRID_API_KEY) {
+    if (!process.env.RESEND_API_KEY) {
       console.log('--- EMAIL SIMULATION (No API Key) ---')
       console.log('To:', guest.email)
       console.log('Subject:', emailData.subject)

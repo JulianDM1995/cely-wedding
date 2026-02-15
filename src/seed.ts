@@ -60,6 +60,7 @@ export const seed = async (payload: Payload, options?: { reset?: boolean }): Pro
           email: user.email,
           profilePicture: media.id,
           status: 'not_sent',
+          guestsCount: 1,
         },
       })
       payload.logger.info(`👤 Guest created: ${guest.name}`)

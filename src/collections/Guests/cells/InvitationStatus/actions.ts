@@ -32,10 +32,16 @@ export const sendInvitation = async (guestId: string) => {
 
     const invitationLink = `${appUrl}/invitation?token=${token}`
 
+    // Fetch Personalization for dynamic couple names
+    const personalization = await payload.findGlobal({
+      slug: 'personalization',
+    })
+    const coupleNames = `${personalization.couple?.groom || 'Juan'} & ${personalization.couple?.bride || 'Tatiana'}`
+
     // Send Email or Log to Console
-    const emailData = await generateInvitationEmail(guest.name || 'Invitado', guest.email, invitationLink)
+    const emailData = await generateInvitationEmail(guest.name || 'Invitado', guest.email, invitationLink, coupleNames)
     
-    if (!process.env.RESEND_API_KEY && !process.env.SENDGRID_API_KEY) {
+    if (!process.env.RESEND_API_KEY) {
       console.log('--- EMAIL SIMULATION (No API Key) ---')
       console.log('To:', guest.email)
       console.log('Subject:', emailData.subject)

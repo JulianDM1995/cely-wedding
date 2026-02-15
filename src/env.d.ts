@@ -3,9 +3,8 @@ declare namespace NodeJS {
     PAYLOAD_SECRET: string
     DATABASE_URL: string
     NEXT_PUBLIC_APP_URL: string
-    SENDGRID_API_KEY: string
-    SENDGRID_FROM_NAME: string
-    SENDGRID_FROM_EMAIL: string
+    RESEND_API_KEY: string
+    RESEND_FROM_EMAIL: string
     // S3 Storage
     S3_BUCKET: string
     S3_ACCESS_KEY_ID: string

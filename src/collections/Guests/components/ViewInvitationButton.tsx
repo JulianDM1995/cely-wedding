@@ -17,10 +17,8 @@ export const ViewInvitationButton: React.FC = () => {
     }
 
     return (
-        <div style={{ marginBottom: '20px' }}>
-            <Button onClick={handleViewInvitation} size="small" buttonStyle="secondary">
-                Ver invitación
-            </Button>
-        </div>
+        <Button onClick={handleViewInvitation} buttonStyle="secondary">
+            Ver invitación
+        </Button>
     )
 }

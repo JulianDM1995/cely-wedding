@@ -176,6 +176,13 @@ export interface Guest {
   id: string;
   name: string;
   email: string;
+  guestsCount?: number | null;
+  guestNames?:
+    | {
+        fullName?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   profilePicture?: (string | null) | Media;
   /**
    * Custom message for the invitation. If empty, uses the default message.
@@ -184,6 +191,7 @@ export interface Guest {
   status?: ('not_sent' | 'sent' | 'confirmed' | 'declined') | null;
   token?: string | null;
   code?: string | null;
+  phoneNumber?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -338,11 +346,19 @@ export interface MediaSelect<T extends boolean = true> {
 export interface GuestsSelect<T extends boolean = true> {
   name?: T;
   email?: T;
+  guestsCount?: T;
+  guestNames?:
+    | T
+    | {
+        fullName?: T;
+        id?: T;
+      };
   profilePicture?: T;
   message?: T;
   status?: T;
   token?: T;
   code?: T;
+  phoneNumber?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -405,6 +421,48 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Personalization {
   id: string;
+  weddingDate: string;
+  couple?: {
+    groom?: string | null;
+    bride?: string | null;
+  };
+  /**
+   * Text appearing at the top of the invitation (e.g. "You are invited")
+   */
+  headerCopy?: string | null;
+  /**
+   * Welcome text or initial greetings.
+   */
+  greetings?: string | null;
+  /**
+   * E.g: "Monetary Gift", "Gift Registry", etc.
+   */
+  giftType?: string | null;
+  dressCode?: {
+    text?: string | null;
+    femaleImage?: (string | null) | Media;
+    maleImage?: (string | null) | Media;
+  };
+  ceremony?: {
+    time?: string | null;
+    placeName?: string | null;
+    gpsCoordinates?: string | null;
+    placePhoto?: (string | null) | Media;
+    mapPhoto?: (string | null) | Media;
+  };
+  reception?: {
+    time?: string | null;
+    placeName?: string | null;
+    gpsCoordinates?: string | null;
+    placePhoto?: (string | null) | Media;
+    mapPhoto?: (string | null) | Media;
+  };
+  carousel?:
+    | {
+        image?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
   qrLayout?: {
     backgroundImage?: (string | null) | Media;
     dotsType?: ('rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square' | 'extra-rounded') | null;
@@ -439,6 +497,47 @@ export interface NewGuestMessage {
  * via the `definition` "personalization_select".
  */
 export interface PersonalizationSelect<T extends boolean = true> {
+  weddingDate?: T;
+  couple?:
+    | T
+    | {
+        groom?: T;
+        bride?: T;
+      };
+  headerCopy?: T;
+  greetings?: T;
+  giftType?: T;
+  dressCode?:
+    | T
+    | {
+        text?: T;
+        femaleImage?: T;
+        maleImage?: T;
+      };
+  ceremony?:
+    | T
+    | {
+        time?: T;
+        placeName?: T;
+        gpsCoordinates?: T;
+        placePhoto?: T;
+        mapPhoto?: T;
+      };
+  reception?:
+    | T
+    | {
+        time?: T;
+        placeName?: T;
+        gpsCoordinates?: T;
+        placePhoto?: T;
+        mapPhoto?: T;
+      };
+  carousel?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
   qrLayout?:
     | T
     | {

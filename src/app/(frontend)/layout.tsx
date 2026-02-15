@@ -1,4 +1,4 @@
-import { APP_DESCRIPTION, APP_NAME } from '@/constants'
+import { APP_DESCRIPTION } from '@/constants'
 import { Cormorant_Garamond, Great_Vibes } from 'next/font/google'
 import React from 'react'
 import './styles.css'
@@ -15,10 +15,29 @@ const greatVibes = Great_Vibes({
   variable: '--font-great-vibes',
 })
 
-export const metadata = {
-  metadataBase: process.env.NEXT_PUBLIC_APP_URL,
-  description: APP_DESCRIPTION,
-  title: APP_NAME,
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
+
+export async function generateMetadata() {
+  const payload = await getPayload({ config: configPromise })
+  const personalization = await payload.findGlobal({
+    slug: 'personalization',
+  })
+
+  const groom = personalization.couple?.groom || 'Juan'
+  const bride = personalization.couple?.bride || 'Tatiana'
+  const title = `${groom} & ${bride}`
+  const description = `${groom} & ${bride} - ${APP_DESCRIPTION}`
+
+  return {
+    metadataBase: process.env.NEXT_PUBLIC_APP_URL ? new URL(process.env.NEXT_PUBLIC_APP_URL) : undefined,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    }
+  }
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
