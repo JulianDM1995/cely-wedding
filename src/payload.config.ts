@@ -1,5 +1,5 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
-import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import { resendAdapter } from '@payloadcms/email-resend'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
 import path from 'path'
@@ -64,18 +64,10 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
   }),
-  email: nodemailerAdapter({
+  email: resendAdapter({
     defaultFromAddress: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
     defaultFromName: APP_NAME,
-    transportOptions: {
-      host: 'smtp.resend.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: 'resend',
-        pass: process.env.RESEND_API_KEY,
-      },
-    },
+    apiKey: process.env.RESEND_API_KEY || '',
   }),
   sharp,
   plugins: [
