@@ -16,8 +16,6 @@ import { Personalization } from './globals/Personalization/index'
 
 import { NewGuestMessage } from './globals/NewGuestMessage'
 
-// ...
-
 import { APP_NAME } from './constants'
 import { seed } from './seed'
 
@@ -52,7 +50,7 @@ export default buildConfig({
   },
   i18n: {
     supportedLanguages: { es, en },
-    fallbackLanguage: 'es', 
+    fallbackLanguage: 'es',
   },
   collections: [Users, Media, Guests, GuestMessages],
   globals: [Personalization, NewGuestMessage],
@@ -71,26 +69,22 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
-    ...(process.env.S3_BUCKET
-      ? [
-          s3Storage({
-            collections: {
-              media: true,
-            },
-            bucket: process.env.S3_BUCKET,
-            config: {
-              credentials: {
-                accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
-                secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
-              },
-              region: process.env.S3_REGION || '',
-              endpoint: process.env.S3_ENDPOINT || '',
-              // Force path style for S3 compatible storage if needed (often needed for MinIO, sometimes for R2/others)
-              forcePathStyle: true,
-            },
-          }),
-        ]
-      : []),
+    s3Storage({
+      collections: {
+        media: true,
+      },
+      bucket: process.env.S3_BUCKET,
+      config: {
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
+        },
+        region: process.env.S3_REGION || '',
+        endpoint: process.env.S3_ENDPOINT || '',
+        // Force path style for S3 compatible storage if needed (often needed for MinIO, sometimes for R2/others)
+        forcePathStyle: true,
+      },
+    }),
   ],
   onInit: async (payload) => {
     if (process.env.PAYLOAD_SEED === 'true') {

@@ -162,8 +162,27 @@ export const Personalization: GlobalConfig = {
                 },
                 {
                   name: 'gpsCoordinates',
-                  type: 'text',
-                  label: { es: 'Coordenadas GPS / Link Mapa', en: 'GPS Coordinates / Map Link' },
+                  type: 'group',
+                  label: { es: 'Coordenadas GPS', en: 'GPS Coordinates' },
+                  fields: [
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'latitude',
+                          type: 'number',
+                          label: { es: 'Latitud', en: 'Latitude' },
+                          admin: { width: '50%' },
+                        },
+                        {
+                          name: 'longitude',
+                          type: 'number',
+                          label: { es: 'Longitud', en: 'Longitude' },
+                          admin: { width: '50%' },
+                        },
+                      ],
+                    },
+                  ],
                 },
                 {
                   type: 'row',
@@ -212,8 +231,27 @@ export const Personalization: GlobalConfig = {
                 },
                 {
                   name: 'gpsCoordinates',
-                  type: 'text',
-                  label: { es: 'Coordenadas GPS / Link Mapa', en: 'GPS Coordinates / Map Link' },
+                  type: 'group',
+                  label: { es: 'Coordenadas GPS', en: 'GPS Coordinates' },
+                  fields: [
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'latitude',
+                          type: 'number',
+                          label: { es: 'Latitud', en: 'Latitude' },
+                          admin: { width: '50%' },
+                        },
+                        {
+                          name: 'longitude',
+                          type: 'number',
+                          label: { es: 'Longitud', en: 'Longitude' },
+                          admin: { width: '50%' },
+                        },
+                      ],
+                    },
+                  ],
                 },
                 {
                   type: 'row',

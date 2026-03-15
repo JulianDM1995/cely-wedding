@@ -321,24 +321,24 @@ export const DownloadInvitationsButton: React.FC = () => {
         >
           <div style={modalStyles.modal}>
             <div style={modalStyles.header}>
-              <FaFilePdf /> Configure PDF
+              <FaFilePdf /> Configurar PDF
             </div>
 
             <div style={modalStyles.row}>
               <div style={modalStyles.field}>
-                <label style={modalStyles.label}>Page Size</label>
+                <label style={modalStyles.label}>Tamaño de Página</label>
                 <select
                   style={modalStyles.input}
                   value={config.pageSize}
                   onChange={(e) => setConfig({ ...config, pageSize: e.target.value })}
                 >
                   <option value="a4">A4</option>
-                  <option value="letter">Letter</option>
-                  <option value="legal">Legal</option>
+                  <option value="letter">Carta</option>
+                  <option value="legal">Oficio</option>
                 </select>
               </div>
               <div style={modalStyles.field}>
-                <label style={modalStyles.label}>QR Width (mm)</label>
+                <label style={modalStyles.label}>Ancho QR (mm)</label>
                 <input
                   type="number"
                   style={modalStyles.input}
@@ -350,7 +350,7 @@ export const DownloadInvitationsButton: React.FC = () => {
 
             <div style={modalStyles.row}>
               <div style={modalStyles.field}>
-                <label style={modalStyles.label}>Page Margin (mm)</label>
+                <label style={modalStyles.label}>Margen (mm)</label>
                 <input
                   type="number"
                   style={modalStyles.input}
@@ -359,7 +359,7 @@ export const DownloadInvitationsButton: React.FC = () => {
                 />
               </div>
               <div style={modalStyles.field}>
-                <label style={modalStyles.label}>Font Size (pt)</label>
+                <label style={modalStyles.label}>Tamaño Fuente (pt)</label>
                 <input
                   type="number"
                   style={modalStyles.input}
@@ -371,7 +371,7 @@ export const DownloadInvitationsButton: React.FC = () => {
             </div>
 
             <div style={modalStyles.field}>
-              <label style={modalStyles.label}>Extra URL Params (e.g. source=qr)</label>
+              <label style={modalStyles.label}>Parámetros Extra (ej. source=qr)</label>
               <input
                 type="text"
                 style={modalStyles.input}
@@ -389,7 +389,7 @@ export const DownloadInvitationsButton: React.FC = () => {
                 style={{ cursor: 'pointer' }}
               />
               <label style={modalStyles.label} onClick={() => setConfig({ ...config, showText: !config.showText })}>
-                Show Guest Name
+                Mostrar Nombre del Invitado
               </label>
             </div>
 
@@ -402,19 +402,30 @@ export const DownloadInvitationsButton: React.FC = () => {
 
             <div style={modalStyles.footer}>
               <Button buttonStyle="secondary" onClick={close} disabled={loading}>
-                Cancel
+                Cancelar
               </Button>
               <Button onClick={generatePDF} disabled={loading}>
-                {loading ? 'Generating...' : 'Generate PDF'}
+                {loading ? 'Generando...' : 'Generar PDF'}
               </Button>
             </div>
           </div>
         </div>
       )}
 
-      <Button buttonStyle="pill" onClick={open}>
-        Download Invitations
-      </Button>
+      <div
+        style={{
+          display: 'inline-flex',
+          flexDirection: 'row',
+          gap: '10px',
+          alignItems: 'center',
+          marginLeft: 'auto', // Push to the right
+        }}
+      >
+        <Button buttonStyle="pill" onClick={open}>
+          Descargar Invitaciones
+        </Button>
+      </div>
+
     </>
   )
 }

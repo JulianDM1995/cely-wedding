@@ -167,7 +167,8 @@ export const QRCode: React.FC = () => {
           border: '1px solid var(--theme-elevation-150)',
           borderRadius: 'var(--style-radius-m)',
           backgroundColor: 'var(--theme-elevation-50)',
-          width: '100%'
+          width: '100%',
+          position: 'relative' // Added for absolute positioning of button
         }}
       >
         {!previewUrl && (
@@ -198,14 +199,14 @@ export const QRCode: React.FC = () => {
                 }}
               />
             </div>
-            <Button
-              size="small"
-              buttonStyle="secondary"
-              onClick={() => window.open(previewUrl, '_blank')}
-              icon="link"
-            >
-              Abrir en nueva pestaña
-            </Button>
+            <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+              <Button
+                size="small"
+                buttonStyle="icon-label" // Using a style that might be more appropriate or just secondary
+                onClick={() => window.open(previewUrl, '_blank')}
+                icon="link"
+              />
+            </div>
           </>
         )}
       </div>

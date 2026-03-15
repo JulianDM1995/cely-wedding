@@ -1,16 +1,20 @@
 'use client'
 
 import type { Guest } from '@/payload-types'
-import React from 'react'
+import React, { useState } from 'react'
+import { EventDetailsModal } from '../EventDetailsModal'
 
 interface InvitationRendererProps {
   guest?: Guest
+  personalization?: any
   transparentBg?: boolean
   onClose?: () => void
   weddingDate?: string | null
 }
 
-export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, transparentBg, onClose, weddingDate }) => {
+export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, transparentBg, onClose, weddingDate, personalization }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   return (
     <div
       style={{
@@ -194,10 +198,50 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
               <div style={{ display: 'flex', gap: 'clamp(8px, 2vw, 16px)', justifyContent: 'center' }}>
                 <AttendanceButtons guestId={guest.id} initialStatus={guest.status} />
               </div>
+
+              {/* Event Details Button */}
+              {/* {personalization && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    style={{
+                      padding: '10px 24px',
+                      backgroundColor: 'transparent',
+                      color: '#d4af37',
+                      border: '1px solid #d4af37',
+                      borderRadius: '50px',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                      fontSize: '14px',
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase',
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent'
+                    }}
+                  >
+                    <span>ℹ️</span> Ver Detalles
+                  </button>
+                </div>
+              )} */}
             </div>
           )}
         </div>
       </div>
+
+      {/* Event Details Modal */}
+      <EventDetailsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        personalization={personalization}
+      />
     </div>
   )
 }
@@ -287,7 +331,7 @@ const Countdown = ({ targetDate }: { targetDate: string }) => {
 }
 
 import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { updateGuestStatus } from './actions'
 

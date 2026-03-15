@@ -62,7 +62,7 @@ const MOBILE_WATERCOLOR_OPTS = {
     scale: 1.2  // 20% larger on mobile
 }
 
-const ParallaxPhoto: React.FC<{ guest?: Guest; weddingDate?: string | null; couple?: { groom: string; bride: string } }> = ({ guest, weddingDate, couple }) => {
+const ParallaxPhoto: React.FC<{ guest?: Guest; weddingDate?: string | null; couple?: { groom: string; bride: string }; personalization?: any }> = ({ guest, weddingDate, couple, personalization }) => {
     // Mouse position state
     const mouseX = useMotionValue(0)
     const mouseY = useMotionValue(0)
@@ -663,13 +663,55 @@ const ParallaxPhoto: React.FC<{ guest?: Guest; weddingDate?: string | null; coup
                             }}
                         // onClick removed to allow clicks to pass through to overlay
                         >
-                            <InvitationRenderer
+                        <InvitationRenderer
                                 guest={guest}
                                 transparentBg
                                 onClose={() => setIsInvitationOpen(false)}
                                 weddingDate={weddingDate}
+                                personalization={personalization}
                             />
                         </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Mobile Tilt Hint - Only on Mobile & When Inactive */}
+            <AnimatePresence>
+                {isMobile && !isTiltActive && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ delay: 2, duration: 1 }}
+                        style={{
+                            position: 'absolute',
+                            bottom: '10%',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            zIndex: 40,
+                            pointerEvents: 'none',
+                            textAlign: 'center',
+                            width: '80%',
+                        }}
+                    >
+                        <div style={{
+                            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                            backdropFilter: 'blur(4px)',
+                            padding: '10px 20px',
+                            borderRadius: '30px',
+                            color: 'white',
+                            fontSize: '14px',
+                            fontWeight: 500,
+                            fontFamily: 'var(--font-cormorant)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                            border: '1px solid rgba(255,255,255,0.2)'
+                        }}>
+                            <span style={{ fontSize: '18px' }}>📱</span>
+                            Presiona la pantalla para activar efecto 3D
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

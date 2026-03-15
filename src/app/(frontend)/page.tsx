@@ -15,7 +15,7 @@ export default async function HomePage() {
 
   return (
     <div style={{ height: '100dvh', width: '100dvw', overflow: 'hidden' }}>
-      <ParallaxPhoto weddingDate={personalization.weddingDate} couple={couple} />
+      <ParallaxPhoto weddingDate={personalization.weddingDate} couple={couple} personalization={personalization} />
     </div>
   )
 }

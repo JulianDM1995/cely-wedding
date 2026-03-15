@@ -96,7 +96,7 @@ export default async function GuestPage({ searchParams }: Props) {
 
   return (
     <div style={{ height: '100dvh', width: '100%' }}>
-      <ParallaxPhoto guest={guest} weddingDate={personalization.weddingDate} couple={couple} />
+      <ParallaxPhoto guest={guest} weddingDate={personalization.weddingDate} couple={couple} personalization={personalization} />
     </div>
   )
 }

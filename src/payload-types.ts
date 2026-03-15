@@ -446,14 +446,20 @@ export interface Personalization {
   ceremony?: {
     time?: string | null;
     placeName?: string | null;
-    gpsCoordinates?: string | null;
+    gpsCoordinates?: {
+      latitude?: number | null;
+      longitude?: number | null;
+    };
     placePhoto?: (string | null) | Media;
     mapPhoto?: (string | null) | Media;
   };
   reception?: {
     time?: string | null;
     placeName?: string | null;
-    gpsCoordinates?: string | null;
+    gpsCoordinates?: {
+      latitude?: number | null;
+      longitude?: number | null;
+    };
     placePhoto?: (string | null) | Media;
     mapPhoto?: (string | null) | Media;
   };
@@ -519,7 +525,12 @@ export interface PersonalizationSelect<T extends boolean = true> {
     | {
         time?: T;
         placeName?: T;
-        gpsCoordinates?: T;
+        gpsCoordinates?:
+          | T
+          | {
+              latitude?: T;
+              longitude?: T;
+            };
         placePhoto?: T;
         mapPhoto?: T;
       };
@@ -528,7 +539,12 @@ export interface PersonalizationSelect<T extends boolean = true> {
     | {
         time?: T;
         placeName?: T;
-        gpsCoordinates?: T;
+        gpsCoordinates?:
+          | T
+          | {
+              latitude?: T;
+              longitude?: T;
+            };
         placePhoto?: T;
         mapPhoto?: T;
       };
