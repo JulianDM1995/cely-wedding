@@ -24,8 +24,21 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      graphics: {
+        Icon: '/components/graphics/ClientIcon.tsx#default',
+        Logo: '/components/graphics/ClientBanner.tsx#default',
+      },
+    },
     meta: {
       titleSuffix: ` | ${APP_NAME}`,
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          url: '/images/branding/icon.png',
+        },
+      ],
     },
   },
   collections: [Users, Media, Guests, GuestMessages],
