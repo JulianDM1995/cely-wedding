@@ -69,6 +69,8 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    guests: Guest;
+    'guest-messages': GuestMessage;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +80,8 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    guests: GuestsSelect<false> | GuestsSelect<true>;
+    'guest-messages': GuestMessagesSelect<false> | GuestMessagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -87,8 +91,14 @@ export interface Config {
     defaultIDType: string;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    personalization: Personalization;
+    'new-guest-message': NewGuestMessage;
+  };
+  globalsSelect: {
+    personalization: PersonalizationSelect<false> | PersonalizationSelect<true>;
+    'new-guest-message': NewGuestMessageSelect<false> | NewGuestMessageSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -163,6 +173,55 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guests".
+ */
+export interface Guest {
+  id: string;
+  name: string;
+  email: string;
+  guestsCount?: number | null;
+  guestNames?:
+    | {
+        fullName?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  profilePicture?: (string | null) | Media;
+  /**
+   * Custom message for the invitation. If empty, uses the default message.
+   */
+  message?: string | null;
+  status?: ('not_sent' | 'sent' | 'confirmed' | 'declined') | null;
+  token?: string | null;
+  code?: string | null;
+  phoneNumber?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guest-messages".
+ */
+export interface GuestMessage {
+  id: string;
+  owner: string | Guest;
+  message: string;
+  media?: (string | null) | Media;
+  style?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  status?: ('draft' | 'published' | 'archived') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -192,6 +251,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'guests';
+        value: string | Guest;
+      } | null)
+    | ({
+        relationTo: 'guest-messages';
+        value: string | GuestMessage;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -277,6 +344,42 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guests_select".
+ */
+export interface GuestsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  guestsCount?: T;
+  guestNames?:
+    | T
+    | {
+        fullName?: T;
+        id?: T;
+      };
+  profilePicture?: T;
+  message?: T;
+  status?: T;
+  token?: T;
+  code?: T;
+  phoneNumber?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guest-messages_select".
+ */
+export interface GuestMessagesSelect<T extends boolean = true> {
+  owner?: T;
+  message?: T;
+  media?: T;
+  style?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -314,6 +417,177 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "personalization".
+ */
+export interface Personalization {
+  id: string;
+  weddingDate: string;
+  couple?: {
+    groom?: string | null;
+    bride?: string | null;
+  };
+  /**
+   * Text appearing at the top of the invitation (e.g. "You are invited")
+   */
+  headerCopy?: string | null;
+  /**
+   * Welcome text or initial greetings.
+   */
+  greetings?: string | null;
+  /**
+   * E.g: "Monetary Gift", "Gift Registry", etc.
+   */
+  giftType?: string | null;
+  dressCode?: {
+    text?: string | null;
+    femaleImage?: (string | null) | Media;
+    maleImage?: (string | null) | Media;
+  };
+  ceremony?: {
+    time?: string | null;
+    placeName?: string | null;
+    gpsCoordinates?: {
+      latitude?: number | null;
+      longitude?: number | null;
+    };
+    placePhoto?: (string | null) | Media;
+    mapPhoto?: (string | null) | Media;
+  };
+  reception?: {
+    time?: string | null;
+    placeName?: string | null;
+    gpsCoordinates?: {
+      latitude?: number | null;
+      longitude?: number | null;
+    };
+    placePhoto?: (string | null) | Media;
+    mapPhoto?: (string | null) | Media;
+  };
+  carousel?:
+    | {
+        image?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  qrLayout?: {
+    backgroundImage?: (string | null) | Media;
+    dotsType?: ('rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square' | 'extra-rounded') | null;
+    color?: string | null;
+    cornersSquareType?: ('dot' | 'square' | 'extra-rounded') | null;
+    cornersSquareColor?: string | null;
+    cornersDotType?: ('dot' | 'square') | null;
+    cornersDotColor?: string | null;
+    show?: boolean | null;
+    size?: number | null;
+    qrSize?: number | null;
+    qrX?: number | null;
+    qrY?: number | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "new-guest-message".
+ */
+export interface NewGuestMessage {
+  id: string;
+  lastTimeRead?: string | null;
+  owner?: (string | null) | Guest;
+  lastMessage?: (string | null) | GuestMessage;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "personalization_select".
+ */
+export interface PersonalizationSelect<T extends boolean = true> {
+  weddingDate?: T;
+  couple?:
+    | T
+    | {
+        groom?: T;
+        bride?: T;
+      };
+  headerCopy?: T;
+  greetings?: T;
+  giftType?: T;
+  dressCode?:
+    | T
+    | {
+        text?: T;
+        femaleImage?: T;
+        maleImage?: T;
+      };
+  ceremony?:
+    | T
+    | {
+        time?: T;
+        placeName?: T;
+        gpsCoordinates?:
+          | T
+          | {
+              latitude?: T;
+              longitude?: T;
+            };
+        placePhoto?: T;
+        mapPhoto?: T;
+      };
+  reception?:
+    | T
+    | {
+        time?: T;
+        placeName?: T;
+        gpsCoordinates?:
+          | T
+          | {
+              latitude?: T;
+              longitude?: T;
+            };
+        placePhoto?: T;
+        mapPhoto?: T;
+      };
+  carousel?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  qrLayout?:
+    | T
+    | {
+        backgroundImage?: T;
+        dotsType?: T;
+        color?: T;
+        cornersSquareType?: T;
+        cornersSquareColor?: T;
+        cornersDotType?: T;
+        cornersDotColor?: T;
+        show?: T;
+        size?: T;
+        qrSize?: T;
+        qrX?: T;
+        qrY?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "new-guest-message_select".
+ */
+export interface NewGuestMessageSelect<T extends boolean = true> {
+  lastTimeRead?: T;
+  owner?: T;
+  lastMessage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

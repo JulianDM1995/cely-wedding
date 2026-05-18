@@ -7,6 +7,13 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Guests } from './collections/Guests'
+import { GuestMessages } from './collections/GuestMessages'
+
+import { Personalization } from './globals/Personalization'
+import { NewGuestMessage } from './globals/NewGuestMessage'
+
+import { APP_NAME } from './constants'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -17,8 +24,12 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      titleSuffix: ` | ${APP_NAME}`,
+    },
   },
-  collections: [Users, Media],
+  collections: [Users, Media, Guests, GuestMessages],
+  globals: [Personalization, NewGuestMessage],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -30,3 +41,4 @@ export default buildConfig({
   sharp,
   plugins: [],
 })
+
