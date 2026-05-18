@@ -214,9 +214,26 @@ const CustomColorInput = ({ value, onChange }: { value: string; onChange: (val: 
   )
 }
 
-const NativeImageUpload = ({ value, onChange, label }: { value: any, onChange: (val: any) => void, label: string }) => {
+const NativeImageUpload = ({ value, onChange, label, aspect }: { value: any, onChange: (val: any) => void, label: string, aspect?: string }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [isFetching, setIsFetching] = useState(typeof value === 'string' && !!value)
+
+  useEffect(() => {
+    if (value && typeof value === 'object' && value.url) {
+      setPreviewUrl(value.url)
+    } else if (typeof value === 'string' && value) {
+      setIsFetching(true)
+      fetch(`/api/media/${value}`)
+        .then(res => res.json())
+        .then(doc => { if(doc.url) setPreviewUrl(doc.url) })
+        .finally(() => setIsFetching(false))
+    } else {
+      setPreviewUrl(null)
+    }
+  }, [value])
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -225,25 +242,66 @@ const NativeImageUpload = ({ value, onChange, label }: { value: any, onChange: (
       const formData = new FormData()
       formData.append('file', file)
       const res = await fetch('/api/media', { method: 'POST', body: formData })
-      if (res.ok) { const data = await res.json(); onChange(data.doc.id) }
+      if (res.ok) { const data = await res.json(); onChange(data.doc.id); setPreviewUrl(data.doc.url); }
     } catch (e) { console.error(e) } finally { setIsUploading(false); if (fileInputRef.current) fileInputRef.current.value = '' }
   }
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onChange(null)
+    setPreviewUrl(null)
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       <label style={PAYLOAD_LABEL}>{label}</label>
-      {value ? (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'var(--theme-bg)', border: '1px solid var(--theme-elevation-200)', borderRadius: '4px', padding: '10px 14px' }}>
-          <span style={{ fontSize: '13px', color: 'var(--theme-text)' }}>Image Selected</span>
-          <button onClick={() => onChange(null)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px' }}><FaTrash size={12} /> Remove</button>
-        </div>
-      ) : (
-        <>
+      <div style={{ position: 'relative', width: '100%', margin: '0' }}>
+        <div 
+          onClick={() => { if (!value) fileInputRef.current?.click() }}
+          style={{ 
+            position: 'relative', width: '100%', height: '200px', 
+            backgroundColor: 'var(--theme-elevation-50)', 
+            border: value ? '4px solid var(--theme-elevation-100)' : '2px dashed var(--theme-elevation-200)', 
+            borderRadius: '8px', overflow: 'hidden', display: 'flex', 
+            alignItems: 'center', justifyContent: 'center',
+            cursor: value ? 'default' : 'pointer',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          {isFetching || isUploading ? (
+            <div style={{ width: '100%', height: '100%', backgroundColor: 'var(--theme-elevation-150)', animation: 'pulse 1.5s infinite ease-in-out' }} />
+          ) : previewUrl ? (
+            <img src={previewUrl} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt="Preview" />
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', color: 'var(--theme-elevation-400)' }}>
+               <FaUpload size={24} />
+               <span style={{ fontSize: '13px', fontWeight: 500 }}>Upload Image</span>
+            </div>
+          )}
+          
           <input type="file" accept="image/*" ref={fileInputRef} onChange={handleUpload} style={{ display: 'none' }} />
-          <button onClick={() => fileInputRef.current?.click()} disabled={isUploading} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', padding: '10px', backgroundColor: 'var(--theme-elevation-100)', color: 'var(--theme-text)', border: '1px dashed var(--theme-elevation-300)', borderRadius: '4px', cursor: isUploading ? 'not-allowed' : 'pointer' }}>
-            {isUploading ? 'Uploading...' : <><FaUpload size={14} /> Upload Image</>}
-          </button>
-        </>
-      )}
+        </div>
+        
+        {value && (
+          <>
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              style={{ position: 'absolute', bottom: '8px', right: '8px', width: '36px', height: '36px', borderRadius: '50%', backgroundColor: 'var(--theme-elevation-800)', color: 'var(--theme-elevation-0)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.2)', border: '2px solid var(--theme-elevation-0)', zIndex: 20, transition: 'all 0.2s' }}
+              title="Change Photo"
+            >
+              <FaUpload size={14} />
+            </div>
+            <div
+              onClick={handleRemove}
+              style={{ position: 'absolute', top: '8px', right: '8px', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#ef4444', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.2)', border: '2px solid var(--theme-elevation-0)', zIndex: 20, transition: 'all 0.2s' }}
+              title="Remove Photo"
+            >
+              <FaTrash size={12} />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 }
@@ -280,16 +338,38 @@ export const StandaloneQRConfigurator: React.FC = () => {
       {backgroundImageValue && (
         <>
           <FieldWrapper>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--theme-text)', cursor: 'pointer' }}>
-              <input type="checkbox" checked={!!includeProductPhoto} onChange={(e) => setIncludeProductPhoto(e.target.checked)} />
-              Include Guest Photo
-            </label>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '8px' }}>
+              <div 
+                onClick={() => setIncludeProductPhoto(!includeProductPhoto)}
+                style={{
+                  width: '18px', height: '18px', 
+                  backgroundColor: includeProductPhoto ? 'var(--theme-success-500)' : 'transparent',
+                  border: includeProductPhoto ? '1px solid var(--theme-success-500)' : '1px solid var(--theme-elevation-300)',
+                  borderRadius: '3px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', transition: 'all 0.1s'
+                }}
+              >
+                {includeProductPhoto && <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </div>
+              <label onClick={() => setIncludeProductPhoto(!includeProductPhoto)} style={{ ...PAYLOAD_LABEL, marginBottom: 0, cursor: 'pointer' }}>Include Guest Photo</label>
+            </div>
           </FieldWrapper>
           <FieldWrapper>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--theme-text)', cursor: 'pointer' }}>
-              <input type="checkbox" checked={!!includeGarmentName} onChange={(e) => setIncludeGarmentName(e.target.checked)} />
-              Include Guest Name
-            </label>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '8px' }}>
+              <div 
+                onClick={() => setIncludeGarmentName(!includeGarmentName)}
+                style={{
+                  width: '18px', height: '18px', 
+                  backgroundColor: includeGarmentName ? 'var(--theme-success-500)' : 'transparent',
+                  border: includeGarmentName ? '1px solid var(--theme-success-500)' : '1px solid var(--theme-elevation-300)',
+                  borderRadius: '3px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', transition: 'all 0.1s'
+                }}
+              >
+                {includeGarmentName && <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </div>
+              <label onClick={() => setIncludeGarmentName(!includeGarmentName)} style={{ ...PAYLOAD_LABEL, marginBottom: 0, cursor: 'pointer' }}>Include Guest Name</label>
+            </div>
           </FieldWrapper>
 
           {includeGarmentName && (

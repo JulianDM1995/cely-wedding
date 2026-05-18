@@ -5,11 +5,15 @@ export const Media: CollectionConfig = {
   access: {
     read: () => true,
   },
+  admin: {
+    hidden: true,
+    hideAPIURL: true,
+  },
   fields: [
     {
       name: 'alt',
       type: 'text',
-      required: true,
+      required: false,
     },
   ],
   upload: true,

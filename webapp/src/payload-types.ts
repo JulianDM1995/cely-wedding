@@ -158,7 +158,7 @@ export interface User {
  */
 export interface Media {
   id: string;
-  alt: string;
+  alt?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -177,24 +177,29 @@ export interface Media {
  */
 export interface Guest {
   id: string;
+  profilePicture?: (string | null) | Media;
   name: string;
   email: string;
   phoneNumber?: string | null;
+  /**
+   * Custom message for the invitation. If empty, uses the default message.
+   */
+  message?: string | null;
+  /**
+   * Add the names of the people associated with this invitation.
+   */
   guestNames?:
     | {
         fullName?: string | null;
         id?: string | null;
       }[]
     | null;
-  profilePicture?: (string | null) | Media;
-  /**
-   * Custom message for the invitation. If empty, uses the default message.
-   */
-  message?: string | null;
-  guestsCount?: number | null;
+  slug?: string | null;
   status?: ('not_sent' | 'sent' | 'confirmed' | 'declined') | null;
-  token?: string | null;
-  code?: string | null;
+  /**
+   * Calculated automatically based on the companions list.
+   */
+  guestsCount?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -347,21 +352,20 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "guests_select".
  */
 export interface GuestsSelect<T extends boolean = true> {
+  profilePicture?: T;
   name?: T;
   email?: T;
   phoneNumber?: T;
+  message?: T;
   guestNames?:
     | T
     | {
         fullName?: T;
         id?: T;
       };
-  profilePicture?: T;
-  message?: T;
-  guestsCount?: T;
+  slug?: T;
   status?: T;
-  token?: T;
-  code?: T;
+  guestsCount?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -425,6 +429,10 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface Personalization {
   id: string;
   weddingDate: string;
+  /**
+   * E.g: "Monetary Gift", "Gift Registry", etc.
+   */
+  giftType?: string | null;
   couple?: {
     groom?: string | null;
     bride?: string | null;
@@ -437,15 +445,6 @@ export interface Personalization {
    * Welcome text or initial greetings.
    */
   greetings?: string | null;
-  /**
-   * E.g: "Monetary Gift", "Gift Registry", etc.
-   */
-  giftType?: string | null;
-  dressCode?: {
-    text?: string | null;
-    femaleImage?: (string | null) | Media;
-    maleImage?: (string | null) | Media;
-  };
   ceremony?: {
     time?: string | null;
     placeName?: string | null;
@@ -466,12 +465,21 @@ export interface Personalization {
     placePhoto?: (string | null) | Media;
     mapPhoto?: (string | null) | Media;
   };
-  carousel?:
-    | {
-        image?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
+  dressCode?: {
+    text?: string | null;
+    femaleImage?: (string | null) | Media;
+    maleImage?: (string | null) | Media;
+  };
+  carousel?: (string | Media)[] | null;
+  /**
+   * You can use {{name}} for the name, {{slug}} for the unique identifier.
+   */
+  whatsappMessage?: string | null;
+  emailSubject?: string | null;
+  /**
+   * You can use {{name}} for the name and {{slug}} for the unique identifier.
+   */
+  emailMessage?: string | null;
   qrLayout?: {
     backgroundImage?: (string | null) | Media;
     dotsType?: string | null;
@@ -528,6 +536,7 @@ export interface NewGuestMessage {
  */
 export interface PersonalizationSelect<T extends boolean = true> {
   weddingDate?: T;
+  giftType?: T;
   couple?:
     | T
     | {
@@ -536,14 +545,6 @@ export interface PersonalizationSelect<T extends boolean = true> {
       };
   headerCopy?: T;
   greetings?: T;
-  giftType?: T;
-  dressCode?:
-    | T
-    | {
-        text?: T;
-        femaleImage?: T;
-        maleImage?: T;
-      };
   ceremony?:
     | T
     | {
@@ -572,12 +573,17 @@ export interface PersonalizationSelect<T extends boolean = true> {
         placePhoto?: T;
         mapPhoto?: T;
       };
-  carousel?:
+  dressCode?:
     | T
     | {
-        image?: T;
-        id?: T;
+        text?: T;
+        femaleImage?: T;
+        maleImage?: T;
       };
+  carousel?: T;
+  whatsappMessage?: T;
+  emailSubject?: T;
+  emailMessage?: T;
   qrLayout?:
     | T
     | {

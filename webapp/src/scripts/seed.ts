@@ -164,9 +164,12 @@ const seed = async () => {
         mapPhoto: receptionMapPhoto || undefined,
       },
       carousel: [
-        { image: carouselImage1 || undefined },
-        { image: carouselImage2 || undefined },
-      ].filter(c => c.image !== undefined),
+        carouselImage1,
+        carouselImage2,
+      ].filter(Boolean) as string[],
+      whatsappMessage: '¡Hola {{name}}! Nos hace muy felices invitarte a nuestra boda. Puedes ver los detalles, tu pase de entrada y confirmar tu asistencia en tu invitación digital aquí: https://boda.com/invitacion/{{slug}}',
+      emailSubject: '¡Estás invitado a nuestra boda!',
+      emailMessage: '<p>¡Hola <b>{{name}}</b>!</p><p>Nos hace muy felices invitarte a nuestra boda.</p><p><a href="https://boda.com/invitacion/{{slug}}">Haz clic aquí para ver los detalles y confirmar tu asistencia</a></p>',
       qrLayout: {
         backgroundImage: qrBgImage || undefined,
         dotsType: 'square',

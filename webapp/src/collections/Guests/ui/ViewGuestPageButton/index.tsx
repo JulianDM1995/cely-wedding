@@ -1,15 +1,16 @@
 'use client'
 
-import { Button, useDocumentInfo, useFormFields } from '@payloadcms/ui'
+import { Button, useDocumentInfo, useFormFields, useTranslation } from '@payloadcms/ui'
 import React from 'react'
 
 const ViewGuestPageButton: React.FC = () => {
   const { id } = useDocumentInfo()
-  const formCode = useFormFields(([fields]) => fields.code?.value as string)
+  const formSlug = useFormFields(([fields]) => fields.slug?.value as string)
+  const { i18n } = useTranslation()
 
-  if (!id || !formCode) return null
+  if (!id || !formSlug) return null
 
-  const href = `/invitation?token=${formCode}`
+  const href = `/invitation/${formSlug}`
 
   return (
     <Button
@@ -18,7 +19,7 @@ const ViewGuestPageButton: React.FC = () => {
       url={href}
       newTab={true}
     >
-      Open Page
+      {i18n.language === 'es' ? 'Abrir página de invitación' : 'Open invitation page'}
     </Button>
   )
 }

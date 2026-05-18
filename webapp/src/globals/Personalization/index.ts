@@ -8,6 +8,7 @@ export const Personalization: GlobalConfig = {
   },
   admin: {
     group: 'Admin',
+    hideAPIURL: true,
   },
   fields: [
     {
@@ -15,18 +16,39 @@ export const Personalization: GlobalConfig = {
       tabs: [
         {
           label: {
-            es: 'General',
-            en: 'General',
+            es: 'La Boda',
+            en: 'The Wedding',
           },
           fields: [
             {
-              name: 'weddingDate',
-              type: 'date',
-              label: {
-                es: 'Fecha de la Boda',
-                en: 'Wedding Date',
-              },
-              required: true,
+              type: 'row',
+              fields: [
+                {
+                  name: 'weddingDate',
+                  type: 'date',
+                  label: {
+                    es: 'Fecha de la Boda',
+                    en: 'Wedding Date',
+                  },
+                  required: true,
+                  admin: { width: '50%' },
+                },
+                {
+                  name: 'giftType',
+                  type: 'text',
+                  label: {
+                    es: 'Tipo de Regalo',
+                    en: 'Gift Type',
+                  },
+                  admin: {
+                    width: '50%',
+                    description: {
+                      es: 'Ej: "Lluvia de Sobres", "Lista de Regalos", etc.',
+                      en: 'E.g: "Monetary Gift", "Gift Registry", etc.',
+                    },
+                  },
+                },
+              ]
             },
             {
               name: 'couple',
@@ -37,19 +59,34 @@ export const Personalization: GlobalConfig = {
               },
               fields: [
                 {
-                  name: 'groom',
-                  type: 'text',
-                  label: { es: 'Nombre del Novio', en: 'Groom Name' },
-                  defaultValue: 'Juan',
-                },
-                {
-                  name: 'bride',
-                  type: 'text',
-                  label: { es: 'Nombre de la Novia', en: 'Bride Name' },
-                  defaultValue: 'Tatiana',
-                },
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'groom',
+                      type: 'text',
+                      label: { es: 'Nombre del Novio', en: 'Groom Name' },
+                      defaultValue: 'Juan',
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'bride',
+                      type: 'text',
+                      label: { es: 'Nombre de la Novia', en: 'Bride Name' },
+                      defaultValue: 'Tatiana',
+                      admin: { width: '50%' },
+                    },
+                  ],
+                }
               ],
             },
+          ],
+        },
+        {
+          label: {
+            es: 'Textos & Detalles',
+            en: 'Texts & Details',
+          },
+          fields: [
             {
               name: 'headerCopy',
               type: 'text',
@@ -78,55 +115,7 @@ export const Personalization: GlobalConfig = {
                 },
               },
             },
-            {
-              name: 'giftType',
-              type: 'text',
-              label: {
-                es: 'Tipo de Regalo',
-                en: 'Gift Type',
-              },
-              admin: {
-                description: {
-                  es: 'Ej: "Lluvia de Sobres", "Lista de Regalos", etc.',
-                  en: 'E.g: "Monetary Gift", "Gift Registry", etc.',
-                },
-              },
-            },
-            {
-              name: 'dressCode',
-              type: 'group',
-              label: {
-                es: 'Código de Vestimenta',
-                en: 'Dress Code',
-              },
-              fields: [
-                {
-                  name: 'text',
-                  type: 'textarea',
-                  label: { es: 'Descripción', en: 'Description' },
-                },
-                {
-                  type: 'row',
-                  fields: [
-                    {
-                      name: 'femaleImage',
-                      type: 'upload',
-                      relationTo: 'media',
-                      label: { es: 'Imagen Mujeres', en: 'Female Image' },
-                      admin: { width: '50%' },
-                    },
-                    {
-                      name: 'maleImage',
-                      type: 'upload',
-                      relationTo: 'media',
-                      label: { es: 'Imagen Hombres', en: 'Male Image' },
-                      admin: { width: '50%' },
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
+          ]
         },
         {
           label: {
@@ -163,6 +152,15 @@ export const Personalization: GlobalConfig = {
                   type: 'group',
                   label: { es: 'Coordenadas GPS', en: 'GPS Coordinates' },
                   fields: [
+                    {
+                      name: 'map',
+                      type: 'ui',
+                      admin: {
+                        components: {
+                          Field: '@/components/fields/LocationMapField#LocationMapField',
+                        },
+                      },
+                    },
                     {
                       type: 'row',
                       fields: [
@@ -233,6 +231,15 @@ export const Personalization: GlobalConfig = {
                   label: { es: 'Coordenadas GPS', en: 'GPS Coordinates' },
                   fields: [
                     {
+                      name: 'map',
+                      type: 'ui',
+                      admin: {
+                        components: {
+                          Field: '@/components/fields/LocationMapField#LocationMapField',
+                        },
+                      },
+                    },
+                    {
                       type: 'row',
                       fields: [
                         {
@@ -272,6 +279,40 @@ export const Personalization: GlobalConfig = {
                 },
               ],
             },
+            {
+              name: 'dressCode',
+              type: 'group',
+              label: {
+                es: 'Código de Vestimenta',
+                en: 'Dress Code',
+              },
+              fields: [
+                {
+                  name: 'text',
+                  type: 'textarea',
+                  label: { es: 'Descripción', en: 'Description' },
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'femaleImage',
+                      type: 'upload',
+                      relationTo: 'media',
+                      label: { es: 'Imagen Mujeres', en: 'Female Image' },
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'maleImage',
+                      type: 'upload',
+                      relationTo: 'media',
+                      label: { es: 'Imagen Hombres', en: 'Male Image' },
+                      admin: { width: '50%' },
+                    },
+                  ],
+                },
+              ],
+            },
           ],
         },
         {
@@ -282,22 +323,77 @@ export const Personalization: GlobalConfig = {
           fields: [
             {
               name: 'carousel',
-              type: 'array',
+              type: 'relationship',
+              relationTo: 'media',
+              hasMany: true,
               label: {
                 es: 'Carrusel de Fotos',
                 en: 'Photo Carousel',
               },
+              admin: {
+                custom: {
+                  relationTo: 'media',
+                },
+                components: {
+                  Field: '@/components/fields/PhotosArrayField#default',
+                },
+              },
+            },
+          ],
+        },
+        {
+          label: {
+            es: 'Comunicaciones',
+            en: 'Communications',
+          },
+          fields: [
+            {
+              name: 'whatsappMessage',
+              type: 'textarea',
+              label: {
+                es: 'Mensaje de WhatsApp',
+                en: 'WhatsApp Message',
+              },
+              admin: {
+                description: {
+                  es: 'Puedes usar {{name}} para el nombre, {{slug}} para el identificador único.',
+                  en: 'You can use {{name}} for the name, {{slug}} for the unique identifier.',
+                },
+              },
+              defaultValue: '¡Hola {{name}}! Queremos invitarte a nuestra boda. Puedes ver tu invitación y confirmar tu asistencia aquí: https://boda.com/invitacion/{{slug}}',
+            },
+            {
+              type: 'row',
               fields: [
                 {
-                  name: 'image',
-                  type: 'upload',
-                  relationTo: 'media',
+                  name: 'emailSubject',
+                  type: 'text',
                   label: {
-                    es: 'Imagen',
-                    en: 'Image',
+                    es: 'Asunto del Email',
+                    en: 'Email Subject',
                   },
+                  admin: { width: '100%' },
+                  defaultValue: '¡Estás invitado a nuestra boda!',
                 },
               ],
+            },
+            {
+              name: 'emailMessage',
+              type: 'textarea',
+              label: {
+                es: 'Mensaje del Email (Texto Enriquecido)',
+                en: 'Email Message (Rich Text)',
+              },
+              admin: {
+                components: {
+                  Field: '@/components/fields/RichHTMLEditor#default',
+                },
+                description: {
+                  es: 'Puedes usar {{name}} para el nombre y {{slug}} para el identificador único.',
+                  en: 'You can use {{name}} for the name and {{slug}} for the unique identifier.',
+                },
+              },
+              defaultValue: '<p>¡Hola <b>{{name}}</b>!</p><p>Queremos invitarte a nuestra boda.</p><p><a href="https://boda.com/invitacion/{{slug}}">Haz clic aquí para ver tu invitación</a></p>',
             },
           ],
         },

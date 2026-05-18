@@ -8,15 +8,15 @@ import { APP_NAME } from '@/constants'
 import type { Metadata } from 'next'
 
 interface Props {
-  searchParams: Promise<{
-    token?: string
+  params: Promise<{
+    slug: string
   }>
 }
 
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const { token } = await searchParams
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
 
-  if (!token) {
+  if (!slug) {
     return {
       title: 'Invitación no encontrada'
     }
@@ -30,8 +30,8 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const guests = await payload.find({
     collection: 'guests',
     where: {
-      code: {
-        equals: token,
+      slug: {
+        equals: slug,
       },
     },
     limit: 1,
@@ -56,11 +56,11 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     }
   }
 }
-export default async function GuestPage({ searchParams }: Props) {
-  const { token } = await searchParams
+export default async function GuestPage({ params }: Props) {
+  const { slug } = await params
   const payload = await getPayload({ config: configPromise })
 
-  if (!token) {
+  if (!slug) {
     return notFound()
   }
 
@@ -68,8 +68,8 @@ export default async function GuestPage({ searchParams }: Props) {
   const guests = await payload.find({
     collection: 'guests',
     where: {
-      code: {
-        equals: token,
+      slug: {
+        equals: slug,
       },
     },
     limit: 1,

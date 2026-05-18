@@ -509,22 +509,34 @@ export const QRComposer = ({
   if (!!layout.background.image) {
     // Calculate scaled positions and size for QR
     const scaledSize = layout.background.qrSize * imageScale
-    const scaledX = layout.background.qrX * imageScale
-    const scaledY = layout.background.qrY * imageScale
+    let scaledX = layout.background.qrX * imageScale
+    let scaledY = layout.background.qrY * imageScale
+    if (layout.background.qrX === 0 && layout.background.qrY === 0 && naturalSize) {
+      scaledX = ((naturalSize.w - layout.background.qrSize) / 2) * imageScale
+      scaledY = ((naturalSize.h - layout.background.qrSize) / 2) * imageScale
+    }
 
     // Calculate scaled positions and size for Product Photo (if enabled)
     const productPhotoEnabled = layout.productPhoto?.show
     const scaledPhotoWidth = (layout.productPhoto?.width || 150) * imageScale
     const scaledPhotoHeight = (layout.productPhoto?.height || 150) * imageScale
-    const scaledPhotoX = (layout.productPhoto?.x || 0) * imageScale
-    const scaledPhotoY = (layout.productPhoto?.y || 0) * imageScale
+    let scaledPhotoX = (layout.productPhoto?.x || 0) * imageScale
+    let scaledPhotoY = (layout.productPhoto?.y || 0) * imageScale
+    if ((layout.productPhoto?.x || 0) === 0 && (layout.productPhoto?.y || 0) === 0 && naturalSize) {
+      scaledPhotoX = ((naturalSize.w - (layout.productPhoto?.width || 150)) / 2) * imageScale
+      scaledPhotoY = ((naturalSize.h - (layout.productPhoto?.height || 150)) / 2) * imageScale
+    }
 
     // Calculate scaled positions and size for Garment Name (if enabled)
     const garmentNameEnabled = layout.garmentName?.show
     const scaledNameWidth = (layout.garmentName?.width || 200) * imageScale
     const scaledNameHeight = (layout.garmentName?.height || 50) * imageScale
-    const scaledNameX = (layout.garmentName?.x || 0) * imageScale
-    const scaledNameY = (layout.garmentName?.y || 0) * imageScale
+    let scaledNameX = (layout.garmentName?.x || 0) * imageScale
+    let scaledNameY = (layout.garmentName?.y || 0) * imageScale
+    if ((layout.garmentName?.x || 0) === 0 && (layout.garmentName?.y || 0) === 0 && naturalSize) {
+      scaledNameX = ((naturalSize.w - (layout.garmentName?.width || 200)) / 2) * imageScale
+      scaledNameY = ((naturalSize.h - (layout.garmentName?.height || 50)) / 2) * imageScale
+    }
     const selectedFontFamily = layout.garmentName?.fontFamily || 'Inter, sans-serif'
 
     return (

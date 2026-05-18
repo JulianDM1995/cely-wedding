@@ -174,10 +174,15 @@ export async function renderQR(qrLayout: QRLayout, productPhotoUrl?: string): Pr
   const qrImage = await loadImage(URL.createObjectURL(qrBlob))
 
   // Draw QR code at specified position with rotation
-  const qrX = layout.background.qrX || 0
-  const qrY = layout.background.qrY || 0
+  let qrX = layout.background.qrX || 0
+  let qrY = layout.background.qrY || 0
   const qrSize = layout.background.qrSize || 300
   const qrRot = layout.background.qrRotation || 0
+  
+  if (qrX === 0 && qrY === 0) {
+    qrX = (bgImage.naturalWidth - qrSize) / 2;
+    qrY = (bgImage.naturalHeight - qrSize) / 2;
+  }
 
   ctx.save()
   if (qrRot) {
@@ -195,10 +200,15 @@ export async function renderQR(qrLayout: QRLayout, productPhotoUrl?: string): Pr
       // Save context
       ctx.save()
       
-      const dx = Number(layout.productPhoto.x) || 0
-      const dy = Number(layout.productPhoto.y) || 0
+      let dx = Number(layout.productPhoto.x) || 0
+      let dy = Number(layout.productPhoto.y) || 0
       const dw = Number(layout.productPhoto.width) || 150
       const dh = Number(layout.productPhoto.height) || 150
+      
+      if (dx === 0 && dy === 0) {
+        dx = (bgImage.naturalWidth - dw) / 2;
+        dy = (bgImage.naturalHeight - dh) / 2;
+      }
       const rotation = Number(layout.productPhoto.rotation) || 0
       const roundness = Number(layout.productPhoto.roundness) || 0
 
@@ -275,6 +285,13 @@ export async function renderQR(qrLayout: QRLayout, productPhotoUrl?: string): Pr
       textAlign = 'center',
       x = 0, y = 0, width = 200, height = 50 
     } = layout.garmentName
+    
+    let textOriginX = x;
+    let textOriginY = y;
+    if (x === 0 && y === 0) {
+      textOriginX = (bgImage.naturalWidth - width) / 2;
+      textOriginY = (bgImage.naturalHeight - height) / 2;
+    }
 
     ctx.font = `${fontWeight} ${fontSize}px ${getSafeFontString(fontFamily)}`
     ctx.fillStyle = fontColor
@@ -284,20 +301,20 @@ export async function renderQR(qrLayout: QRLayout, productPhotoUrl?: string): Pr
 
     const rotation = layout.garmentName.rotation || 0
     if (rotation) {
-      ctx.translate(x + width / 2, y + height / 2)
+      ctx.translate(textOriginX + width / 2, textOriginY + height / 2)
       ctx.rotate((rotation * Math.PI) / 180)
-      ctx.translate(-(x + width / 2), -(y + height / 2))
+      ctx.translate(-(textOriginX + width / 2), -(textOriginY + height / 2))
     }
 
     // Calculate X placement based on alignment inside the bounding box
-    let textX = x
-    if (textAlign === 'center') textX = x + width / 2
-    else if (textAlign === 'right') textX = x + width
+    let textX = textOriginX
+    if (textAlign === 'center') textX = textOriginX + width / 2
+    else if (textAlign === 'right') textX = textOriginX + width
     
     // Calculate Y placement based on vertical alignment
-    let textY = y
-    if (verticalAlign === 'middle') textY = y + height / 2
-    else if (verticalAlign === 'bottom') textY = y + height
+    let textY = textOriginY
+    if (verticalAlign === 'middle') textY = textOriginY + height / 2
+    else if (verticalAlign === 'bottom') textY = textOriginY + height
 
     // Draw text limited to the width of the bounding box
     ctx.fillText(layout.garmentName.text || 'Garment Name', textX, textY, width)
@@ -400,10 +417,15 @@ export async function renderQRSVG(qrLayout: QRLayout, productPhotoUrl?: string):
       const pImage = await loadImage(productPhotoUrl)
       const pBase64 = await getBase64FromImage(pImage)
       
-      const dx = Number(layout.productPhoto.x) || 0
-      const dy = Number(layout.productPhoto.y) || 0
+      let dx = Number(layout.productPhoto.x) || 0
+      let dy = Number(layout.productPhoto.y) || 0
       const dw = Number(layout.productPhoto.width) || 150
       const dh = Number(layout.productPhoto.height) || 150
+
+      if (dx === 0 && dy === 0) {
+        dx = (bgImage.naturalWidth - dw) / 2;
+        dy = (bgImage.naturalHeight - dh) / 2;
+      }
 
       let bgRectSvg = ''
       if (layout.productPhoto.bgColor) {
@@ -480,16 +502,23 @@ export async function renderQRSVG(qrLayout: QRLayout, productPhotoUrl?: string):
       x = 0, y = 0, width = 200, height = 50 
     } = layout.garmentName
 
+    let textOriginX = x;
+    let textOriginY = y;
+    if (x === 0 && y === 0) {
+      textOriginX = (bgImage.naturalWidth - width) / 2;
+      textOriginY = (bgImage.naturalHeight - height) / 2;
+    }
+
     let textAnchor = 'middle'
-    let textX = x + width / 2
+    let textX = textOriginX + width / 2
     if (textAlign === 'left') {
       textAnchor = 'start'
-      textX = x
+      textX = textOriginX
     } else if (textAlign === 'right') {
       textAnchor = 'end'
-      textX = x + width
+      textX = textOriginX + width
     }
-    const textY = y + height / 2
+    const textY = textOriginY + height / 2
 
     const safeFont = getSafeFontString(fontFamily).replace(/"/g, "'") // SVG attrs strictly prefer single quotes wrapping primary font.
 
@@ -504,10 +533,15 @@ export async function renderQRSVG(qrLayout: QRLayout, productPhotoUrl?: string):
     garmentNameSvg = `<text x="${textX}" y="${textY}" font-family="${safeFont}" font-size="${fontSize}px" font-weight="${fontWeight}" fill="${fontColor}" text-anchor="${textAnchor}" dominant-baseline="middle"${transformAttr}>${textToDraw}</text>`
   }
 
-  const qrX = layout.background.qrX || 0
-  const qrY = layout.background.qrY || 0
+  let qrX = layout.background.qrX || 0
+  let qrY = layout.background.qrY || 0
   const qrSize = layout.background.qrSize || 300
   const qrRot = layout.background.qrRotation || 0
+
+  if (qrX === 0 && qrY === 0) {
+    qrX = (bgImage.naturalWidth - qrSize) / 2;
+    qrY = (bgImage.naturalHeight - qrSize) / 2;
+  }
   
   let qrTransform = `translate(${qrX}, ${qrY})`
   if (qrRot) {

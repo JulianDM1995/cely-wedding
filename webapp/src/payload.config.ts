@@ -14,17 +14,26 @@ import { Personalization } from './globals/Personalization'
 import { NewGuestMessage } from './globals/NewGuestMessage'
 
 import { APP_NAME } from './constants'
+import { es } from '@payloadcms/translations/languages/es'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  i18n: {
+    supportedLanguages: { es },
+  },
   admin: {
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
     components: {
+      views: {
+        dashboard: {
+          Component: '@/components/dashboard/WeddingDashboard#WeddingDashboard',
+        },
+      },
       graphics: {
         Icon: '/components/graphics/ClientIcon.tsx#default',
         Logo: '/components/graphics/ClientBanner.tsx#default',

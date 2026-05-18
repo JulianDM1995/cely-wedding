@@ -3,7 +3,7 @@
 import type { QRLayout } from '@/components/QRDesigner/utils'
 import { renderQR, renderQRSVG } from '@/components/QRDesigner/utils'
 import { QRComposer } from '@/components/QRDesigner/QRComposer'
-import { Button, useDocumentInfo, useField } from '@payloadcms/ui'
+import { Button, useDocumentInfo, useField, useFormFields } from '@payloadcms/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 
 const GUEST_PLACEHOLDER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" preserveAspectRatio="none"><rect width="300" height="400" fill="#FFFFFF" /><g transform="translate(50, 120) scale(0.3125)"><path fill="#6B7280" d="M211.8 0c7.8 0 14.3 5.7 16.7 13.2C240.8 51.9 277.1 80 320 80s79.2-28.1 91.5-66.8C413.9 5.7 420.4 0 428.2 0h12.6c22.5 0 44.2 7.9 61.5 22.3L628.5 127.4c6.6 5.5 10.7 13.5 11.4 22.1s-2.1 17.1-7.8 23.6l-56 64c-11.4 13.1-31.2 14.6-44.6 3.5L480 195.3V464c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V195.3l-51.5 45.3c-13.4 11.1-33.3 9.6-44.6-3.5l-56-64c-5.7-6.5-8.5-15-7.8-23.6s4.8-16.6 11.4-22.1L137.7 22.3C155 7.9 176.7 0 199.2 0h12.6z"/></g></svg>`
@@ -29,8 +29,8 @@ const fetchMediaIfId = async (input: string | AnyRecord, collection: string): Pr
 const GuestQRCode: React.FC = () => {
   const { id } = useDocumentInfo()
   const { value: profilePicture } = useField<string | { id: string; url?: string }>({ path: 'profilePicture' })
-  const { value: guestNameData } = useField<string>({ path: 'name' })
-  const { value: code } = useField<string>({ path: 'code' })
+  const slug = useFormFields(([fields]) => fields.slug?.value as string)
+  const guestNameData = useFormFields(([fields]) => fields.name?.value as string)
 
   const [personalizationConfig, setPersonalizationConfig] = useState<Record<string, unknown> | null>(null)
   const [logoUrl, setLogoUrl] = useState<string>('')
@@ -83,17 +83,13 @@ const GuestQRCode: React.FC = () => {
 
   const url = useMemo(() => {
      let base = `${process.env.NEXT_PUBLIC_APP_URL || ''}/invitation`
-     const params = new URLSearchParams()
      
-     if (code) {
-       params.append('token', code)
+     if (slug) {
+       base += `/${slug}`
      }
 
-     const str = params.toString()
-     if (str) base += `?${str}`
-     
      return base
-  }, [code])
+  }, [slug])
 
   const finalQRLayout: QRLayout | null = useMemo(() => {
     if (!url || isLoadingVisuals) return null
