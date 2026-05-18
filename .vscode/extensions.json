@@ -1,3 +1,9 @@
 {
-  "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "fwcd.kotlin",
+    "mathiasfrohlich.kotlin",
+    "sswg.swift-lang"
+  ]
 }
