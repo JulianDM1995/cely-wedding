@@ -179,7 +179,7 @@ export interface Guest {
   id: string;
   name: string;
   email: string;
-  guestsCount?: number | null;
+  phoneNumber?: string | null;
   guestNames?:
     | {
         fullName?: string | null;
@@ -191,10 +191,10 @@ export interface Guest {
    * Custom message for the invitation. If empty, uses the default message.
    */
   message?: string | null;
+  guestsCount?: number | null;
   status?: ('not_sent' | 'sent' | 'confirmed' | 'declined') | null;
   token?: string | null;
   code?: string | null;
-  phoneNumber?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -349,7 +349,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface GuestsSelect<T extends boolean = true> {
   name?: T;
   email?: T;
-  guestsCount?: T;
+  phoneNumber?: T;
   guestNames?:
     | T
     | {
@@ -358,10 +358,10 @@ export interface GuestsSelect<T extends boolean = true> {
       };
   profilePicture?: T;
   message?: T;
+  guestsCount?: T;
   status?: T;
   token?: T;
   code?: T;
-  phoneNumber?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -474,17 +474,38 @@ export interface Personalization {
     | null;
   qrLayout?: {
     backgroundImage?: (string | null) | Media;
-    dotsType?: ('rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square' | 'extra-rounded') | null;
+    dotsType?: string | null;
     color?: string | null;
-    cornersSquareType?: ('dot' | 'square' | 'extra-rounded') | null;
-    cornersSquareColor?: string | null;
-    cornersDotType?: ('dot' | 'square') | null;
-    cornersDotColor?: string | null;
-    show?: boolean | null;
-    size?: number | null;
+    cornersSquareType?: string | null;
+    cornersDotType?: string | null;
+    errorCorrectionLevel?: string | null;
+    logo?: {
+      image?: (string | null) | Media;
+      size?: number | null;
+      strokeWidth?: number | null;
+    };
     qrSize?: number | null;
     qrX?: number | null;
     qrY?: number | null;
+    qrRotation?: number | null;
+    includeProductPhoto?: boolean | null;
+    productPhotoWidth?: number | null;
+    productPhotoHeight?: number | null;
+    productPhotoX?: number | null;
+    productPhotoY?: number | null;
+    productPhotoRoundness?: number | null;
+    includeGarmentName?: boolean | null;
+    garmentNameWidth?: number | null;
+    garmentNameHeight?: number | null;
+    garmentNameX?: number | null;
+    garmentNameY?: number | null;
+    garmentNameRotation?: number | null;
+    garmentNameFontFamily?: string | null;
+    garmentNameFontSize?: number | null;
+    garmentNameFontWeight?: string | null;
+    garmentNameFontColor?: string | null;
+    garmentNameTextAlign?: string | null;
+    garmentNameTextVerticalAlign?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -564,14 +585,37 @@ export interface PersonalizationSelect<T extends boolean = true> {
         dotsType?: T;
         color?: T;
         cornersSquareType?: T;
-        cornersSquareColor?: T;
         cornersDotType?: T;
-        cornersDotColor?: T;
-        show?: T;
-        size?: T;
+        errorCorrectionLevel?: T;
+        logo?:
+          | T
+          | {
+              image?: T;
+              size?: T;
+              strokeWidth?: T;
+            };
         qrSize?: T;
         qrX?: T;
         qrY?: T;
+        qrRotation?: T;
+        includeProductPhoto?: T;
+        productPhotoWidth?: T;
+        productPhotoHeight?: T;
+        productPhotoX?: T;
+        productPhotoY?: T;
+        productPhotoRoundness?: T;
+        includeGarmentName?: T;
+        garmentNameWidth?: T;
+        garmentNameHeight?: T;
+        garmentNameX?: T;
+        garmentNameY?: T;
+        garmentNameRotation?: T;
+        garmentNameFontFamily?: T;
+        garmentNameFontSize?: T;
+        garmentNameFontWeight?: T;
+        garmentNameFontColor?: T;
+        garmentNameTextAlign?: T;
+        garmentNameTextVerticalAlign?: T;
       };
   updatedAt?: T;
   createdAt?: T;

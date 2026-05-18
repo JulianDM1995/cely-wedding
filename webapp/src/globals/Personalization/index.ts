@@ -308,140 +308,57 @@ export const Personalization: GlobalConfig = {
           },
           fields: [
             {
+              name: 'qrDesigner',
+              type: 'ui',
+              admin: {
+                components: {
+                  Field: '@/components/QRDesigner#default',
+                },
+              },
+            },
+            {
               name: 'qrLayout',
               type: 'group',
               label: false,
+              admin: { hidden: true },
               fields: [
+                { name: 'backgroundImage', type: 'upload', relationTo: 'media' },
+                { name: 'dotsType', type: 'text', defaultValue: 'square' },
+                { name: 'color', type: 'text', defaultValue: '#000000' },
+                { name: 'cornersSquareType', type: 'text', defaultValue: 'square' },
+                { name: 'cornersDotType', type: 'text', defaultValue: 'square' },
+                { name: 'errorCorrectionLevel', type: 'text', defaultValue: 'Q' },
                 {
-                  name: 'backgroundImage',
-                  type: 'upload',
-                  relationTo: 'media',
-                  label: {
-                    es: 'Imagen de Fondo',
-                    en: 'Background Image',
-                  },
-                },
-                {
-                  type: 'row',
+                  name: 'logo',
+                  type: 'group',
                   fields: [
-                    {
-                      name: 'dotsType',
-                      type: 'select',
-                      label: {
-                        es: 'Tipo de Puntos',
-                        en: 'Dots Type',
-                      },
-                      options: [
-                        { label: { es: 'Redondeado', en: 'Rounded' }, value: 'rounded' },
-                        { label: { es: 'Puntos', en: 'Dots' }, value: 'dots' },
-                        { label: { es: 'Elegante', en: 'Classy' }, value: 'classy' },
-                        { label: { es: 'Elegante Redondeado', en: 'Classy Rounded' }, value: 'classy-rounded' },
-                        { label: { es: 'Cuadrado', en: 'Square' }, value: 'square' },
-                        { label: { es: 'Extra Redondeado', en: 'Extra Rounded' }, value: 'extra-rounded' },
-                      ],
-                      defaultValue: 'square',
-                      admin: { width: '50%' },
-                    },
-                    {
-                      name: 'color',
-                      type: 'text',
-                      label: {
-                        es: 'Color Principal',
-                        en: 'Main Color',
-                      },
-                      admin: { width: '50%' },
-                    },
+                    { name: 'image', type: 'upload', relationTo: 'media' },
+                    { name: 'size', type: 'number', defaultValue: 3 },
+                    { name: 'strokeWidth', type: 'number', defaultValue: 3 },
                   ],
                 },
-                {
-                  type: 'row',
-                  fields: [
-                    {
-                      name: 'cornersSquareType',
-                      type: 'select',
-                      label: {
-                        es: 'Tipo de Esquinas (Cuadrado)',
-                        en: 'Corners Type (Square)',
-                      },
-                      options: [
-                        { label: { es: 'Punto', en: 'Dot' }, value: 'dot' },
-                        { label: { es: 'Cuadrado', en: 'Square' }, value: 'square' },
-                        { label: { es: 'Extra Redondeado', en: 'Extra Rounded' }, value: 'extra-rounded' },
-                      ],
-                      defaultValue: 'square',
-                      admin: { width: '50%' },
-                    },
-                    {
-                      name: 'cornersSquareColor',
-                      type: 'text',
-                      label: {
-                        es: 'Color de Esquinas (Cuadrado)',
-                        en: 'Corners Color (Square)',
-                      },
-                      admin: { width: '50%' },
-                    },
-                  ],
-                },
-                {
-                  type: 'row',
-                  fields: [
-                    {
-                      name: 'cornersDotType',
-                      type: 'select',
-                      label: {
-                        es: 'Tipo de Esquinas (Punto)',
-                        en: 'Corners Type (Dot)',
-                      },
-                      options: [
-                        { label: { es: 'Punto', en: 'Dot' }, value: 'dot' },
-                        { label: { es: 'Cuadrado', en: 'Square' }, value: 'square' },
-                      ],
-                      defaultValue: 'square',
-                      admin: { width: '50%' },
-                    },
-                    {
-                      name: 'cornersDotColor',
-                      type: 'text',
-                      label: {
-                        es: 'Color de Esquinas (Punto)',
-                        en: 'Corners Color (Dot)',
-                      },
-                      admin: { width: '50%' },
-                    },
-                  ],
-                },
-                {
-                  name: 'show',
-                  type: 'checkbox',
-                  label: {
-                    es: 'Mostrar Logo',
-                    en: 'Show Logo',
-                  },
-                },
-                {
-                  name: 'size',
-                  type: 'number',
-                  label: {
-                    es: 'Tamaño del Logo (%)',
-                    en: 'Logo Size (%)',
-                  },
-                  defaultValue: 20,
-                },
-                {
-                  name: 'qrSize',
-                  type: 'number',
-                  defaultValue: 300,
-                },
-                {
-                  name: 'qrX',
-                  type: 'number',
-                  defaultValue: 0,
-                },
-                {
-                  name: 'qrY',
-                  type: 'number',
-                  defaultValue: 0,
-                },
+                { name: 'qrSize', type: 'number', defaultValue: 300 },
+                { name: 'qrX', type: 'number', defaultValue: 0 },
+                { name: 'qrY', type: 'number', defaultValue: 0 },
+                { name: 'qrRotation', type: 'number', defaultValue: 0 },
+                { name: 'includeProductPhoto', type: 'checkbox', defaultValue: true },
+                { name: 'productPhotoWidth', type: 'number', defaultValue: 150 },
+                { name: 'productPhotoHeight', type: 'number', defaultValue: 150 },
+                { name: 'productPhotoX', type: 'number', defaultValue: 0 },
+                { name: 'productPhotoY', type: 'number', defaultValue: -200 },
+                { name: 'productPhotoRoundness', type: 'number', defaultValue: 100 },
+                { name: 'includeGarmentName', type: 'checkbox', defaultValue: true },
+                { name: 'garmentNameWidth', type: 'number', defaultValue: 300 },
+                { name: 'garmentNameHeight', type: 'number', defaultValue: 50 },
+                { name: 'garmentNameX', type: 'number', defaultValue: 0 },
+                { name: 'garmentNameY', type: 'number', defaultValue: 150 },
+                { name: 'garmentNameRotation', type: 'number', defaultValue: 0 },
+                { name: 'garmentNameFontFamily', type: 'text', defaultValue: 'Inter, sans-serif' },
+                { name: 'garmentNameFontSize', type: 'number', defaultValue: 48 },
+                { name: 'garmentNameFontWeight', type: 'text', defaultValue: '600' },
+                { name: 'garmentNameFontColor', type: 'text', defaultValue: '#000000' },
+                { name: 'garmentNameTextAlign', type: 'text', defaultValue: 'center' },
+                { name: 'garmentNameTextVerticalAlign', type: 'text', defaultValue: 'middle' },
               ],
             },
           ],

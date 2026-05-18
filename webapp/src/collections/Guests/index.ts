@@ -16,27 +16,126 @@ export const Guests: CollectionConfig = {
     group: 'Admin',
     useAsTitle: 'name',
     defaultColumns: ['name', 'status', 'email', 'updatedAt'],
-    // Components removed to avoid errors until we migrate them
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          '@/collections/Guests/ui/ViewGuestPageButton#default',
+        ],
+      },
+    },
     hideAPIURL: true,
   },
   fields: [
     {
-      name: 'name',
-      type: 'text',
-      label: {
-        es: 'Nombre',
-        en: 'Name',
-      },
-      required: true,
-    },
-    {
-      name: 'email',
-      type: 'email',
-      label: {
-        es: 'Correo Electrónico',
-        en: 'Email',
-      },
-      required: true,
+      type: 'tabs',
+      tabs: [
+        {
+          label: {
+            es: 'Detalles',
+            en: 'Details',
+          },
+          fields: [
+            {
+              name: 'name',
+              type: 'text',
+              label: {
+                es: 'Nombre',
+                en: 'Name',
+              },
+              required: true,
+            },
+            {
+              name: 'email',
+              type: 'email',
+              label: {
+                es: 'Correo Electrónico',
+                en: 'Email',
+              },
+              required: true,
+            },
+            {
+              name: 'phoneNumber',
+              type: 'text',
+              label: {
+                es: 'Teléfono',
+                en: 'Phone Number',
+              },
+            },
+            {
+              type: 'collapsible',
+              label: {
+                es: 'Nombres de los Invitados',
+                en: 'Guest Names',
+              },
+              fields: [
+                {
+                  name: 'guestNames',
+                  type: 'array',
+                  label: {
+                    es: 'Lista de Nombres',
+                    en: 'Names List',
+                  },
+                  fields: [
+                    {
+                      name: 'fullName',
+                      type: 'text',
+                      label: {
+                        es: 'Nombre Completo',
+                        en: 'Full Name',
+                      },
+                    },
+                  ],
+                  admin: {
+                    initCollapsed: false,
+                  },
+                },
+              ],
+            },
+            {
+              name: 'profilePicture',
+              type: 'upload',
+              relationTo: 'media',
+              label: {
+                es: 'Foto de Perfil',
+                en: 'Profile Picture',
+              },
+              required: false,
+            },
+            {
+              name: 'message',
+              type: 'textarea',
+              label: {
+                es: 'Mensaje Personalizado',
+                en: 'Custom Message',
+              },
+              admin: {
+                hidden: true,
+                description: {
+                  es: 'Mensaje personalizado para la invitación. Si se deja vacío, se usará el mensaje por defecto.',
+                  en: 'Custom message for the invitation. If empty, uses the default message.',
+                },
+              },
+            },
+          ]
+        },
+        {
+          label: {
+            es: 'QR & Exportación',
+            en: 'QR & Export',
+          },
+          fields: [
+            {
+              name: 'qrCode',
+              type: 'ui',
+              admin: {
+                components: {
+                  Field: '@/collections/Guests/ui/QRCode#default'
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       name: 'guestsCount',
@@ -56,61 +155,6 @@ export const Guests: CollectionConfig = {
             return siblingData?.guestNames?.length || 1
           },
         ],
-      },
-    },
-    {
-      type: 'collapsible',
-      label: {
-        es: 'Nombres de los Invitados',
-        en: 'Guest Names',
-      },
-      fields: [
-        {
-          name: 'guestNames',
-          type: 'array',
-          label: {
-            es: 'Lista de Nombres',
-            en: 'Names List',
-          },
-          fields: [
-            {
-              name: 'fullName',
-              type: 'text',
-              label: {
-                es: 'Nombre Completo',
-                en: 'Full Name',
-              },
-            },
-          ],
-          admin: {
-            initCollapsed: false,
-          },
-        },
-      ],
-    },
-    {
-      name: 'profilePicture',
-      type: 'upload',
-      relationTo: 'media',
-      label: {
-        es: 'Foto de Perfil',
-        en: 'Profile Picture',
-      },
-      required: false,
-    },
-    {
-      name: 'message',
-      type: 'textarea',
-      label: {
-        es: 'Mensaje Personalizado',
-        en: 'Custom Message',
-      },
-      admin: {
-        hidden: true,
-        description: {
-          es: 'Mensaje personalizado para la invitación. Si se deja vacío, se usará el mensaje por defecto.',
-          en: 'Custom message for the invitation. If empty, uses the default message.',
-        },
       },
     },
     {
@@ -165,14 +209,6 @@ export const Guests: CollectionConfig = {
             return generateGuestCode()
           },
         ],
-      },
-    },
-    {
-      name: 'phoneNumber',
-      type: 'text',
-      label: {
-        es: 'Teléfono',
-        en: 'Phone Number',
       },
     },
   ],
