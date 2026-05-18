@@ -49,3 +49,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 Garments
+
+# legacy
+legacy/node_modules
+legacy/.next
