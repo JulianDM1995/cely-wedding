@@ -694,24 +694,42 @@ const ParallaxPhoto: React.FC<{ guest?: Guest; weddingDate?: string | null; coup
                             width: '80%',
                         }}
                     >
-                        <div style={{
-                            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                            backdropFilter: 'blur(4px)',
-                            padding: '10px 20px',
-                            borderRadius: '30px',
-                            color: 'white',
-                            fontSize: '14px',
-                            fontWeight: 500,
-                            fontFamily: 'var(--font-cormorant)',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-                            border: '1px solid rgba(255,255,255,0.2)'
-                        }}>
-                            <span style={{ fontSize: '18px' }}>📱</span>
-                            Presiona la pantalla para activar efecto 3D
-                        </div>
+                        <button
+                            onClick={handleInteraction}
+                            style={{
+                                backgroundColor: 'rgba(212, 175, 55, 0.8)',
+                                backdropFilter: 'blur(8px)',
+                                WebkitBackdropFilter: 'blur(8px)',
+                                padding: '12px 24px',
+                                borderRadius: '30px',
+                                color: '#fffcf5',
+                                fontSize: '15px',
+                                fontWeight: 600,
+                                fontFamily: 'var(--font-cormorant)',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                boxShadow: '0 4px 20px rgba(212, 175, 55, 0.4)',
+                                border: '1px solid rgba(255,255,255,0.4)',
+                                cursor: 'pointer',
+                                pointerEvents: 'auto',
+                                animation: 'pulse-glow 2s infinite ease-in-out'
+                            }}
+                        >
+                            <span style={{ fontSize: '20px', animation: 'bounce-horizontal 2s infinite ease-in-out' }}>👆</span>
+                            Toca la pantalla para activar efecto 3D
+                        </button>
+                        <style>{`
+                            @keyframes pulse-glow {
+                                0% { transform: scale(1); box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4); }
+                                50% { transform: scale(1.05); box-shadow: 0 4px 30px rgba(212, 175, 55, 0.7); }
+                                100% { transform: scale(1); box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4); }
+                            }
+                            @keyframes bounce-horizontal {
+                                0%, 100% { transform: translateX(0); }
+                                50% { transform: translateX(-5px); }
+                            }
+                        `}</style>
                     </motion.div>
                 )}
             </AnimatePresence>

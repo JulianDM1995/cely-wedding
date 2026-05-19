@@ -34,6 +34,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ isOpen, on
         justifyContent: 'center',
         zIndex: 1000,
         padding: '20px',
+        pointerEvents: 'auto',
       }}
       onClick={onClose}
     >
@@ -44,37 +45,66 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ isOpen, on
           maxHeight: '90vh',
           backgroundColor: '#fffcf5',
           borderRadius: '24px',
-          padding: '30px',
-          overflowY: 'auto',
+          overflow: 'hidden', // Contain the scrollable area
           position: 'relative',
-          fontFamily: 'var(--font-cormorant)',
-          textAlign: 'center',
           boxShadow: '0 25px 50px rgba(0,0,0,0.2)',
+          display: 'flex',
+          flexDirection: 'column',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '15px',
-            right: '15px',
-            background: 'transparent',
-            border: 'none',
-            fontSize: '2rem',
-            cursor: 'pointer',
-            color: '#888',
-            transition: 'color 0.2s',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#333')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = '#888')}
-        >
-          ×
-        </button>
+        {/* Sticky Header with Close Button */}
+        <div style={{
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          justifyContent: 'flex-end',
+          padding: '15px 20px 0',
+          backgroundColor: '#fffcf5', // Match card background
+          zIndex: 10,
+        }}>
+          <button
+            onClick={onClose}
+            style={{
+              background: 'rgba(0,0,0,0.05)',
+              border: 'none',
+              borderRadius: '50%',
+              fontSize: '1.5rem',
+              cursor: 'pointer',
+              color: '#888',
+              width: '36px',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#333'
+              e.currentTarget.style.background = 'rgba(0,0,0,0.1)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = '#888'
+              e.currentTarget.style.background = 'rgba(0,0,0,0.05)'
+            }}
+          >
+            ×
+          </button>
+        </div>
 
-        <h2 style={{ fontSize: '2rem', color: '#1a1a1a', marginBottom: '30px', fontFamily: 'var(--font-great-vibes)' }}>
-          Detalles del Evento
-        </h2>
+        {/* Scrollable Content */}
+        <div style={{
+          padding: '10px 30px 30px',
+          overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch', // Crucial for iOS scroll
+          fontFamily: 'var(--font-cormorant)',
+          textAlign: 'center',
+        }}>
+          <h2 style={{ fontSize: '2rem', color: '#1a1a1a', marginBottom: '30px', fontFamily: 'var(--font-great-vibes)' }}>
+            Detalles del Evento
+          </h2>
 
         {/* Ceremony */}
         {ceremony && (
@@ -129,6 +159,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ isOpen, on
             <p style={{ margin: '5px 0', fontSize: '1.1rem' }}>{giftType}</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   )

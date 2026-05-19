@@ -33,11 +33,12 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
       <div
         style={{
           width: '100%',
-          height: '100%',
-          maxWidth: '600px',
-          maxHeight: '800px', // Optional: constrain height slightly or keep full
+          height: 'auto',
+          minHeight: '60vh',
+          maxHeight: '90vh',
+          maxWidth: '550px',
           margin: '0 auto',
-          padding: '40px',
+          padding: '20px',
           backgroundColor: transparentBg ? 'rgba(255, 252, 245, 0.95)' : '#fffcf5', // Warm paper color
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E")`, // Subtle paper texture
           backdropFilter: transparentBg ? 'blur(20px)' : 'none',
@@ -49,7 +50,6 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
           fontFamily: 'var(--font-cormorant)',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
           position: 'relative',
           pointerEvents: 'auto', // Fix: Capture clicks inside card
         }}
@@ -60,27 +60,29 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
             onClick={onClose}
             style={{
               position: 'absolute',
-              top: '15px', // Top corner
-              right: '15px',
-              background: 'transparent',
+              top: '20px', // Top corner
+              right: '20px',
+              background: 'rgba(255, 255, 255, 0.5)',
               border: 'none',
-              fontSize: '2rem', // Larger X
+              borderRadius: '50%',
+              fontSize: '1.5rem',
               cursor: 'pointer',
-              color: '#888',
+              color: '#666',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '40px',
-              height: '40px',
+              width: '36px',
+              height: '36px',
               transition: 'all 0.2s',
-              zIndex: 20
+              zIndex: 20,
+              boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#333'
+              e.currentTarget.style.color = '#111'
               e.currentTarget.style.transform = 'scale(1.1)'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#888'
+              e.currentTarget.style.color = '#666'
               e.currentTarget.style.transform = 'scale(1)'
             }}
           >
@@ -95,7 +97,7 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
             left: '12px',
             right: '12px',
             bottom: '12px',
-            border: '2px solid rgba(212, 175, 55, 0.5)', // Thicker and darker gold inner border
+            border: '1px solid rgba(212, 175, 55, 0.4)', // Thicker and darker gold inner border
             borderRadius: '16px',
             pointerEvents: 'none'
           }}
@@ -109,10 +111,13 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center'
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            overflowY: 'auto',
+            padding: '30px 10px 20px 10px',
           }}
         >
+          <div style={{ margin: 'auto 0', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
 
           <div
@@ -181,9 +186,20 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
             {guest ? guest.name : 'Bienvenido'}
           </h1>
 
+          {guest?.guestNames && guest.guestNames.length > 0 && (
+            <div style={{ marginTop: '5px', marginBottom: '20px' }}>
+              <span style={{ fontSize: '1.5rem', color: '#997b1f', fontFamily: 'var(--font-great-vibes)' }}>junto con</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '8px' }}>
+                {guest.guestNames.map((companion: any, idx: number) => (
+                  <h2 key={companion.id || idx} style={{ fontSize: 'clamp(1.5rem, 4vw + 1rem, 2.5rem)', color: '#444', fontWeight: 'normal', margin: 0, lineHeight: 1.1, letterSpacing: '-0.5px' }}>
+                    {companion.fullName}
+                  </h2>
+                ))}
+              </div>
+            </div>
+          )}
 
-
-          <p style={{ color: '#666', fontSize: 'clamp(1rem, 2vw + 0.5rem, 1.2rem)', marginBottom: '30px', lineHeight: '1.6', fontStyle: 'italic', maxWidth: '80%', whiteSpace: 'pre-line' }}>
+          <p style={{ color: '#666', fontSize: 'clamp(1rem, 2vw + 0.5rem, 1.2rem)', marginBottom: '30px', marginTop: guest?.guestNames?.length ? '10px' : '0', lineHeight: '1.6', fontStyle: 'italic', maxWidth: '80%', whiteSpace: 'pre-line' }}>
             {guest?.message ? guest.message : <>Estamos encantados de que celebres<br />con nosotros este día especial.</>}
           </p>
 
@@ -200,12 +216,12 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
               </div>
 
               {/* Event Details Button */}
-              {/* {personalization && (
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+              {personalization && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '25px' }}>
                   <button
                     onClick={() => setIsModalOpen(true)}
                     style={{
-                      padding: '10px 24px',
+                      padding: '12px 28px',
                       backgroundColor: 'transparent',
                       color: '#d4af37',
                       border: '1px solid #d4af37',
@@ -227,12 +243,13 @@ export const InvitationRenderer: React.FC<InvitationRendererProps> = ({ guest, t
                       e.currentTarget.style.backgroundColor = 'transparent'
                     }}
                   >
-                    <span>ℹ️</span> Ver Detalles
+                    <span>ℹ️</span> Ver Detalles del Evento
                   </button>
                 </div>
-              )} */}
+              )}
             </div>
           )}
+          </div>
         </div>
       </div>
 
