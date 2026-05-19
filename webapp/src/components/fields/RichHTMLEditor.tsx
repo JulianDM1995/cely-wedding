@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { useField, useTranslation } from '@payloadcms/ui'
-import Editor, { DefaultEditorOptions } from 'react-simple-wysiwyg'
+import Editor from 'react-simple-wysiwyg'
 
 type Props = {
   path: string
